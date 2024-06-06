@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,12 +7,262 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
+model User {
+  id              Int      @id @default(autoincrement())
+  fullName        String
+  email           String
+  password        String?
+  isDeleted       Boolean  @default(false)
+  imageProfileUrl String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  userAddress UserAddress[]
+  order       Order[]
+  employee    Employee?
+  cart        Cart[]
+  payment     Payment[]
+
+  @@map("user")
+}
+
+model UserAddress {
+  id Int @id @default(autoincrement())
+
+  userId    Int
+  addressId Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  address Address @relation(fields: [addressId], references: [id])
+
+  @@map("user_address")
+}
+
+model Cart {
+  id Int @id @default(autoincrement())
+
+  userId    Int
+  productId Int
+  quantity  Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("cart")
+}
+
+model Employee {
+  id             Int             @id @default(autoincrement())
+  identityCardId Int
+  npwpCardId     Int
+  nikCardId      Int
+  salary         Int
+  isActive       Boolean
+  role           EmployeRoleType
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  userId      Int @unique
+  warehouseId Int
+
+  user      User      @relation(fields: [userId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@map("employee")
+}
+
+enum EmployeRoleType {
+  ADMIN
+  COURIER
+  WAREHOUSE
+}
+
+model Warehouse {
+  id         Int    @id @default(autoincrement())
+  name       String
+  location   String
+  longtitude Float
+  latitude   Float
+
+  product                    Product[]
+  stock                      Stock[]
+  employee                   Employee[]
+  stockMutationFromWarehouse StockMutation[] @relation("fromWarehouse")
+  stockMutationToWarehouse   StockMutation[] @relation("toWarehouse")
+
+  @@map("warehouse")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  description String
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  warehouseId Int
+
+  productCategory ProductCategory[]
+  stock           Stock[]
+  stockMutation   StockMutation[]
+  cart            Cart[]
+  order           Order[]
+
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@map("product")
+}
+
+model Order {
   id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("samples") // if you want to use snake_case format
+  productId      Int
+  userId         Int
+  orderPaymentId Int
+
+  user         User         @relation(fields: [userId], references: [id])
+  product      Product      @relation(fields: [productId], references: [id])
+  orderPayment OrderPayment @relation(fields: [orderPaymentId], references: [id])
+
+  @@map("order")
+}
+
+model OrderPayment {
+  id           Int      @id @default(autoincrement())
+  shippingCost Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  addressId Int
+
+  order   Order[]
+  payment Payment?
+
+  address Address @relation(fields: [addressId], references: [id])
+
+  @@map("order_payment")
+}
+
+enum PaymentMethodType {
+  MANUAL
+  MIDTRANS
+}
+
+enum PaymentStatusType {
+  PENDING
+  CHECKING
+  SUCCESS
+}
+
+model Payment {
+  id              Int               @id @default(autoincrement())
+  invoiceNumber   Int
+  totalPrice      Int
+  status          PaymentStatusType
+  paymentMethod   PaymentMethodType
+  paymentProof    String?
+  snapToken       String?
+  snapRedirectURL String?
+  paidAt          DateTime?
+  snapAt          DateTime?
+  createdAt       DateTime          @default(now())
+
+  userId         Int
+  orderPaymentId Int @unique
+
+  user         User         @relation(fields: [userId], references: [id])
+  orderPayment OrderPayment @relation(fields: [orderPaymentId], references: [id])
+
+  @@map("payment")
+}
+
+model Stock {
+  id          Int @id @default(autoincrement())
+  quantity    Int
+  productId   Int
+  warehouseId Int
+
+  product   Product   @relation(fields: [productId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@map("stock")
+}
+
+model StockMutation {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fromWarehouseId Int
+  toWarehouseId   Int
+  productId       Int
+
+  fromWarehouse Warehouse? @relation("fromWarehouse", fields: [toWarehouseId], references: [id])
+  toWarehouse   Warehouse? @relation("toWarehouse", fields: [fromWarehouseId], references: [id])
+  product       Product    @relation(fields: [productId], references: [id])
+
+  @@map("stockMutation")
+}
+
+model ProductCategory {
+  id         Int @id @default(autoincrement())
+  productId  Int
+  categoryId Int
+
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("productCategory")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  productCategory ProductCategory[]
+
+  @@map("category")
+}
+
+model Address {
+  id         Int    @id @default(autoincrement())
+  state      String
+  latitude   Float
+  longtitude Float
+
+  cityId     Int
+  provinceId Int
+
+  orderPayment OrderPayment[]
+
+  city        City          @relation(fields: [cityId], references: [id])
+  province    Province      @relation(fields: [provinceId], references: [id])
+  userAddress UserAddress[]
+
+  @@map("address")
+}
+
+model City {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  address Address[]
+
+  @@map("city")
+}
+
+model Province {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  address Address[]
+
+  @@map("province")
 }
