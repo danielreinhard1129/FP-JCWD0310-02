@@ -1,4 +1,4 @@
-import { BookOpenCheck, CalendarPlus2, LayoutDashboard , Banknote } from "lucide-react";
+import { BookOpenCheck, CalendarPlus2, LayoutDashboard , Banknote, Package, Boxes, PackageOpen, Blocks } from "lucide-react";
 import { type LucideIcon } from 'lucide-react'
 
 export interface NavItem {
@@ -14,33 +14,33 @@ export const NavItems: NavItem[] = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    href: "/organizer-dashboard",
+    href: "/dashboard",
     color: "text-sky-500",
   },
   {
-    title: "Events",
-    icon: BookOpenCheck,
-    href: "/organizer-dashboard/event",
+    title: "Product",
+    icon: Package,
+    href: "/dashboard/product",
     color: "text-orange-500",
     isChidren: true,
     children: [
       {
-        title: "Create Events",
-        icon: CalendarPlus2,
+        title: "List Products",
+        icon: Boxes,
         color: "text-yellow-500",
-        href: "/organizer-dashboard/event/create-event",
+        href: "/dashboard/product/list",
       },
       {
-        title: "Manage Event",
-        icon: BookOpenCheck,
+        title: "Manage Products",
+        icon: PackageOpen,
         color: "text-blue-500",
-        href: "/organizer-dashboard/event/manage-event",
+        href: "/dashboard/product/manage",
       },
       {
-        title: "Transaction",
-        icon: Banknote,
+        title: "Product Mutations",
+        icon: Blocks,
         color: "text-green-500",
-        href: "/organizer-dashboard/transaction",
+        href: "/dashboard/product/mutation",
       },
     ],
   },

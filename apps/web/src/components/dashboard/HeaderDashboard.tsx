@@ -10,13 +10,13 @@ import ThemeButton from '@/components/ThemeButton';
 import { ThemeToggle } from '../ThemeToggle';
 
 export default function HeaderDashboard() {
-//   const currentTheme = localStorage.getItem('theme');
-//   const userData = useAppSelector((state) => state.user);
-//   const user = {
-//     name: `${userData.firstName} ${userData.lastName}`,
-//     email: userData.email,
-//     image: userData.pictureId,
-//   };
+  //   const currentTheme = localStorage.getItem('theme');
+  //   const userData = useAppSelector((state) => state.user);
+  //   const user = {
+  //     name: `${userData.firstName} ${userData.lastName}`,
+  //     email: userData.email,
+  //     image: userData.pictureId,
+  //   };
 
   return (
     <div className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
@@ -26,7 +26,7 @@ export default function HeaderDashboard() {
           className="hidden items-center justify-between gap-2 md:flex"
         >
           <Boxes className="h-6 w-6" />
-          <h1 className="text-lg font-semibold">TuneTix</h1>
+          <h1 className="text-lg font-semibold">Stock.In</h1>
         </Link>
         <div className={cn('block md:!hidden')}>
           <MobileSidebar />
@@ -34,6 +34,9 @@ export default function HeaderDashboard() {
         <div className="flex gap-4 flex-row">
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            {
+              // TODO Users Redux for User Nav
+            }
             {/* <Label>sadam@email.com</Label>
             <UserNav user={user} /> */}
           </div>
