@@ -118,9 +118,9 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     }
 
     return {
-      data: {
-        product,
-      },
+      // data: {
+      //   product,
+      // },
       dataWithStock: {
         productWithStock,
       },
