@@ -7,219 +7,168 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int      @id @default(autoincrement())
-  fullName        String
-  email           String
-  password        String?
-  isDeleted       Boolean  @default(false)
-  imageProfileUrl String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  userAddress UserAddress[]
-  order       Order[]
-  employee    Employee?
-  cart        Cart[]
-  payment     Payment[]
-
-  @@map("user")
+enum UserRoleType {
+  CUSTOMER
+  ADMIN
+  WAREHOUSE_ADMIN
 }
 
-model UserAddress {
-  id Int @id @default(autoincrement())
+model Users {
+  id              Int          @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String
+  password        String?
+  profileImageUrl String?
+  role            UserRoleType
+  isDelete        Boolean
+  createdAt       DateTime     @default(now())
+  updateAt        DateTime     @updatedAt
 
-  userId    Int
-  addressId Int
+  address  Address[]
+  order    Order[]
+  cart     Cart[]
+  employee Employee?
 
-  user    User    @relation(fields: [userId], references: [id])
-  address Address @relation(fields: [addressId], references: [id])
+  @@map("users")
+}
 
-  @@map("user_address")
+model Address {
+  id         Int      @id @default(autoincrement())
+  name       String
+  lat        Float
+  lon        Float
+  street     String
+  city       String
+  province   String
+  postalCode String
+  isPrimary  Boolean
+  createdAt  DateTime @default(now())
+  updateAt   DateTime @updatedAt
+
+  userId Int
+
+  user Users @relation(fields: [userId], references: [id])
+
+  @@map("address")
 }
 
 model Cart {
-  id Int @id @default(autoincrement())
+  id       Int @id @default(autoincrement())
+  quantity Int
 
-  userId    Int
   productId Int
-  quantity  Int
+  variantId Int
+  userId    Int
 
-  user    User    @relation(fields: [userId], references: [id])
+  user    Users   @relation(fields: [userId], references: [id])
   product Product @relation(fields: [productId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
 
   @@map("cart")
 }
 
+enum OrderStatus {
+  WAIT_USER
+  CONFIRMATION_PAYMENT
+  ON_PROGRESS
+  ON_SHIPPING
+  DONE
+  CANCEL
+}
+
+model Order {
+  id             Int         @id @default(autoincrement())
+  status         OrderStatus
+  total          Int
+  shippingCost   Int
+  shippingDetail Int
+  discount       Int
+  createdAt      DateTime    @default(now())
+  updateAt       DateTime
+
+  userId      Int
+  warehouseId Int
+
+  orderItems OrderItems[]
+  payments   Payments?
+
+  user      Users     @relation(fields: [userId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@map("order")
+}
+
+model OrderItems {
+  id        Int @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  variantId Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+enum PaymentsMethodType {
+  MANUAL
+  MIDTRANS
+}
+
+model Payments {
+  id              Int                @id @default(autoincrement())
+  invoiceNumber   String             @unique
+  paymentMethod   PaymentsMethodType
+  snapToken       String?
+  snapRedirectUrl String?
+  paymentProof    String?
+  createdAt       DateTime           @default(now())
+  updateAt        DateTime           @updatedAt
+
+  orderId Int @unique
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("payments")
+}
+
 model Employee {
-  id             Int             @id @default(autoincrement())
-  identityCardId Int
-  npwpCardId     Int
-  nikCardId      Int
-  salary         Int
-  isActive       Boolean
-  role           EmployeRoleType
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id        Int      @id @default(autoincrement())
+  nik       String
+  ktp       String
+  npwp      String
+  salary    Int
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
   userId      Int @unique
   warehouseId Int
 
-  user      User      @relation(fields: [userId], references: [id])
+  user      Users?    @relation(fields: [userId], references: [id])
   warehouse Warehouse @relation(fields: [warehouseId], references: [id])
 
   @@map("employee")
 }
 
-enum EmployeRoleType {
-  ADMIN
-  COURIER
-  WAREHOUSE
-}
-
 model Warehouse {
-  id         Int    @id @default(autoincrement())
-  name       String
-  location   String
-  longtitude Float
-  latitude   Float
+  id       Int    @id @default(autoincrement())
+  name     String
+  street   String
+  city     String
+  province String
+  state    String
+  lat      Float
+  lon      Float
 
-  product                    Product[]
-  stock                      Stock[]
-  employee                   Employee[]
-  stockMutationFromWarehouse StockMutation[] @relation("fromWarehouse")
-  stockMutationToWarehouse   StockMutation[] @relation("toWarehouse")
+  employee                    Employee[]
+  order                       Order[]
+  variantStocks               VariantStocks[]
+  toWarehouseStockMutations   StockMutations[] @relation("toWarehouseStockMutations")
+  fromWarehouseStockMutations StockMutations[] @relation("fromWarehouseStockMutations")
 
   @@map("warehouse")
-}
-
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  price       Int
-  description String
-  imageUrl    String
-  createdAt   DateTime @default(now())
-  updateAt    DateTime @updatedAt
-
-  warehouseId Int
-
-  productCategory ProductCategory[]
-  stock           Stock[]
-  stockMutation   StockMutation[]
-  cart            Cart[]
-  order           Order[]
-
-  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
-
-  @@map("product")
-}
-
-model Order {
-  id        Int      @id @default(autoincrement())
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  productId      Int
-  userId         Int
-  orderPaymentId Int
-
-  user         User         @relation(fields: [userId], references: [id])
-  product      Product      @relation(fields: [productId], references: [id])
-  orderPayment OrderPayment @relation(fields: [orderPaymentId], references: [id])
-
-  @@map("order")
-}
-
-model OrderPayment {
-  id           Int      @id @default(autoincrement())
-  shippingCost Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  addressId Int
-
-  order   Order[]
-  payment Payment?
-
-  address Address @relation(fields: [addressId], references: [id])
-
-  @@map("order_payment")
-}
-
-enum PaymentMethodType {
-  MANUAL
-  MIDTRANS
-}
-
-enum PaymentStatusType {
-  PENDING
-  CHECKING
-  SUCCESS
-}
-
-model Payment {
-  id              Int               @id @default(autoincrement())
-  invoiceNumber   Int
-  totalPrice      Int
-  status          PaymentStatusType
-  paymentMethod   PaymentMethodType
-  paymentProof    String?
-  snapToken       String?
-  snapRedirectURL String?
-  paidAt          DateTime?
-  snapAt          DateTime?
-  createdAt       DateTime          @default(now())
-
-  userId         Int
-  orderPaymentId Int @unique
-
-  user         User         @relation(fields: [userId], references: [id])
-  orderPayment OrderPayment @relation(fields: [orderPaymentId], references: [id])
-
-  @@map("payment")
-}
-
-model Stock {
-  id          Int @id @default(autoincrement())
-  quantity    Int
-  productId   Int
-  warehouseId Int
-
-  product   Product   @relation(fields: [productId], references: [id])
-  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
-
-  @@map("stock")
-}
-
-model StockMutation {
-  id        Int      @id @default(autoincrement())
-  quantity  Int
-  status    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fromWarehouseId Int
-  toWarehouseId   Int
-  productId       Int
-
-  fromWarehouse Warehouse? @relation("fromWarehouse", fields: [toWarehouseId], references: [id])
-  toWarehouse   Warehouse? @relation("toWarehouse", fields: [fromWarehouseId], references: [id])
-  product       Product    @relation(fields: [productId], references: [id])
-
-  @@map("stockMutation")
-}
-
-model ProductCategory {
-  id         Int @id @default(autoincrement())
-  productId  Int
-  categoryId Int
-
-  product  Product  @relation(fields: [productId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
-
-  @@map("productCategory")
 }
 
 model Category {
@@ -231,38 +180,104 @@ model Category {
   @@map("category")
 }
 
-model Address {
-  id         Int    @id @default(autoincrement())
-  state      String
-  latitude   Float
-  longtitude Float
+model ProductCategory {
+  id         Int @id @default(autoincrement())
+  productId  Int
+  CategoryId Int
 
-  cityId     Int
-  provinceId Int
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [CategoryId], references: [id])
 
-  orderPayment OrderPayment[]
-
-  city        City          @relation(fields: [cityId], references: [id])
-  province    Province      @relation(fields: [provinceId], references: [id])
-  userAddress UserAddress[]
-
-  @@map("address")
+  @@map("product_category")
 }
 
-model City {
-  id   Int    @id @default(autoincrement())
-  name String
+model ProductImages {
+  id        Int      @id @default(autoincrement())
+  url       String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
-  address Address[]
+  productId Int
 
-  @@map("city")
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("product_images")
 }
 
-model Province {
-  id   Int    @id @default(autoincrement())
-  name String
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
 
-  address Address[]
+  productImages   ProductImages[]
+  productCategory ProductCategory[]
+  variant         Variant[]
+  cart            Cart[]
+  stockMutations  StockMutations[]
+  orderItems      OrderItems[]
 
-  @@map("province")
+  @@map("product")
+}
+
+model Variant {
+  id        Int    @id @default(autoincrement())
+  color     String
+  size      String
+  productId Int
+
+  cart           Cart[]
+  variantStocks  VariantStocks[]
+  stockMutations StockMutations[]
+
+  product    Product      @relation(fields: [productId], references: [id])
+  orderItems OrderItems[]
+
+  @@map("variant")
+}
+
+model VariantStocks {
+  id       Int @id @default(autoincrement())
+  quantity Int
+
+  warehouseId Int
+  variantId   Int
+
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+  variant   Variant   @relation(fields: [variantId], references: [id])
+
+  @@map("variant_stocks")
+}
+
+enum StockMutationsStatus {
+  WAIT_CONFIRMATION
+  ON_PROGRESS
+  DONE
+}
+
+enum StockMutationsType {
+  IMPORT
+  EXPORT
+}
+
+model StockMutations {
+  id        Int                  @id @default(autoincrement())
+  quantity  Int
+  status    StockMutationsStatus
+  type      StockMutationsType
+  createdAt DateTime             @default(now())
+  updateAt  DateTime             @updatedAt
+
+  productId       Int
+  variantId       Int
+  fromWarehouseId Int?
+  toWarehouseId   Int
+
+  product       Product    @relation(fields: [productId], references: [id])
+  variant       Variant    @relation(fields: [variantId], references: [id])
+  fromWarehouse Warehouse? @relation("fromWarehouseStockMutations", fields: [fromWarehouseId], references: [id])
+  toWarehouse   Warehouse  @relation("toWarehouseStockMutations", fields: [toWarehouseId], references: [id])
+
+  @@map("stock_mutations")
 }
