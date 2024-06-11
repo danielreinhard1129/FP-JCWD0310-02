@@ -1,87 +1,97 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Minus, Plus } from 'lucide-react';
+import Image from 'next/image';
+import ShoesImage from '../../../../../public/sepatu.jpg';
 import React from 'react';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Heart } from 'lucide-react';
 
 const ProductDetailPage = ({ params }: { params: { id: number } }) => {
   return (
     <>
       <title>Jaket Kulit</title>
-      <div className="py-4 w-full flex flex-col gap-8">
-        <div className="flex justify-center">
-          <h1 className="text-3xl font-medium">Jaket Kulit</h1>
-        </div>
-        <div className="flex gap-4">
-          <p className="text-muted-foreground">Categories</p>
-          <p>/</p>
-          <p>Jackets</p>
-        </div>
-        <div id="content" className="flex justify-between">
-          <div className='w-[600px] flex flex-col gap-10'>
-            <div
-              id="image"
-              className="w-[600px] h-[400px] rounded-[40px] bg-gray-500"
-            ></div>
+      <section className="w-full bg-gray-300">
+        <div
+          id="content"
+          className="p-4 grid md:grid-flow-col-dense grid-flow-row-dense gap-8"
+        >
+          <div
+            id="left-content"
+            className="w-full h-fit grid grid-cols-2 gap-4"
+          >
+            <Image alt="image" src={ShoesImage} className="" />
+            <Image alt="image" src={ShoesImage} className="" />
+            <Image alt="image" src={ShoesImage} className="" />
+            <Image alt="image" src={ShoesImage} className="" />
+          </div>
+          <div
+            id="right-content"
+            className="md:w-[30vw] w-full flex flex-col gap-4"
+          >
+            <Button className="cursor-none text-xs w-28 p-2 h-10 bg-blue-500">
+              New Release
+            </Button>
+            <Label className="font-bold text-2xl">
+              ADIDAS 4DFWD X PARLEY RUNNING SHOES
+            </Label>
+            <Label className="font-bold text-lg text-blue-500">
+              Rp.500.000,00
+            </Label>
+            <div className="flex flex-col">
+              <div className="flex justify-between items-center">
+                <Label className="text-base">SIZE</Label>
+                <Label className="underline font-medium text-xs">
+                  SIZE CHART
+                </Label>
+              </div>
+              <div
+                id="size-select"
+                className="grid grid-cols-[repeat(auto-fit,minmax(32px,32px))] gap-[2px] justify-between text-xs"
+              >
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  XS
+                </div>
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  S
+                </div>
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  M
+                </div>
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  L
+                </div>
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  XL
+                </div>
+                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
+                  XXL
+                </div>
+              </div>
+            </div>
+            <div id="button-group" className="gap-1 flex flex-col">
+              <div className="flex gap-1 w-full">
+                <div className="basis-full font-bold text-sm flex justify-center items-center bg-primary text-primary-foreground rounded-md">
+                  Add To Cart
+                </div>
+                <div className="w-8 h-8 basis-10 bg-primary grid justify-center rounded-md items-center">
+                  <Heart className="text-primary-foreground" width={16} />
+                </div>
+              </div>
+              <div className="w-full h-8 bg-blue-500 text-sm font-bold rounded-md flex justify-center items-center font-bold text-primary-foreground">
+                BUY IT NOW
+              </div>
+            </div>
             <div>
-              <Label>About Jaket Kulit</Label>
-              <p className="text-muted-foreground">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut
-                consequuntur rerum placeat sed quo dolore, atque autem quisquam
-                praesentium veritatis sunt quidem, totam odio saepe quos minima
-                nostrum facere inventore.
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Repudiandae suscipit aperiam fugit ut nemo fuga iure amet
+                tenetur, assumenda omnis earum maiores? Omnis qui voluptatibus
+                autem veritatis totam, voluptatem doloribus!
               </p>
             </div>
           </div>
-          {/* <div
-            id="checkout"
-            className=""
-          > */}
-          <Card
-            id="checkout"
-            className="p-6 shadow-none w-[400px] h-[400px] rounded-lg border border-gray-200"
-          >
-            <CardHeader>
-              <CardTitle>Price</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-8">
-                <Label className="text-green-500 text-3xl">Rp.75.000</Label>
-
-                <div>
-                  <Label>How many do you wants?</Label>
-                  <div className="mt-2 w-full h-10 flex justify-between items-center rounded-md bg-gray-200">
-                    <div
-                      onClick={() => console.log('plus')}
-                      className="w-10 h-10 bg-green-500 rounded-md flex items-center justify-center cursor-pointer"
-                    >
-                      <Plus color="white" />
-                    </div>
-                    <p>5</p>
-                    <div
-                      onClick={() => console.log('minus')}
-                      className="w-10 h-10 bg-red-500 rounded-md flex items-center justify-center cursor-pointer"
-                    >
-                      <Minus color="white" />
-                    </div>
-                  </div>
-                </div>
-
-                <Label className="flex gap-1">
-                  You will pay <p className="font-bold">Rp 75.000</p> per{' '}
-                  <p className="font-bold">2 item</p>
-                </Label>
-
-                <Button className="bg-blue-500 w-full">
-                  Continue to Chart
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          {/* </div> */}
         </div>
-      </div>
+      </section>
     </>
   );
 };

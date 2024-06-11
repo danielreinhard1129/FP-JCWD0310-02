@@ -191,7 +191,7 @@ const ProductsPage = () => {
           <div className="w-full flex-col">
             <div
               id="product-list"
-              className="grid grid-cols-[repeat(auto-fit,minmax(180px,200px))] justify-around gap-2"
+              className="grid grid-cols-[repeat(auto-fit,minmax(200px,230px))] justify-around"
             >
               {isLoading ? (
                 Loading()
