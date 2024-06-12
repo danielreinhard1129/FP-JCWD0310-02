@@ -78,12 +78,11 @@ enum EmployeRoleType {
 }
 
 model Warehouse {
-  id         Int    @id @default(autoincrement())
-  name       String
-  location   String
-  longtitude Float
-  latitude   Float
-
+  id                         Int             @id @default(autoincrement())
+  name                       String
+  location                   String
+  longtitude                 Float
+  latitude                   Float
   product                    Product[]
   stock                      Stock[]
   employee                   Employee[]
