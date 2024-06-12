@@ -21,5 +21,7 @@ export const PostProductService = async (body: Product) => {
       messages: 'Success create product',
       data: newProduct,
     };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };

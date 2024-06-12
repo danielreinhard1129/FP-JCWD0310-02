@@ -7,34 +7,54 @@ export const GetProductService = async (params: number) => {
         id: params,
       },
       include: {
-        stock: {
-          select: {
-            quantity: true,
-            warehouseId: true,
-          },
-        },
-        warehouse: {
-          select: {
-            latitude: true,
-            longtitude: true,
-            location: true,
-            name: true,
-          },
-        },
         productCategory: {
           include: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+            category: true,
+          },
+        },
+        productImages: {
+          select: {
+            url: true,
+          },
+        },
+        variant: {
+          select: {
+            color: true,
+            size: true,
+          },
+          include: {
+            variantStocks: true,
           },
         },
       },
     });
+
+    if (!product) {
+      throw new Error('Product not fond');
+    }
+
+    // const variant = await prisma.variant.findMany({
+    //   where: {
+    //     productId: product.id,
+    //   },
+    //   include: {
+    //     variantStocks: true,
+    //   },
+    // });
+
+    const stock = product.variant.reduce((a, b) => {
+      return (
+        a +
+        b.variantStocks.reduce((c, d) => {
+          return c + d.quantity;
+        }, 0)
+      );
+    }, 0);
+
     return {
       data: {
-        product,
+        ...product,
+        stock,
       },
     };
   } catch (error) {}

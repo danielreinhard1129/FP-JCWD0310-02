@@ -16,7 +16,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     const { page, take, search, sortBy, sortOrder, filter, warehouse, userId } =
       query;
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
         id: userId,
       },
@@ -24,7 +24,6 @@ export const GetProductsService = async (query: GetProductsQuery) => {
         employee: {
           select: {
             warehouseId: true,
-            role: true,
           },
         },
       },
@@ -38,7 +37,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
       if (!user.employee) {
         return undefined;
       }
-      if (user.employee.role == 'WAREHOUSE') {
+      if (user.role == 'WAREHOUSE_ADMIN') {
         return user.employee.warehouseId;
       }
       return warehouse;
@@ -46,7 +45,15 @@ export const GetProductsService = async (query: GetProductsQuery) => {
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
-      warehouseId: warehouseId(),
+      variant: {
+        every: {
+          variantStocks: {
+            every: {
+              warehouseId: warehouseId(),
+            },
+          },
+        },
+      },
       productCategory: {
         every: {
           category: {
@@ -69,18 +76,14 @@ export const GetProductsService = async (query: GetProductsQuery) => {
         [sortBy]: sortOrder,
       },
       include: {
-        stock: {
-          select: {
-            quantity: true,
-            warehouseId: true,
-          },
-        },
-        warehouse: {
-          select: {
-            latitude: true,
-            longtitude: true,
-            location: true,
-            name: true,
+        productImages: true,
+        variant: {
+          include: {
+            variantStocks: {
+              include: {
+                warehouse: true,
+              },
+            },
           },
         },
         productCategory: {
@@ -95,15 +98,20 @@ export const GetProductsService = async (query: GetProductsQuery) => {
       },
     });
 
+    if (!product) {
+      throw new Error('Cannot find the product');
+    }
+
     const productWithStock = product.map((val) => {
-      const sumStock = val.stock.reduce((a, b) => a + b.quantity, 0);
-      return {
-        ...val,
-        stock: {
-          ...val.stock,
-          sum: sumStock,
-        },
-      };
+      const stock = val.variant.reduce((a, b) => {
+        return (
+          a +
+          b.variantStocks.reduce((c, d) => {
+            return c + d.quantity;
+          }, 0)
+        );
+      }, 0);
+      return { ...val, stock };
     });
 
     if (!product.length) {
@@ -118,12 +126,11 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     }
 
     return {
-      // data: {
-      //   product,
-      // },
-      dataWithStock: {
-        productWithStock,
+      data: {
+        ...productWithStock,
       },
     };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
