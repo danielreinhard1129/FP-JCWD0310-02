@@ -1,12 +1,13 @@
+'use client';
 import { axiosInstance } from '@/lib/axios';
 import { useEffect, useState } from 'react';
 
 export interface GetProductsResponse {
-  data: DataWithStock;
+  dataWithStock: DataWithStock;
 }
 
 export interface DataWithStock {
-  product: {
+  productWithStock: {
     id: number;
     name: string;
     price: number;
@@ -18,7 +19,7 @@ export interface DataWithStock {
     stock: Stock;
     warehouse: Warehouse;
     productCategory: ProductCategory[];
-  };
+  }[];
 }
 
 export interface ProductCategory {
@@ -43,15 +44,37 @@ export interface Warehouse {
   name: string;
 }
 
-export const useGetProduct = (productId: number) => {
-  const [id, setId] = useState<Number>(1);
+interface PaginationQueryParams {
+  take: number;
+  page: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+interface GetProductsArg extends PaginationQueryParams {
+  filter?: string;
+  warehouse?: number;
+}
+
+export const useGetProducts = (queryParams?: {
+  page: number;
+  take: number;
+}) => {
   const [data, setData] = useState<GetProductsResponse>();
+  const [search, setSearch] = useState<String>('');
+  const [query, setQuery] = useState<GetProductsArg>({
+    page: queryParams?.page || 1,
+    take: queryParams?.take || 9,
+  });
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   const getProduct = async () => {
     try {
       const response = await axiosInstance.get<GetProductsResponse>(
-        `/product/${id}`,
+        '/product',
+        {
+          params: { ...query, search, userId: 1 },
+        },
       );
       setData(response.data);
     } catch (error) {
@@ -63,7 +86,15 @@ export const useGetProduct = (productId: number) => {
   useEffect(() => {
     setIsLoading(true);
     getProduct();
-  }, [id]);
+  }, [
+    query.page,
+    query.filter,
+    query.sortBy,
+    query.sortOrder,
+    query.take,
+    query.warehouse,
+    search,
+  ]);
 
-  return { data, isLoading, id, setId };
+  return { data, isLoading, setQuery, setSearch, query };
 };

@@ -5,7 +5,7 @@ interface ProductCardAttribute {
   title: string | '';
   category: string | 'baju';
   price: number | 0;
-  skeleton: boolean | 'false';
+  skeleton: boolean | Boolean | 'false';
 }
 
 const ProductCard = (param: ProductCardAttribute) => {
@@ -37,7 +37,7 @@ const ProductCard = (param: ProductCardAttribute) => {
             </>
           )}
         </div>
-        <div className="flex flex-col items-start justify-start gap-[16px] text-lg">
+        <div className="flex flex-col items-start justify-start text-lg">
           {param.skeleton ? (
             <>
               <div className="flex flex-col items-start justify-start gap-2">
@@ -54,7 +54,7 @@ const ProductCard = (param: ProductCardAttribute) => {
               </div>
             </>
           )}
-          <div className="self-stretch flex flex-col items-start justify-start text-[10px] text-pure-white">
+          <div className="w-full flex flex-col items-start justify-start text-[10px] text-pure-white">
             <div className="self-stretch rounded-lg bg-black h-12 flex flex-row items-center justify-center py-2 px-4 box-border">
               {param.skeleton ? (
                 <>

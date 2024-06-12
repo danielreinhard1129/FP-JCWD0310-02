@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { useGetProduct } from '@/hooks/product/useGetProduct';
+import { useGetProducts } from '@/hooks/product/useGetProducts';
 import { ArrowLeft, ArrowRight, ArrowUp, Check } from 'lucide-react';
 import React from 'react';
 
@@ -30,7 +30,7 @@ const Loading = () => {
 };
 
 const ProductsPage = () => {
-  const { data, isLoading, query, setQuery, setSearch } = useGetProduct();
+  const { data, isLoading, query, setQuery, setSearch } = useGetProducts();
   const priceFormat = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
     style: 'currency',
