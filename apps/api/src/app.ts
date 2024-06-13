@@ -10,7 +10,10 @@ import express, {
 import cors from 'cors';
 import { PORT } from './config';
 // import { SampleRouter } from './routers/sample.router';
+
 import { AuthRouter } from './routers/auth.router';
+
+import { ProductRouter } from './routers/product.router';
 
 export default class App {
   private app: Express;
@@ -53,14 +56,19 @@ export default class App {
 
   private routes(): void {
     // const sampleRouter = new SampleRouter();
+
     const authRouter = new AuthRouter();
+
+    const productRouter = new ProductRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
     });
 
     // this.app.use('/samples', sampleRouter.getRouter());
+
     this.app.use('/api/auth', authRouter.getRouter());
+    this.app.use('/api/product', productRouter.getRouter());
   }
 
   public start(): void {

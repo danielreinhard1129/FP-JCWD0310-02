@@ -1,31 +1,33 @@
-import { User } from '@/app/types/user.type';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '@/redux/store';
 
-const initialState: Pick<User, 'id' | 'email' | 'role'> = {
-  id: 0,
+// Define a type for the slice state
+interface UserState {
+  value: number;
+}
 
-  email: '',
-  role: '',
+// Define the initial state using that type
+const initialState: UserState = {
+  value: 0,
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    loginAction: (state, action: PayloadAction<User>) => {
-      state.id = action.payload.id;
-
-      state.email = action.payload.email;
-      state.role = action.payload.role;
+    addProduct: (state) => {
+      state.value += 96;
     },
-    logoutAction: (state) => {
-      state.id = 0;
-
-      state.email = '';
-      state.role = '';
+    decrement: (state) => {
+      state.value -= 1;
+    },
+    // Use the PayloadAction type to declare the contents of `action.payload`
+    incrementByAmount: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
     },
   },
 });
 
-export const { loginAction, logoutAction } = userSlice.actions;
+export const { addProduct, decrement, incrementByAmount } = userSlice.actions;
 export default userSlice.reducer;

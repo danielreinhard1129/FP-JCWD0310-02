@@ -1,89 +1,55 @@
+import { BsFacebook, BsInstagram, BsTiktok, BsTwitter } from 'react-icons/bs';
+import { Label } from './ui/label';
+import logoWhite from '../../public/logo-white.png';
+import Image from 'next/image';
+
 export const Footer = () => {
   return (
-    <div className="border-t-4 border-[#D9D9D9]">
-      {' '}
-      <footer className="text-white px-8 max-w-[1141px] justify-center mx-auto my-5  ">
-        {' '}
-        {/* Menambahkan mx-auto untuk membuat footer menjadi pusat */}
-        <div className="container grid grid-cols-1 md:grid-cols-4 gap-8 px-4">
-          <div>
-            <h2 className="text-blue-500 font-bold text-lg">Stockin</h2>
-            <p className="mt-2 text-gray-400">
-              Achieve logistics efficiency with smart stockin management.
-            </p>
+    <footer className="w-full flex flex-col items-center relative mx-2 md:mx-8">
+      <div className="w-full rounded-[30px] px-4 md:px-10 bg-primary relative overflow-hidden">
+        <div className="w-full py-10 flex flex-col md:flex-row justify-between gap-4">
+          <div className="text-primary-foreground md:text-base text-sm tracking-tight">
+            <Label className="md:text-2xl text-xl text-[#FFA52F]">
+              About Us
+            </Label>
+            <p>We are the biggest hyperstore in the universe.</p>
+            <p>We got you all cover with our exclusive</p>
+            <p>collections and latest drops.</p>
           </div>
-          <div>
-            <h3 className="font-bold text-[#152C5B]">Shop</h3>
-            <ul className="mt-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Ladies
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Man
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Kids
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Man
-                </a>
-              </li>
-            </ul>
+          <div className="text-primary-foreground md:text-base text-sm tracking-tight">
+            <Label className="md:text-2xl text-xl text-[#FFA52F]">
+              Categories
+            </Label>
+            <p>Runners</p>
+            <p>Sneakers</p>
+            <p>Basketball</p>
+            <p>Outdoor</p>
+            <p>Golf</p>
+            <p>Hiking</p>
           </div>
-          <div>
-            <h3 className="font-bold text-[#152C5B]">Explore Us</h3>
-            <ul className="mt-2">
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Categories
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  Agents
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  About us
-                </a>
-              </li>
-            </ul>
+          <div className="text-primary-foreground md:text-base text-sm tracking-tight">
+            <Label className="md:text-2xl text-xl text-[#FFA52F]">
+              Company
+            </Label>
+            <p>About</p>
+            <p>Contact</p>
+            <p>Blogs</p>
           </div>
-          <div>
-            <h3 className="font-bold text-[#152C5B]">Connect Us</h3>
-            <ul className="mt-2">
-              <li>
-                <a
-                  href="mailto:support@staycation.id"
-                  className="text-gray-400 hover:text-white"
-                >
-                  support@staycation.id
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:085-1500-2100"
-                  className="text-gray-400 hover:text-white"
-                >
-                  085-1500-2100
-                </a>
-              </li>
-              <li className="text-gray-400">Staycation, Kemang, Jakarta</li>
-            </ul>
+          <div className="text-primary-foreground md:text-base text-sm tracking-tight">
+            <Label className="md:text-2xl text-xl text-[#FFA52F]">
+              Follow Us
+            </Label>
+            <div className="flex md:justify-between gap-4 md:gap-0 mt-2">
+              <BsFacebook />
+              <BsInstagram />
+              <BsTwitter />
+              <BsTiktok />
+            </div>
           </div>
         </div>
-        <div className="  pt-4 text-center text-gray-600">
-          <p>&copy; 2019 • All rights reserved • Stockin</p>
-        </div>
-      </footer>
-    </div>
+        <Image alt="logo" src={logoWhite} className="w-full h-auto" />
+      </div>
+      <Label className="my-2">@Copyright KicksIn</Label>
+    </footer>
   );
 };

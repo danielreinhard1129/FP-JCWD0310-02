@@ -1,13 +1,11 @@
-import React from 'react'
+import React from 'react';
 
 const page = () => {
   return (
-    <div className='bg-background'>
-      <p>
-        ini admin
-      </p>
+    <div className="bg-background h-[2000px]">
+      <p>ini admin</p>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;
