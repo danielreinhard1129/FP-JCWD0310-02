@@ -29,18 +29,14 @@ export const GetProductsService = async (query: GetProductsQuery) => {
       },
     });
 
-    if (!user) {
-      throw new Error('Sorry your account is available');
-    }
-
     const warehouseId = () => {
-      if (!user.employee) {
-        return undefined;
+      if (user && user.employee) {
+        if (user.role == 'ADMIN') {
+          return warehouse ? warehouse : undefined;
+        } else if (user.role == 'WAREHOUSE_ADMIN') {
+          return user.employee.warehouseId;
+        }
       }
-      if (user.role == 'WAREHOUSE_ADMIN') {
-        return user.employee.warehouseId;
-      }
-      return warehouse;
     };
 
     const whereClause: Prisma.ProductWhereInput = {
@@ -49,7 +45,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
         every: {
           variantStocks: {
             every: {
-              warehouseId: warehouseId(),
+              warehouseId: user && user.employee ? warehouseId() : undefined,
             },
           },
         },
@@ -61,11 +57,6 @@ export const GetProductsService = async (query: GetProductsQuery) => {
           },
         },
       },
-      // stock: {
-      //   every: {
-      //     warehouseId: warehouseId(),
-      //   },
-      // },
     };
 
     const product = await prisma.product.findMany({
@@ -76,18 +67,30 @@ export const GetProductsService = async (query: GetProductsQuery) => {
         [sortBy]: sortOrder,
       },
       include: {
-        productImages: true,
+        productImages: {
+          select: {
+            url: true,
+          },
+        },
         variant: {
-          include: {
-            variantStocks: {
-              include: {
-                warehouse: true,
-              },
-            },
+          select: {
+            color: true,
+            size: true,
+            variantStocks: user?.employee
+              ? {
+                  include: {
+                    warehouse: true,
+                  },
+                }
+              : {
+                  select: {
+                    quantity: true,
+                  },
+                },
           },
         },
         productCategory: {
-          include: {
+          select: {
             category: {
               select: {
                 name: true,
@@ -126,9 +129,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     }
 
     return {
-      data: {
-        ...productWithStock,
-      },
+      data: productWithStock,
     };
   } catch (error) {
     throw error;
