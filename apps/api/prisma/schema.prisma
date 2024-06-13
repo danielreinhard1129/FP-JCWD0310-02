@@ -8,22 +8,31 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  fullName        String
+  id              Int          @id @default(autoincrement())
+  firstName       String
+  lastName        String
   email           String
   password        String?
-  isDeleted       Boolean  @default(false)
-  imageProfileUrl String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  profileImageUrl String?
+  role            UserRoleType
+  isDeleted       Boolean      @default(false)
 
-  userAddress UserAddress[]
-  order       Order[]
-  employee    Employee?
-  cart        Cart[]
-  payment     Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  UserAddress UserAddress[]
+  Cart        Cart[]
+  Employee    Employee?
+  Order       Order[]
+  Payment     Payment[]
 
   @@map("user")
+}
+
+enum UserRoleType {
+  USER
+  ADMIN
+  SUPERADMIN
 }
 
 model UserAddress {
@@ -72,9 +81,9 @@ model Employee {
 }
 
 enum EmployeRoleType {
+  USER
   ADMIN
-  COURIER
-  WAREHOUSE
+  SUPERADMIN
 }
 
 model Warehouse {
