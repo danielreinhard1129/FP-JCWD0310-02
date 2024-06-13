@@ -8,17 +8,27 @@ interface GetProductsQuery extends PaginationQueryParams {
     name: { contains: string };
   }[];
   warehouse: number | undefined;
+  userRole: string | undefined;
   userId: number;
 }
 
 export const GetProductsService = async (query: GetProductsQuery) => {
   try {
-    const { page, take, search, sortBy, sortOrder, filter, warehouse, userId } =
-      query;
+    const {
+      page,
+      take,
+      search,
+      sortBy,
+      sortOrder,
+      filter,
+      warehouse,
+      userId,
+      userRole,
+    } = query;
 
     const user = await prisma.users.findFirst({
       where: {
-        id: userId,
+        id: userId || undefined,
       },
       include: {
         employee: {
@@ -29,27 +39,31 @@ export const GetProductsService = async (query: GetProductsQuery) => {
       },
     });
 
-    const warehouseId = () => {
-      if (user && user.employee) {
-        if (user.role == 'ADMIN') {
-          return warehouse ? warehouse : undefined;
-        } else if (user.role == 'WAREHOUSE_ADMIN') {
-          return user.employee.warehouseId;
-        }
-      }
-    };
+    if (user && user.employee && user.role === 'WAREHOUSE_ADMIN') {
+      if (warehouse !== user.employee.warehouseId)
+        // return new Error('You are not an admin on this warehouse');
+        return {
+          message: 'You are not an admin on this warehouse',
+        };
+    }
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
-      variant: {
-        every: {
-          variantStocks: {
-            every: {
-              warehouseId: user && user.employee ? warehouseId() : undefined,
-            },
-          },
-        },
-      },
+      variant:
+        userRole == 'ADMIN' && user && user.employee
+          ? {
+              every: {
+                variantStocks: {
+                  every: {
+                    warehouseId:
+                      user.role == 'ADMIN'
+                        ? warehouse || undefined
+                        : user.employee.warehouseId,
+                  },
+                },
+              },
+            }
+          : undefined,
       productCategory: {
         every: {
           category: {
@@ -76,17 +90,18 @@ export const GetProductsService = async (query: GetProductsQuery) => {
           select: {
             color: true,
             size: true,
-            variantStocks: user?.employee
-              ? {
-                  include: {
-                    warehouse: true,
+            variantStocks:
+              userRole == 'ADMIN' && user?.employee
+                ? {
+                    include: {
+                      warehouse: true,
+                    },
+                  }
+                : {
+                    select: {
+                      quantity: true,
+                    },
                   },
-                }
-              : {
-                  select: {
-                    quantity: true,
-                  },
-                },
           },
         },
         productCategory: {
@@ -119,12 +134,12 @@ export const GetProductsService = async (query: GetProductsQuery) => {
 
     if (!product.length) {
       return {
-        messages: 'No data found',
-        detail: {
-          userId,
-          warehouse,
-          warehouseId: warehouseId(),
-        },
+        messages:
+          userRole == 'ADMIN'
+            ? user?.role == 'ADMIN'
+              ? 'No data in this warehouse'
+              : 'No data on your warehouse'
+            : 'No data found',
       };
     }
 
