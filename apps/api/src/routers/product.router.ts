@@ -21,7 +21,11 @@ export class ProductRouter {
       uploader('IMG', '/images').array('image'),
       this.productController.postProduct,
     );
-    this.router.patch('/:id', this.productController.patchProduct);
+    this.router.patch(
+      '/:id',
+      // verifyToken,
+      this.productController.patchProduct,
+    );
   }
 
   getRouter(): Router {
