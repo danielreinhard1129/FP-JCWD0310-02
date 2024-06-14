@@ -27,7 +27,6 @@ export class ProductController {
       sortBy: (req.query.sortBy as string) || 'createdAt',
       sortOrder: (req.query.sortOrder as string) || 'desc',
       search: (req.query.search as string) || '',
-      warehouse: Number(req.query.warehouse) || undefined,
       userId: Number(req.query.userId),
       userRole: (req.query.userRole as string) || undefined,
       filter,

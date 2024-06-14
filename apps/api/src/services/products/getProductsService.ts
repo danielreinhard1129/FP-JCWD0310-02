@@ -7,68 +7,26 @@ interface GetProductsQuery extends PaginationQueryParams {
   filter: {
     name: { contains: string };
   }[];
-  warehouse: number | undefined;
   userRole: string | undefined;
   userId: number;
 }
 
 export const GetProductsService = async (query: GetProductsQuery) => {
   try {
-    const {
-      page,
-      take,
-      search,
-      sortBy,
-      sortOrder,
-      filter,
-      warehouse,
-      userId,
-      userRole,
-    } = query;
+    const { page, take, search, sortBy, sortOrder, filter, userId, userRole } =
+      query;
 
     const user = await prisma.users.findFirst({
       where: {
         id: userId || undefined,
       },
-      include: {
-        employee: {
-          select: {
-            warehouseId: true,
-          },
-        },
-      },
     });
-
-    if (user && user.employee && user.role === 'WAREHOUSE_ADMIN') {
-      if (warehouse !== user.employee.warehouseId)
-        // return new Error('You are not an admin on this warehouse');
-        return {
-          message: 'You are not an admin on this warehouse',
-        };
-    }
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
-      variant:
-        userRole == 'ADMIN' && user && user.employee
-          ? {
-              every: {
-                variantStocks: {
-                  every: {
-                    warehouseId:
-                      user.role == 'ADMIN'
-                        ? warehouse || undefined
-                        : user.employee.warehouseId,
-                  },
-                },
-              },
-            }
-          : undefined,
       productCategory: {
-        every: {
-          category: {
-            AND: [...filter],
-          },
+        some: {
+          category: { OR: [...filter] },
         },
       },
     };
@@ -91,7 +49,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
             color: true,
             size: true,
             variantStocks:
-              userRole == 'ADMIN' && user?.employee
+              userRole == 'ADMIN'
                 ? {
                     include: {
                       warehouse: true,
