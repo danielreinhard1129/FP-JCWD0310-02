@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { Category, Product, Variant, VariantStocks } from '@prisma/client';
+import { Product, Variant, VariantStocks } from '@prisma/client';
 
 interface VariantWithStocks extends Pick<Variant, 'size' | 'color'> {
   stock: Pick<VariantStocks, 'quantity'>;
@@ -16,44 +16,15 @@ interface CreateProductParams {
   variant: VariantWithStocks[];
 }
 
-// IMAGE POST RESPONSE FROM MULTER
-// "image": [
-//         {
-//             "fieldname": "image",
-//             "originalname": "sepatu.jpg.jpg",
-//             "encoding": "7bit",
-//             "mimetype": "image/jpeg",
-//             "destination": "C:\\Users\\sdhz\\Desktop\\purwadhika\\FP-JCWD0310-02\\apps\\api\\public/images",
-//             "filename": "IMG1718303296494.jpg",
-//             "path": "C:\\Users\\sdhz\\Desktop\\purwadhika\\FP-JCWD0310-02\\apps\\api\\public\\images\\IMG1718303296494.jpg",
-//             "size": 78690
-//         },
-//         {
-//             "fieldname": "image",
-//             "originalname": "snippet.png",
-//             "encoding": "7bit",
-//             "mimetype": "image/png",
-//             "destination": "C:\\Users\\sdhz\\Desktop\\purwadhika\\FP-JCWD0310-02\\apps\\api\\public/images",
-//             "filename": "IMG1718303296495.png",
-//             "path": "C:\\Users\\sdhz\\Desktop\\purwadhika\\FP-JCWD0310-02\\apps\\api\\public\\images\\IMG1718303296495.png",
-//             "size": 1563011
-//         }
-//     ]
-
-export const PostProductService = async (body: CreateProductParams) => {
+export const postProductService = async (body: CreateProductParams) => {
   try {
-    const {
-      user: userId,
-      warehouseId,
-      product,
-      image,
-      category,
-      variant,
-    } = body;
+    const userId = Number(body.user.id);
+    const warehouseId = Number(body.warehouseId);
+    const { product, image, variant, category } = body;
 
     const user = await prisma.users.findFirst({
       where: {
-        id: Number(userId.id),
+        id: userId,
       },
       include: {
         employee: {
@@ -67,6 +38,9 @@ export const PostProductService = async (body: CreateProductParams) => {
 
     // Validation for user credential as super admin
     if (user.role !== 'SUPER_ADMIN') {
+      return {
+        messages: 'You are not a super admin',
+      };
       throw new Error('You are not a super admin');
     }
 
@@ -92,7 +66,7 @@ export const PostProductService = async (body: CreateProductParams) => {
         });
 
         if (isExistTitle) {
-          return new Error('Product title is used!');
+          return { messages: 'Product title is used!' };
         }
 
         const newProduct = await tx.product.create({
@@ -101,7 +75,10 @@ export const PostProductService = async (body: CreateProductParams) => {
 
         const imageData = await tx.productImages.createMany({
           data: image.map((val) => {
-            return { productId: newProduct.id, url: val.path };
+            return {
+              productId: newProduct.id,
+              url: `/public/images/${val.filename}`,
+            };
           }),
         });
 
@@ -159,8 +136,9 @@ export const PostProductService = async (body: CreateProductParams) => {
         const existProductVariantWithStock = existProductVariant.map((val) => {
           return {
             variantId: val.id,
-            quantity:
+            quantity: Number(
               productVariantStock[`${val.color}_${[val.size]}`].quantity,
+            ),
             warehouseId,
           };
         });
@@ -182,8 +160,7 @@ export const PostProductService = async (body: CreateProductParams) => {
     });
 
     return {
-      messages: 'Success create product',
-      data: createProduct,
+      ...createProduct,
     };
   } catch (error) {
     throw error;
