@@ -1,6 +1,8 @@
 import { User } from '@/app/types/user.type';
 import { axiosInstance } from '@/lib/axios';
+import { loginAction } from '@/redux/slicers/userSlice';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 // import { useRouter } from 'next/navigation';
 
 interface LoginArgs extends Pick<User, 'email' | 'role'> {
@@ -15,16 +17,14 @@ interface LoginResponse {
 
 const useLogin = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const login = async (payload: LoginArgs) => {
     try {
       const { data } = await axiosInstance.post<LoginResponse>(
         'auth/login',
         payload,
       );
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', data.data.role);
-      localStorage.setItem('email', data.data.email);
+      dispatch(loginAction(data.data));
 
       alert('login sucess');
       router.replace('/');

@@ -9,13 +9,13 @@ type User = {
 export const loginService = async (body: User) => {
   try {
     const { email, password } = body;
-    const existingUser = await prisma.user.findFirst({
+    const existingUser = await prisma.users.findFirst({
       where: { email },
     });
     if (!existingUser) {
       throw new Error('User not found');
     }
-    const validPassword = await prisma.user.findFirst({
+    const validPassword = await prisma.users.findFirst({
       where: { password },
     });
 

@@ -1,11 +1,13 @@
 'use client';
 
+import useGoogleAuth from '@/hooks/api/auth/useGoogleAuth';
 import useLogin from '@/hooks/api/auth/useLogin';
-import { GoogleLogin } from '@react-oauth/google';
+
 import { useFormik } from 'formik';
 
 const Login = () => {
   const { login } = useLogin();
+  const { googleLogin } = useGoogleAuth();
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -66,24 +68,17 @@ const Login = () => {
           <div className="text-center md:my-2 font-bold max-md:">OR</div>
           <button
             type="submit"
+            onClick={() => googleLogin()}
             className="w-full p-2.5 text-base rounded-lg border border-black flex items-center justify-center text-black font-semibold"
           >
-            {/* <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-            /> */}
-            {/* <img
+            <img
               src="/logo/google.png"
               width={32}
               height={32}
               alt="Google logo"
               className="mr-2"
             />
-            Sign in with Google */}
+            Sign in with Google
           </button>
         </form>
       </div>

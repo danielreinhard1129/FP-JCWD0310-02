@@ -4,7 +4,7 @@ import { User } from '@/types/user.type';
 export const registerService = async (body: User) => {
   const { email, password, firstName, lastName } = body;
 
-  const existingUser = await prisma.user.findFirst({
+  const existingUser = await prisma.users.findFirst({
     where: { email },
   });
 
@@ -12,10 +12,7 @@ export const registerService = async (body: User) => {
     throw new Error('User already exists');
   }
 
-  return await prisma.user.create({
-    data: {
-      ...body,
-      role: 'USER',
-    },
+  return await prisma.users.create({
+    data: { ...body, role: 'CUSTOMER', isDelete: false },
   });
 };
