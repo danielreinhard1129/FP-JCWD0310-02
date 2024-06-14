@@ -80,11 +80,6 @@ export const PostProductService = async (body: CreateProductParams) => {
       return { name: val.charAt(0).toUpperCase() + val.slice(1) };
     });
 
-    return {
-      message: 'hello',
-      dataImage: image,
-    };
-
     const createProduct = await prisma.$transaction(async (tx) => {
       try {
         const isExistTitle = await tx.product.findFirst({

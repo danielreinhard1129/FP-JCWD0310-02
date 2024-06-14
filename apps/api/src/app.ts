@@ -10,6 +10,9 @@ import express, {
 import cors from 'cors';
 import { PORT } from './config';
 // import { SampleRouter } from './routers/sample.router';
+
+import { AuthRouter } from './routers/auth.router';
+import { CartRouter } from './routers/cart.router';
 import { ProductRouter } from './routers/product.router';
 import { StockRouter } from './routers/stock.router';
 
@@ -54,6 +57,9 @@ export default class App {
 
   private routes(): void {
     // const sampleRouter = new SampleRouter();
+
+    const authRouter = new AuthRouter();
+    const cartRouter = new CartRouter();
     const productRouter = new ProductRouter();
     const stockRouter = new StockRouter();
 
@@ -62,7 +68,10 @@ export default class App {
     });
 
     // this.app.use('/samples', sampleRouter.getRouter());
+
+    this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/product', productRouter.getRouter());
+    this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stock', stockRouter.getRouter());
   }
 
