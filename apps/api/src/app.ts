@@ -70,9 +70,9 @@ export default class App {
     // this.app.use('/samples', sampleRouter.getRouter());
 
     this.app.use('/api/auth', authRouter.getRouter());
-    this.app.use('/api/product', productRouter.getRouter());
+    this.app.use('/api/products', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
-    this.app.use('/api/stock', stockRouter.getRouter());
+    this.app.use('/api/stocks', stockRouter.getRouter());
   }
 
   public start(): void {
