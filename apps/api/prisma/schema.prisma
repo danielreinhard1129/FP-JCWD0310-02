@@ -51,7 +51,7 @@ model Address {
 
   user Users @relation(fields: [userId], references: [id])
 
-  @@map("Addresses")
+  @@map("addresses")
 }
 
 model Cart {
