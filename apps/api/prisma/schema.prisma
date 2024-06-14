@@ -223,10 +223,11 @@ model Product {
 }
 
 model Variant {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   color     String
   size      String
   productId Int
+  isDelete  Boolean @default(false)
 
   carts          Cart[]
   variantStocks  VariantStock[]
