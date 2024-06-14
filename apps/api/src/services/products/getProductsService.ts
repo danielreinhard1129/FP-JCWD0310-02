@@ -7,15 +7,12 @@ interface GetProductsQuery extends PaginationQueryParams {
   filter: {
     name: { contains: string };
   }[];
-  userRole: string | undefined;
   userId: number;
 }
 
 export const GetProductsService = async (query: GetProductsQuery) => {
   try {
-    const { page, take, search, sortBy, sortOrder, filter, userId, userRole } =
-      query;
-
+    const { page, take, search, sortBy, sortOrder, filter, userId } = query;
     const user = await prisma.users.findFirst({
       where: {
         id: userId || undefined,
@@ -49,15 +46,15 @@ export const GetProductsService = async (query: GetProductsQuery) => {
             color: true,
             size: true,
             variantStocks:
-              userRole == 'SUPER_ADMIN'
+              user?.role == 'CUSTOMER'
                 ? {
-                    include: {
-                      warehouse: true,
+                    select: {
+                      quantity: true,
                     },
                   }
                 : {
-                    select: {
-                      quantity: true,
+                    include: {
+                      warehouse: true,
                     },
                   },
           },
@@ -93,11 +90,11 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     if (!product.length) {
       return {
         messages:
-          userRole == 'SUPER_ADMIN'
-            ? user?.role == 'SUPER_ADMIN'
+          user?.role == 'CUSTOMER'
+            ? 'No data found'
+            : user?.role == 'SUPER_ADMIN'
               ? 'No data in this warehouse'
-              : 'No data on your warehouse'
-            : 'No data found',
+              : 'No data on your warehouse',
       };
     }
 
