@@ -10,7 +10,7 @@ interface GetProductsQuery extends PaginationQueryParams {
   userId: number;
 }
 
-export const GetProductsService = async (query: GetProductsQuery) => {
+export const getProductsService = async (query: GetProductsQuery) => {
   try {
     const { page, take, search, sortBy, sortOrder, filter, userId } = query;
     const user = await prisma.users.findFirst({

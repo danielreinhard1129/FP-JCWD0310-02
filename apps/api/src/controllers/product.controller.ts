@@ -1,14 +1,12 @@
 import { Request, Response } from 'express';
-import { GetProductService } from '@/services/products/getProductService';
-import { GetProductsService } from '@/services/products/getProductsService';
-import { PostProductService } from '@/services/products/postProductService';
-import { PatchProductService } from '@/services/products/patchProductService';
-import { verify } from 'jsonwebtoken';
+import { getProductService } from '@/services/products/getProductService';
+import { getProductsService } from '@/services/products/getProductsService';
+import { postProductService } from '@/services/products/postProductService';
+import { patchProductService } from '@/services/products/patchProductService';
 
 export class ProductController {
   async getProduct(req: Request, res: Response) {
-    const id = Number(req.params.id);
-    const response = await GetProductService(id);
+    const response = await getProductService(Number(req.params.id));
     return res.status(200).send(response);
   }
   async getProducts(req: Request, res: Response) {
@@ -27,10 +25,10 @@ export class ProductController {
       sortBy: (req.query.sortBy as string) || 'createdAt',
       sortOrder: (req.query.sortOrder as string) || 'desc',
       search: (req.query.search as string) || '',
-      userId: req.body.user.id,
+      userId: Number(req.body.user.id),
       filter,
     };
-    const response = await GetProductsService(query);
+    const response = await getProductsService(query);
     return res.status(200).send(response);
   }
 
@@ -39,12 +37,25 @@ export class ProductController {
     if (!files.length) {
       return res.status(200).send({ messages: 'no image uploaded' });
     }
-    const response = await PostProductService({ ...req.body, image: files });
+    const response = await postProductService({
+      ...req.body,
+      user: res.locals.user,
+      image: files,
+    });
     return res.status(200).send(response);
   }
+
   async patchProduct(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const response = await PatchProductService(id, req.body);
+    const files = req.files as Express.Multer.File[];
+    if (!files.length) {
+      return res.status(200).send({ messages: 'no image uploaded' });
+    }
+    const response = await patchProductService(
+      id,
+      { ...req.body, user: res.locals.user },
+      files,
+    );
     return res.status(200).send(response);
   }
 }
