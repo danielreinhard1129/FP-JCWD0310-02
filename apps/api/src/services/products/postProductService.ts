@@ -6,11 +6,13 @@ interface VariantWithStocks extends Pick<Variant, 'size' | 'color'> {
 }
 
 interface CreateProductParams {
-  userId: number;
+  user: {
+    id: number;
+  };
   warehouseId: number;
   product: Pick<Product, 'name' | 'description'>;
   category: string[];
-  image: Express.Multer.File;
+  image: Express.Multer.File[];
   variant: VariantWithStocks[];
 }
 
@@ -40,11 +42,18 @@ interface CreateProductParams {
 
 export const PostProductService = async (body: CreateProductParams) => {
   try {
-    const { userId, warehouseId, product, image, category, variant } = body;
+    const {
+      user: userId,
+      warehouseId,
+      product,
+      image,
+      category,
+      variant,
+    } = body;
 
     const user = await prisma.users.findFirst({
       where: {
-        id: Number(userId),
+        id: Number(userId.id),
       },
       include: {
         employee: {
@@ -54,18 +63,12 @@ export const PostProductService = async (body: CreateProductParams) => {
     });
 
     // Validation user data
-    if (!user) return new Error('We cannot find your user data');
+    if (!user) throw new Error('We cannot find your user data');
 
-    // Validation for user credential as employee or admin
-    if (user.employee && user.employee.warehouse) {
-      if (user.employee.warehouseId === user.employee.warehouse.id) {
-        if (user.employee.warehouse.id !== warehouseId)
-          return new Error('Something is error');
-      } else
-        return new Error(
-          'Something is error on data employee and warehouse data',
-        );
-    } else return new Error('You are not an employee');
+    // Validation for user credential as super admin
+    if (user.role !== 'SUPER_ADMIN') {
+      throw new Error('You are not a super admin');
+    }
 
     // Validation for body parameter
     if (
@@ -94,6 +97,12 @@ export const PostProductService = async (body: CreateProductParams) => {
 
         const newProduct = await tx.product.create({
           data: product,
+        });
+
+        const imageData = await tx.productImages.createMany({
+          data: image.map((val) => {
+            return { productId: newProduct.id, url: val.path };
+          }),
         });
 
         const newCategory = await tx.category.createMany({
@@ -162,6 +171,7 @@ export const PostProductService = async (body: CreateProductParams) => {
 
         return {
           product: newProduct,
+          image: imageData,
           category: existCategory,
           variant: existProductVariant,
           stock: existProductVariantWithStock,

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import prisma from '@/prisma';
 import { GetProductService } from '@/services/products/getProductService';
 import { GetProductsService } from '@/services/products/getProductsService';
 import { PostProductService } from '@/services/products/postProductService';
 import { PatchProductService } from '@/services/products/patchProductService';
+import { verify } from 'jsonwebtoken';
 
 export class ProductController {
   async getProduct(req: Request, res: Response) {
@@ -27,8 +27,7 @@ export class ProductController {
       sortBy: (req.query.sortBy as string) || 'createdAt',
       sortOrder: (req.query.sortOrder as string) || 'desc',
       search: (req.query.search as string) || '',
-      userId: Number(req.query.userId),
-      userRole: (req.query.userRole as string) || undefined,
+      userId: req.body.user.id,
       filter,
     };
     const response = await GetProductsService(query);
