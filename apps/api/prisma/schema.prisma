@@ -9,7 +9,7 @@ datasource db {
 
 enum UserRoleType {
   CUSTOMER
-  ADMIN
+  SUPER_ADMIN
   WAREHOUSE_ADMIN
 }
 
@@ -22,6 +22,7 @@ model Users {
   profileImageUrl String?
   role            UserRoleType
   isDelete        Boolean
+  token           String
   createdAt       DateTime     @default(now())
   updateAt        DateTime     @updatedAt
 
