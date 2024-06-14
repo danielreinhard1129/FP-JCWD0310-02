@@ -1,8 +1,8 @@
-export default function ProductsPage() {
+export default function NewProducts() {
   return (
-    <section>
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-y-6 w-72">
+    <>
+      <div className="flex flex-wrap justify-center lg:justify-between gap-6">
+        <div className="flex flex-col gap-y-6  sm:w-6 lg:w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
             <img
               src="/landing_page/foot.png"
@@ -20,7 +20,8 @@ export default function ProductsPage() {
             View Products
           </button>
         </div>
-        <div className="flex flex-col gap-y-6 w-72">
+
+        <div className="flex flex-col gap-y-6  sm:w-6  lg:w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
             <img
               src="/landing_page/foot.png"
@@ -38,7 +39,7 @@ export default function ProductsPage() {
             View Products
           </button>
         </div>
-        <div className="flex flex-col gap-y-6 w-72">
+        <div className="flex flex-col gap-y-6  sm:w-6 lg:w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
             <img
               src="/landing_page/foot.png"
@@ -56,7 +57,7 @@ export default function ProductsPage() {
             View Products
           </button>
         </div>
-        <div className="flex flex-col gap-y-6 w-72">
+        <div className="flex flex-col gap-y-6  sm:w-6  lg:w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
             <img
               src="/landing_page/foot.png"
@@ -75,6 +76,6 @@ export default function ProductsPage() {
           </button>
         </div>
       </div>
-    </section>
+    </>
   );
 }
