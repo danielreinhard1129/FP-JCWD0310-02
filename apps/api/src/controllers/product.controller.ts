@@ -29,6 +29,7 @@ export class ProductController {
       search: (req.query.search as string) || '',
       warehouse: Number(req.query.warehouse) || undefined,
       userId: Number(req.query.userId),
+      userRole: (req.query.userRole as string) || undefined,
       filter,
     };
     const response = await GetProductsService(query);
@@ -36,7 +37,11 @@ export class ProductController {
   }
 
   async postProduct(req: Request, res: Response) {
-    const response = await PostProductService(req.body);
+    const files = req.files as Express.Multer.File[];
+    if (!files.length) {
+      return res.status(200).send({ messages: 'no image uploaded' });
+    }
+    const response = await PostProductService({ ...req.body, image: files });
     return res.status(200).send(response);
   }
   async patchProduct(req: Request, res: Response) {

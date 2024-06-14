@@ -1,6 +1,7 @@
 'use client';
 import ProductCard from '@/components/ProductCard';
 import SearchBarDebounce from '@/components/SearchBarDebounce';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -14,6 +15,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { useGetProducts } from '@/hooks/product/useGetProducts';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { addProduct } from '@/redux/slicers/userSlice';
 import { ArrowLeft, ArrowRight, ArrowUp, Check } from 'lucide-react';
 import React from 'react';
 
@@ -31,6 +34,7 @@ const Loading = () => {
 
 const ProductsPage = () => {
   const { data, isLoading, query, setQuery, setSearch } = useGetProducts();
+  const dispatch = useAppDispatch();
   const priceFormat = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
     style: 'currency',
@@ -54,6 +58,15 @@ const ProductsPage = () => {
   return (
     <>
       <div className="w-full">
+        <div>
+          <Button
+            onClick={() => {
+              dispatch(addProduct());
+            }}
+          >
+            Ngedux
+          </Button>
+        </div>
         <SearchBarDebounce onValueChange={(e) => setSearch(e)} />
         <div id="title">
           <div id="top" className="flex flex-col">
