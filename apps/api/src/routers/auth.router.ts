@@ -19,6 +19,14 @@ export class AuthRouter {
     );
     this.router.post('/register', this.authController.registerController);
     // this.router.post('/keeplogin', this.authController.keeploginController);
+    this.router.post(
+      '/login/google',
+      this.authController.loginGoogleController,
+    );
+    this.router.post(
+      '/register/google',
+      this.authController.registerGoogleController,
+    );
   }
   getRouter(): Router {
     return this.router;

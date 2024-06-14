@@ -1,13 +1,13 @@
 'use client';
 
-import useGoogleAuth from '@/hooks/api/auth/useGoogleAuth';
+import useLoginGoogleAuth from '@/hooks/api/auth/useLoginGoogleAuth';
 import useLogin from '@/hooks/api/auth/useLogin';
 
 import { useFormik } from 'formik';
 
 const Login = () => {
   const { login } = useLogin();
-  const { googleLogin } = useGoogleAuth();
+  const { googleLogin } = useLoginGoogleAuth();
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -32,40 +32,42 @@ const Login = () => {
         </div>
       </div>
       <div className="md:w-1/2 flex items-center justify-center max-md:absolute max-md:mt-10 max-md:mx-10">
-        <form
-          className="flex flex-col gap-y-7 w-full max-w-md"
-          onSubmit={formik.handleSubmit}
-        >
-          <div className="text-4xl font-bold max-md:text-center">Login</div>
-          <div className="text-2xl font-semibold">Forgot your password?</div>
-          <input
-            className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
-            placeholder="Email"
-            name="email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-            type="text"
-          />
-          <input
-            className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
-            placeholder="Password"
-            name="password"
-            type="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-          <div className="flex items-center">
-            <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
-            <div className="max-md:text-sm">
-              <span>Make sure the account you are using is correct</span>
-              <br />
-              <span>applies to all login options below. More info.</span>
+        <div className="flex flex-col gap-y-5 w-full max-w-md">
+          <form
+            className="flex flex-col gap-y-7 w-full max-w-md"
+            onSubmit={formik.handleSubmit}
+          >
+            <div className="text-4xl font-bold max-md:text-center">Login</div>
+            <div className="text-2xl font-semibold">Forgot your password?</div>
+            <input
+              className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
+              placeholder="Email"
+              name="email"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              type="text"
+            />
+            <input
+              className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
+              placeholder="Password"
+              name="password"
+              type="password"
+              onChange={formik.handleChange}
+              value={formik.values.password}
+            />
+            <div className="flex items-center">
+              <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
+              <div className="max-md:text-sm">
+                <span>Make sure the account you are using is correct</span>
+                <br />
+                <span>applies to all login options below. More info.</span>
+              </div>
             </div>
-          </div>
-          <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold">
-            Login
-          </button>
-          <div className="text-center md:my-2 font-bold max-md:">OR</div>
+            <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold">
+              Login
+            </button>
+            <div className="text-center md:my-2 font-bold max-md:">OR</div>
+          </form>
           <button
             type="submit"
             onClick={() => googleLogin()}
@@ -80,7 +82,7 @@ const Login = () => {
             />
             Sign in with Google
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
