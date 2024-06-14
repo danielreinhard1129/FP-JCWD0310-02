@@ -49,7 +49,7 @@ export const GetProductsService = async (query: GetProductsQuery) => {
             color: true,
             size: true,
             variantStocks:
-              userRole == 'ADMIN'
+              userRole == 'SUPER_ADMIN'
                 ? {
                     include: {
                       warehouse: true,
@@ -93,8 +93,8 @@ export const GetProductsService = async (query: GetProductsQuery) => {
     if (!product.length) {
       return {
         messages:
-          userRole == 'ADMIN'
-            ? user?.role == 'ADMIN'
+          userRole == 'SUPER_ADMIN'
+            ? user?.role == 'SUPER_ADMIN'
               ? 'No data in this warehouse'
               : 'No data on your warehouse'
             : 'No data found',

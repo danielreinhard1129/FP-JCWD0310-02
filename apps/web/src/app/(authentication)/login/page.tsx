@@ -22,7 +22,7 @@ const Login = () => {
     <div className="h-screen w-screen flex flex-col md:flex-row bg-white ">
       <div className="md:w-1/2 h-full flex justify-center items-center md:block relative">
         <img
-          src="/landing_page/img _auth.png"
+          src="/landing_page/img_auth.png"
           alt="Short Pants"
           className="w-full h-full rounded-xl object-cover"
         />

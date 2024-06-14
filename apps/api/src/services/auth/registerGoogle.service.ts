@@ -1,5 +1,6 @@
 import prisma from '@/prisma';
 import { google } from 'googleapis';
+import { transporter } from '@/lib/nodemailer';
 
 interface GoogleUser {
   id: string;
@@ -45,10 +46,17 @@ export const registerGoogleService = async (code: string) => {
           lastName: data.family_name,
           role: 'CUSTOMER',
           isDelete: false,
+          token: '',
         },
       });
     }
 
+    // transporter.sendMail({
+    //   from: process.env.GMAIL_EMAIL,
+    //   to: data.email,
+    //   subject: 'Register success',
+    //   text: 'Register success',
+    // });
     return { message: 'register success', data: existingUser };
   } catch (error) {
     console.error('Error in Google login service:', error);

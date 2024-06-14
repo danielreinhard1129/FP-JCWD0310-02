@@ -26,7 +26,7 @@ const Register = () => {
       <div className="md:w-1/2 h-full flex justify-center items-center md:block relative">
         <div className="relative h-full">
           <img
-            src="/landing_page/img _auth.png"
+            src="/landing_page/img_auth.png"
             alt="Short Pants"
             className="w-full h-full rounded-xl"
           />
