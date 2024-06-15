@@ -18,7 +18,6 @@ export class AuthRouter {
       this.authController.loginController,
     );
     this.router.post('/register', this.authController.registerController);
-    // this.router.post('/keeplogin', this.authController.keeploginController);
     this.router.post(
       '/login/google',
       this.authController.loginGoogleController,
@@ -26,6 +25,12 @@ export class AuthRouter {
     this.router.post(
       '/register/google',
       this.authController.registerGoogleController,
+    );
+
+    this.router.get(
+      '/verify',
+
+      this.authController.verifyController,
     );
   }
   getRouter(): Router {
