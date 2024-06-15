@@ -8,23 +8,21 @@ interface QueryGetStocksService {
   warehouseId: string | undefined;
 }
 
-interface GetStocksServiceBody {
-  userId: number;
-  role: string;
+interface UserToken {
+  id: number;
 }
 
 export const GetStocksService = async (
-  body: GetStocksServiceBody,
+  userToken: UserToken,
   query: QueryGetStocksService,
 ) => {
   try {
     const { search, take, page } = query;
     const warehouseId = Number(query.warehouseId);
-    const { userId, role } = body;
 
     const user = await prisma.users.findFirst({
       where: {
-        id: Number(userId),
+        id: Number(userToken.id),
       },
       include: {
         employee: {
@@ -36,17 +34,11 @@ export const GetStocksService = async (
     });
 
     if (!user) {
-      return {
-        message: "can't find your user acc",
-      };
-      return new Error("Can't find your account");
+      throw new Error("Can't find your account");
     }
 
     if (!user.employee || user.role == 'CUSTOMER') {
-      return {
-        message: 'you ar not an admin',
-      };
-      return new Error('You are not an Admin!!!');
+      throw new Error('You are not an Admin!!!');
     }
 
     const ProductWhereClause: Prisma.ProductWhereInput = {
@@ -58,7 +50,7 @@ export const GetStocksService = async (
     // const VariantWhereClause: Prisma.VariantWhereInput = {
     // };
 
-    const VariantStockWhereClause: Prisma.VariantStocksFindManyArgs = {
+    const VariantStockWhereClause: Prisma.VariantStockFindManyArgs = {
       where: {
         warehouseId:
           user.role == 'WAREHOUSE_ADMIN'

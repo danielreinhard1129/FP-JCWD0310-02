@@ -1,8 +1,8 @@
 import prisma from '@/prisma';
-import { Product, Variant, VariantStocks } from '@prisma/client';
+import { Product, Variant, VariantStock } from '@prisma/client';
 
 interface VariantWithStocks extends Pick<Variant, 'size' | 'color'> {
-  stock: Pick<VariantStocks, 'quantity'>;
+  stock: Pick<VariantStock, 'quantity'>;
 }
 
 interface CreateProductParams {
@@ -38,9 +38,6 @@ export const postProductService = async (body: CreateProductParams) => {
 
     // Validation for user credential as super admin
     if (user.role !== 'SUPER_ADMIN') {
-      return {
-        messages: 'You are not a super admin',
-      };
       throw new Error('You are not a super admin');
     }
 
@@ -73,7 +70,7 @@ export const postProductService = async (body: CreateProductParams) => {
           data: product,
         });
 
-        const imageData = await tx.productImages.createMany({
+        const imageData = await tx.productImage.createMany({
           data: image.map((val) => {
             return {
               productId: newProduct.id,
@@ -143,7 +140,7 @@ export const postProductService = async (body: CreateProductParams) => {
           };
         });
 
-        const newVariantStock = await tx.variantStocks.createMany({
+        const newVariantStock = await tx.variantStock.createMany({
           data: existProductVariantWithStock,
         });
 
