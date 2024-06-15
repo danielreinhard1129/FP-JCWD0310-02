@@ -8,7 +8,6 @@ const verify = () => {
   const formik = useFormik({
     initialValues: {
       password: '',
-      token: '',
     },
     onSubmit: (values) => {
       verifyToken(values);

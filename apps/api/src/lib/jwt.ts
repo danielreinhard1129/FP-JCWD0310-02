@@ -25,8 +25,7 @@ export const verifyToken = (
         return res.status(403).send({ message: 'inauthorized' });
       }
     }
-
-    req.body.user = payload as PayloadToken;
+    res.locals.user = payload as PayloadToken;
     next();
   });
 };

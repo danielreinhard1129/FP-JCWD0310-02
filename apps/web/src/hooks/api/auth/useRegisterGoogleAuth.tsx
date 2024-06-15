@@ -1,11 +1,11 @@
 'use client';
 
 import useAxios from '@/hooks/useAxios';
+import { axiosInstance } from '@/lib/axios';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 
 const useRegisterGoogleAuth = () => {
-  const { axiosInstance } = useAxios();
   const router = useRouter();
   const googleRegister = useGoogleLogin({
     onSuccess: async ({ code }) => {

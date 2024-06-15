@@ -1,5 +1,5 @@
 import { ProductController } from '@/controllers/product.controller';
-import { verifyToken } from '@/lib/jswt';
+import { verifyToken } from '@/lib/jwt';
 import { uploader } from '@/lib/uploader';
 import { Router } from 'express';
 
@@ -14,15 +14,20 @@ export class ProductRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', verifyToken, this.productController.getProducts);
-    this.router.get('/:id', verifyToken, this.productController.getProduct);
+    this.router.get('/:id', this.productController.getProduct);
+    this.router.get('/', this.productController.getProducts);
     this.router.post(
       '/',
       verifyToken,
-      uploader('IMG', '/images').array('image'),
+      uploader('IMG', '/images').array('images'),
       this.productController.postProduct,
     );
-    this.router.patch('/:id', verifyToken, this.productController.patchProduct);
+    this.router.patch(
+      '/:id',
+      verifyToken,
+      uploader('IMG', '/images').array('images'),
+      this.productController.patchProduct,
+    );
   }
 
   getRouter(): Router {

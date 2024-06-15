@@ -1,6 +1,7 @@
 import prisma from '@/prisma';
 import { comparePassword } from '@/lib/bcrypt';
 type verify = {
+  email: string;
   token: string;
   password: string;
 };
@@ -8,82 +9,29 @@ type verify = {
 export const authVerifyService = async (body: verify) => {
   try {
     const { token, password } = body;
+    console.log(token, password);
     const validateUser = await prisma.users.findFirst({
-      where: {
-        token,
-      },
+      where: { token },
     });
-
+    console.log(validateUser?.token);
     if (!validateUser) {
-      throw new Error('invalid token or password');
+      throw new Error('Invalid token or password');
     }
-    const storedPassword = validateUser.password;
+    if (!validateUser.password) {
+      throw new Error('Password is not set for this user');
+    }
     const hashedPassword = await comparePassword(
       password,
-      storedPassword as string,
+      validateUser.password,
     );
-    // if (!validateUser) {
-    //   throw new Error('invalid token or password');
-    // }
-    // const storedPassword = validateUser.password;
-    // if (!storedPassword) {
-    //   throw new Error('Password is not set for this user');
-    // }
-    // const isPasswordValid = await comparePassword(password, storedPassword);
-
-    //get user berdasarkan user id dari isi token
-    // cek password pake compare pw dr bcrypt
-    // cek token dri body sama engga dgn token dri db
+    if (!hashedPassword) {
+      throw new Error('Incorrect password');
+    }
 
     return {
       message: 'Verify success',
-      data: validateUser,
     };
   } catch (error) {
     throw error;
   }
 };
-
-// import prisma from '@/prisma';
-// import { comparePassword } from '@/lib/bcrypt';
-
-// type VerifyInput = {
-//   token: string;
-//   password: string;
-// };
-
-// export const authVerifyService = async (body: VerifyInput) => {
-//   try {
-//     const { token, password } = body;
-
-//     const validateUser = await prisma.users.findFirst({
-//       where: {
-//         token,
-//       },
-//     });
-
-//     if (!validateUser) {
-//       throw new Error('Invalid token or password');
-//     }
-
-//     const storedPassword = validateUser.password;
-
-//     if (!storedPassword) {
-//       throw new Error('Password is not set for this user');
-//     }
-
-//     const isPasswordValid = await comparePassword(password, storedPassword);
-
-//     if (!isPasswordValid) {
-//       throw new Error('Invalid token or password');
-//     }
-
-//     return {
-//       message: 'Verification successful',
-//       data: validateUser,
-//     };
-//   } catch (error) {
-//     console.error('Error in authVerifyService:', error);
-//     throw new Error('Failed to verify user');
-//   }
-// };

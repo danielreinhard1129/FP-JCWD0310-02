@@ -6,7 +6,7 @@ import { loginAction } from '@/redux/slicers/userSlice';
 import { useGoogleLogin } from '@react-oauth/google';
 import { OAuth2Client } from 'google-auth-library';
 import { useRouter } from 'next/navigation';
-
+import { axiosInstance } from '@/lib/axios';
 const useLoginGoogleAuth = () => {
   const { axiosInstance } = useAxios();
   const router = useRouter();
