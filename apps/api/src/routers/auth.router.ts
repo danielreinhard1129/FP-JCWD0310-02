@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { AuthController } from '@/controllers/auth.controller';
-import { verifyToken } from '@/lib/jswt';
+import { verifyToken } from '@/lib/jwt';
 
 export class AuthRouter {
   private router: Router;
@@ -17,10 +17,15 @@ export class AuthRouter {
 
       this.authController.loginController,
     );
+    this.router.get(
+      '/verify',
+      verifyToken,
+      this.authController.verifyController,
+    );
     this.router.post('/register', this.authController.registerController);
-    // this.router.post('/keeplogin', this.authController.keeploginController);
     this.router.post(
       '/login/google',
+      verifyToken,
       this.authController.loginGoogleController,
     );
     this.router.post(

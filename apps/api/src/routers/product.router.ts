@@ -1,5 +1,5 @@
 import { ProductController } from '@/controllers/product.controller';
-import { verifyToken } from '@/lib/jswt';
+import { verifyToken } from '@/lib/jwt';
 import { uploader } from '@/lib/uploader';
 import { Router } from 'express';
 
