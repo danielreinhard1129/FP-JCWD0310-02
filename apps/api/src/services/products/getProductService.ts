@@ -19,15 +19,15 @@ export const getProductService = async (params: number) => {
         },
         variant: {
           include: {
-            variantStocks: true,
+            variantStocks: {
+              include: { warehouse: true },
+            },
           },
         },
       },
     });
     if (!product) {
-      return {
-        messages: 'Cannot find the product',
-      };
+      throw new Error('Cannot find the product');
     }
     const stock = product.variant.reduce((a, b) => {
       return (
@@ -39,7 +39,7 @@ export const getProductService = async (params: number) => {
     }, 0);
 
     return {
-      product,
+      data: { ...product, stock },
     };
   } catch (error) {
     throw error;

@@ -5,19 +5,13 @@ import { Prisma } from '@prisma/client';
 interface GetProductsQuery extends PaginationQueryParams {
   search: string;
   filter: {
-    name: { contains: string };
+    name: { equals: string };
   }[];
-  userId: number;
 }
 
 export const getProductsService = async (query: GetProductsQuery) => {
   try {
-    const { page, take, search, sortBy, sortOrder, filter, userId } = query;
-    const user = await prisma.users.findFirst({
-      where: {
-        id: userId || undefined,
-      },
-    });
+    const { page, take, search, sortBy, sortOrder, filter } = query;
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
@@ -42,30 +36,17 @@ export const getProductsService = async (query: GetProductsQuery) => {
           },
         },
         variant: {
-          select: {
-            color: true,
-            size: true,
-            variantStocks:
-              user?.role == 'CUSTOMER'
-                ? {
-                    select: {
-                      quantity: true,
-                    },
-                  }
-                : {
-                    include: {
-                      warehouse: true,
-                    },
-                  },
+          include: {
+            variantStocks: {
+              include: {
+                warehouse: true,
+              },
+            },
           },
         },
         productCategory: {
-          select: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+          include: {
+            category: true,
           },
         },
       },
@@ -88,14 +69,7 @@ export const getProductsService = async (query: GetProductsQuery) => {
     });
 
     if (!product.length) {
-      return {
-        messages:
-          user?.role == 'CUSTOMER'
-            ? 'No data found'
-            : user?.role == 'SUPER_ADMIN'
-              ? 'No data in this warehouse'
-              : 'No data on your warehouse',
-      };
+      throw new Error('No products found');
     }
 
     return {
