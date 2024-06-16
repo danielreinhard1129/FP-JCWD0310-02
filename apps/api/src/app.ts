@@ -15,6 +15,7 @@ import { AuthRouter } from './routers/auth.router';
 
 import { ProductRouter } from './routers/product.router';
 import { CartRouter } from './routers/cart.router';
+import { OrderRouter } from './routers/order.routers';
 
 export default class App {
   private app: Express;
@@ -62,6 +63,7 @@ export default class App {
 
     const productRouter = new ProductRouter();
     const cartRouter = new CartRouter();
+    const orderRouter = new OrderRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
@@ -72,6 +74,7 @@ export default class App {
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/product', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
   }
 
   public start(): void {
