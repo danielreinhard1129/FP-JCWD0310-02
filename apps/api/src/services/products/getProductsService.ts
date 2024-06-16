@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 interface GetProductsQuery extends PaginationQueryParams {
   search: string;
   filter: {
-    name: { contains: string };
+    name: { equals: string };
   }[];
 }
 

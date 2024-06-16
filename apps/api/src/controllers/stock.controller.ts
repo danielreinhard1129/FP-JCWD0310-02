@@ -4,8 +4,11 @@ import { NextFunction, Request, Response } from 'express';
 export class StockController {
   async getStock(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await GetStockService(req.body);
-      return res.status(200).send('');
+      const response = await GetStockService(
+        Number(req.params.id),
+        res.locals.user,
+      );
+      return res.status(200).send(response);
     } catch (error) {
       next(error);
     }
@@ -13,7 +16,7 @@ export class StockController {
   async getStocks(req: Request, res: Response, next: NextFunction) {
     try {
       const query = {
-        take: Number(req.query.take as string) || 50,
+        take: Number(req.query.take as string) || 5,
         page: Number(req.query.page as string) || 1,
         search: (req.query.search as string) || '',
         warehouseId: (req.query.warehouseId as string) || undefined,

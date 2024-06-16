@@ -47,7 +47,7 @@ export default class App {
       (err: Error, req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api/')) {
           console.error('Error : ', err.stack);
-          res.status(500).send({ essages: err.message });
+          res.status(500).send({ messages: err.message });
         } else {
           next();
         }

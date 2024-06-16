@@ -1,8 +1,8 @@
 import prisma from '@/prisma';
-import { Variant, VariantStocks } from '@prisma/client';
+import { Variant, VariantStock } from '@prisma/client';
 
 interface VariantWithStocks extends Variant {
-  variantStocks: VariantStocks[];
+  variantStocks: VariantStock[];
 }
 
 interface PostStockService {

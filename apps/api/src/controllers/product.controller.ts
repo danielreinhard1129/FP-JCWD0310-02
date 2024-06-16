@@ -20,10 +20,10 @@ export class ProductController {
         filterString.length > 2
           ? filterString.split(',').map((val, indx) => {
               return {
-                name: { contains: val },
+                name: { equals: val },
               };
             })
-          : [{ name: { contains: '' } }];
+          : [{ name: { equals: '' } }];
       const query = {
         take: parseInt(req.query.take as string) || 10,
         page: parseInt(req.query.page as string) || 1,

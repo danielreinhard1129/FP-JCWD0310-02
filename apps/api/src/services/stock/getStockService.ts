@@ -1,14 +1,15 @@
 import prisma from '@/prisma';
 
-interface GetStockParams {
-  userId: number;
-  warehouseId: number;
-  productId: number;
+interface UserTokenLocals {
+  id: number;
 }
 
-export const GetStockService = async (body: GetStockParams) => {
+export const GetStockService = async (
+  params: number,
+  userToken: UserTokenLocals,
+) => {
   try {
-    const { productId, userId, warehouseId } = body;
+    const userId = userToken.id;
 
     const user = await prisma.users.findFirst({
       where: {
@@ -24,21 +25,15 @@ export const GetStockService = async (body: GetStockParams) => {
     });
 
     if (!user) {
-      return {
-        message: "can't find your user acc",
-      };
-      return new Error("Can't find your account");
+      throw new Error("Can't find your account");
     }
 
     if (!user.employee || user.role == 'CUSTOMER') {
-      return {
-        message: 'you ar not an admin',
-      };
-      return new Error('You are not an Admin!!!');
+      throw new Error('You are not an Admin!!!');
     }
 
     const product = await prisma.product.findFirst({
-      where: { id: productId },
+      where: { id: params },
       include: {
         variant: {
           include: {
@@ -51,5 +46,11 @@ export const GetStockService = async (body: GetStockParams) => {
         },
       },
     });
-  } catch (error) {}
+
+    if (!product) {
+      throw new Error('Cannot find the product!');
+    }
+  } catch (error) {
+    throw error;
+  }
 };
