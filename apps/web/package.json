@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "serve": "cross-env PORT=${PORT:-3000} next start -p $PORT",
+    "serve": "cross-env PORTWEB=${PORTWEB:-3000} next start -p $PORTWEB",
     "lint": "next lint",
     "test": "npx cypress verify & cypress run --component"
   },
