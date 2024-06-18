@@ -27,6 +27,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
           source: './apps/web/.next, ./apps/web/*, ./apps/web/.*, ./apps/api, ./deploy.config.js, ./package*.json, ./turbo.json'
           target: '${{ secrets.SSH_FOLDER }}'
       - name: Run App
@@ -35,6 +36,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
           script: |
             cd ${{ secrets.SSH_FOLDER }}
             npm install
