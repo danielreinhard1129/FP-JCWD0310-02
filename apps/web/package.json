@@ -5,14 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "serve": "cross-env PORTWEB=${PORTWEB:-3000} next start -p $PORTWEB",
+    "serve": "next start -p ${PORTWEB:-3000}",
     "lint": "next lint",
     "test": "npx cypress verify & cypress run --component"
   },
   "dependencies": {
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -21,7 +22,6 @@
     "cypress": "^13.6.2",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
-    "typescript": "^5",
-    "cross-env": "^7.0.3"
+    "typescript": "^5"
   }
 }
