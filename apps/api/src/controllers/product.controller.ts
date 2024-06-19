@@ -16,21 +16,34 @@ export class ProductController {
   async getProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const filterString = (req.query.filter as string) || '';
-      const filter =
-        filterString.length > 2
-          ? filterString.split(',').map((val, indx) => {
-              return {
-                name: { equals: val },
-              };
-            })
-          : [{ name: { equals: '' } }];
+      const sizeString = (req.query.size as string) || '';
+      const colorString = (req.query.color as string) || '';
       const query = {
         take: parseInt(req.query.take as string) || 10,
         page: parseInt(req.query.page as string) || 1,
         sortBy: (req.query.sortBy as string) || 'createdAt',
         sortOrder: (req.query.sortOrder as string) || 'desc',
         search: (req.query.search as string) || '',
-        filter,
+        filter: {
+          size:
+            sizeString.length > 2
+              ? sizeString.split(',').map((val) => {
+                  return { size: { equals: val } };
+                })
+              : undefined,
+          color:
+            colorString.length > 2
+              ? colorString.split(',').map((val) => {
+                  return { color: { equals: val } };
+                })
+              : undefined,
+          filter:
+            filterString.length > 2
+              ? filterString.split(',').map((val) => {
+                  return { name: { equals: val } };
+                })
+              : undefined,
+        },
       };
       const response = await getProductsService(query);
       return res.status(200).send(response);
@@ -45,11 +58,15 @@ export class ProductController {
       if (!files.length) {
         return res.status(200).send({ messages: 'no image uploaded' });
       }
-      const response = await postProductService({
-        ...req.body,
+      const data = {
         user: res.locals.user,
+        warehouseId: Number(req.body.warehouse),
+        product: { name: '', description: '', price: Number(req.body.price) },
+        categories: JSON.parse(req.body.categories),
         image: files,
-      });
+        variant: JSON.parse(req.body.categories),
+      };
+      const response = await postProductService(data);
       return res.status(200).send(response);
     } catch (error) {
       next(error);
