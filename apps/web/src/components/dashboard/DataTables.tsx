@@ -1,13 +1,17 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { Table } from 'antd';
-import type { TableColumnsType } from 'antd';
-import { Product, Variant, VariantStock } from '@/types/product.type';
+import { notification, Space, Table, Tag } from 'antd';
+import { TableColumnsType, Modal } from 'antd';
+import { Product, ProductCategory, Variant } from '@/types/product.type';
 import Image from 'next/image';
 import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { Button } from '../ui/button';
+import { AlertCircle, Bolt, Trash } from 'lucide-react';
+import Link from 'next/link';
+import { useDeleteProduct } from '@/hooks/products/useDeleteProduct';
+import { NotificationInstance } from 'antd/es/notification/interface';
 
 interface DataTablesProps {
-  type: 'stocks' | 'products';
   data: Product[] | undefined;
   loading: boolean;
 }
@@ -18,80 +22,41 @@ interface DataTypeProducts {
   price: string;
   images: string;
   stocks: number;
+  status: boolean;
   variant: Variant[];
-  categories: string;
-  productId: string;
+  categories: ProductCategory[];
+  productId: number;
   warehouse: string;
 }
-const columnsProducts: TableColumnsType<DataTypeProducts> = [
-  {
-    title: 'Images',
-    dataIndex: 'images',
-    width: 80,
-    render: (val) =>
-      val ? (
-        <Image
-          alt="image-product"
-          width={80}
-          height={80}
-          className="rounded-md border border-black"
-          src={`${NEXT_PUBLIC_BASE_API_URL}assets/${val}`}
-        />
-      ) : (
-        <div className="w-20 h-20 border border-black rounded-md"></div>
-      ),
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: 80,
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    width: 80,
-  },
-  {
-    title: 'Stocks',
-    dataIndex: 'stocks',
-    width: 80,
-  },
-  Table.EXPAND_COLUMN,
-  {
-    title: 'Categories',
-    dataIndex: 'categories',
-    width: 150,
-  },
-];
-const columnsStocks: TableColumnsType<DataTypeProducts> = [
-  {
-    title: 'Product Id',
-    dataIndex: 'productId',
-    width: 80,
-  },
-  {
-    title: 'Product Name',
-    dataIndex: 'name',
-    width: 80,
-  },
-  {
-    title: 'Stocks',
-    dataIndex: 'stocks',
-    width: 80,
-  },
-  Table.EXPAND_COLUMN,
-  {
-    title: 'Warehouse',
-    dataIndex: 'warehouse',
-    width: 150,
-  },
-];
 
-const DataTables: FC<DataTablesProps> = ({ data, type, loading }) => {
-  const numberFormat = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
+const ModalConfirm = (
+  onDelete: (productId: number) => Promise<void>,
+  id: number,
+  onSuccess: NotificationInstance,
+) => {
+  Modal.confirm({
+    title: 'Are you sure delete this task?',
+    icon: <AlertCircle className="mr-2" />,
+    content: 'Some descriptions',
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk() {
+      onDelete(id)
+        .then((res) =>
+          onSuccess.success({
+            message: 'Success delete the product',
+          }),
+        )
+        .catch(() =>
+          onSuccess.error({ message: 'Something is error with the server!' }),
+        );
+    },
   });
+};
+
+const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
+  const [api, contextHolder] = notification.useNotification();
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([
     {
       key: 0,
@@ -99,22 +64,125 @@ const DataTables: FC<DataTablesProps> = ({ data, type, loading }) => {
       images: '',
       price: '',
       stocks: 0,
-      categories: '',
+      status: false,
+      categories: [],
       variant: [],
-      productId: '',
+      productId: 0,
       warehouse: '',
     },
   ]);
+  const { deleteProduct } = useDeleteProduct();
+  const numberFormat = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  });
+  const columnsProducts: TableColumnsType<DataTypeProducts> = [
+    {
+      title: 'Images',
+      align: 'center',
+      dataIndex: 'images',
+      width: 100,
+      render: (val, _, indx) =>
+        val ? (
+          <div
+            key={indx}
+            className="w-full h-full flex justify-center items-center"
+          >
+            <Image
+              alt="image-product"
+              width={100}
+              height={100}
+              className="rounded-md border border-black"
+              src={`${NEXT_PUBLIC_BASE_API_URL}assets/${val}`}
+            />
+          </div>
+        ) : (
+          <div className="w-20 h-20 border border-black rounded-md"></div>
+        ),
+    },
+    {
+      title: 'Name',
+      align: 'center',
+      dataIndex: 'name',
+      width: 150,
+    },
+    {
+      title: 'Price',
+      align: 'center',
+      dataIndex: 'price',
+      width: 150,
+    },
+    {
+      title: 'Categories',
+      align: 'center',
+      key: 'categories',
+      dataIndex: 'categories',
+      render: (_, { categories }, indx) => (
+        <div key={indx} className="w-full flex justify-center">
+          {categories.map((tag, index) => {
+            return <Tag key={index}>{tag.category.name}</Tag>;
+          })}
+        </div>
+      ),
+    },
+    {
+      title: 'Stocks',
+      align: 'center',
+      dataIndex: 'stocks',
+      width: 80,
+    },
+    {
+      title: 'Status',
+      align: 'center',
+      dataIndex: 'status',
+      render: (_, record) => (
+        <Tag color={record.status ? 'red' : 'green'}>
+          {record.status ? 'Deleted' : 'Listed'}
+          {record.status}
+        </Tag>
+      ),
+      width: 80,
+    },
+    {
+      title: 'Action',
+      align: 'center',
+      key: 'action',
+      width: 200,
+      render: (_, record) => (
+        <Space size="middle" className="w-full justify-end">
+          <Link href={`/admin/products/${record.key}`}>
+            <Button
+              variant="outline"
+              className="p-2 h-8 flex justify-around items-center gap-2"
+            >
+              {' '}
+              <Bolt width={15} /> Edit
+            </Button>
+          </Link>
+          <Button
+            onClick={() => ModalConfirm(deleteProduct, record.productId, api)}
+            variant="outline"
+            className="p-2 h-8 flex justify-around items-center gap-2"
+          >
+            {' '}
+            <Trash width={15} /> Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
   useEffect(() => {
-    if (data && !loading) {
+    if (data) {
       setDataTable(
         data.map((val, indx) => {
           return {
             key: val.id,
-            productId: val.name,
+            productId: val.id,
             name: val.name,
             stocks: val.stock,
-            categories: '',
+            status: val.isDelete,
+            categories: val.productCategory,
             images: val.productImages[0].url,
             price: numberFormat.format(val.price),
             variant: val.variant,
@@ -126,30 +194,14 @@ const DataTables: FC<DataTablesProps> = ({ data, type, loading }) => {
   }, [data]);
 
   return (
-    <Table
-      columns={type == 'products' ? columnsProducts : columnsStocks}
-      loading={loading}
-      dataSource={dataTable}
-      expandable={{
-        expandedRowRender: (record) => (
-          <div>
-            <h2>Variants :</h2>
-            {record.variant.map((val, index) => {
-              return (
-                <div key={index}>
-                  <p>
-                    {val.color} - {val.size} :{' '}
-                    {val.variantStocks.reduce((prev, curr) => {
-                      return prev + curr.quantity;
-                    }, 0)}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        ),
-      }}
-    />
+    <>
+      {contextHolder}
+      <Table
+        columns={columnsProducts}
+        loading={loading}
+        dataSource={dataTable}
+      />
+    </>
   );
 };
 

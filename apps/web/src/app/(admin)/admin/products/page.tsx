@@ -9,13 +9,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import PaginationPage from '@/components/PaginationPage';
 import Link from 'next/link';
-import { Variant } from '@/types/product.type';
-import Image from 'next/image';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
 import DataTables from '@/components/dashboard/DataTables';
-
 const AdminDashboardProductPage = () => {
   const { data, isLoading, query, setQuery, setSearch } = useGetProducts({
     page: 1,
@@ -35,11 +30,7 @@ const AdminDashboardProductPage = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <DataTables
-              loading={isLoading}
-              data={data ? data.data : undefined}
-              type="products"
-            />
+            <DataTables loading={isLoading} data={data?.data} />
           </CardContent>
         </Card>
       </div>

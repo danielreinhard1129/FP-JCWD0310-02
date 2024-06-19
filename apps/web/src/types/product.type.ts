@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  isDelete: boolean;
   createdAt: Date;
   updateAt: Date;
   productCategory: ProductCategory[];
