@@ -17,7 +17,7 @@ export class AuthRouter {
 
       this.authController.loginController,
     );
-    this.router.get(
+    this.router.post(
       '/verify',
       verifyToken,
       this.authController.verifyController,

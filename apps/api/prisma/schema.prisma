@@ -21,6 +21,7 @@ model Users {
   password        String?
   profileImageUrl String?
   role            UserRoleType
+  isVerify        Boolean?     @default(false)
   isDelete        Boolean
   token           String
   createdAt       DateTime     @default(now())

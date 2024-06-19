@@ -10,7 +10,7 @@ const useRegister = () => {
   const router = useRouter();
   const register = async (payload: RegisterArgs) => {
     try {
-      const { data } = await axiosInstance.post('auth/register', payload);
+      const { data } = await axiosInstance.post('/auth/register', payload);
 
       router.replace('/login');
     } catch (error) {
