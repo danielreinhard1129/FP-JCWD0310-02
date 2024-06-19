@@ -1,17 +1,15 @@
 'use client';
-import Image from 'next/image';
-import ShoesImage from '../../../../../public/sepatu.jpg';
 import React, { useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
-import { useGetProduct } from '@/hooks/product/useGetProduct';
+import { useGetProduct } from '@/hooks/products/useGetProduct';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useGetProducts } from '@/hooks/product/useGetProducts';
+import { useGetProducts } from '@/hooks/products/useGetProducts';
 
 const ProductDetailPage = ({ params }: { params: { id: number } }) => {
-  const { data, isLoading, id, setId } = useGetProduct(params.id);
+  const { data, isLoading } = useGetProduct(params.id);
   const {
     data: dataSuggestion,
     isLoading: isLoadingSuggestion,
@@ -42,12 +40,19 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 <Skeleton className="w-40 h-40" />
               </>
             ) : (
-              <>
-                <Image alt="image" src={ShoesImage} className="" />
-                <Image alt="image" src={ShoesImage} className="" />
-                <Image alt="image" src={ShoesImage} className="" />
-                <Image alt="image" src={ShoesImage} className="" />
-              </>
+              data?.data.productImages.map((val) => {
+                return (
+                  <>
+                    <img
+                      alt="image"
+                      src={`http://localhost:3000/api/${val.url}`}
+                      className=""
+                      width={100}
+                      height={100}
+                    />
+                  </>
+                );
+              })
             )}
           </div>
           <div
@@ -66,13 +71,9 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 <Button className="cursor-none text-xs w-28 p-2 h-10 bg-blue-500">
                   New Release
                 </Button>
-                <Label className="font-bold text-2xl">
-                  {data?.data.product.name}
-                </Label>
+                <Label className="font-bold text-2xl">{data?.data.name}</Label>
                 <Label className="font-bold text-lg text-blue-500">
-                  {data
-                    ? priceFormat.format(data?.data.product.price)
-                    : 'Rp Nan'}
+                  {data ? priceFormat.format(0) : 'Rp Nan'}
                 </Label>
               </>
             )}
@@ -152,7 +153,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 </>
               ) : (
                 <>
-                  <p>{data?.data.product.description}</p>
+                  <p>{data?.data.description}</p>
                 </>
               )}
             </div>
@@ -189,14 +190,14 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                   />
                 </>
               </>
-            ) : dataSuggestion?.dataWithStock?.productWithStock.length ? (
-              dataSuggestion.dataWithStock.productWithStock.map((val, indx) => {
+            ) : dataSuggestion?.data.length ? (
+              dataSuggestion.data.map((val, indx) => {
                 return (
                   <>
                     <ProductCard
                       key={indx}
                       title={val.name}
-                      price={val.price}
+                      price={0}
                       category="baju"
                       skeleton={false}
                     />

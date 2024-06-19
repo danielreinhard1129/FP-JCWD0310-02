@@ -1,47 +1,11 @@
 'use client';
-import { axiosInstance } from '@/lib/axios';
 import { useEffect, useState } from 'react';
+import useAxios from '../useAxios';
+import { Product } from '@/types/product.type';
 
 export interface GetProductsResponse {
-  dataWithStock: DataWithStock;
-}
-
-export interface DataWithStock {
-  productWithStock: {
-    id: number;
-    name: string;
-    price: number;
-    description: string;
-    imageUrl: string;
-    createdAt: Date;
-    updateAt: Date;
-    warehouseId: number;
-    stock: Stock;
-    warehouse: Warehouse;
-    productCategory: ProductCategory[];
-  }[];
-}
-
-export interface ProductCategory {
-  id: number;
-  productId: number;
-  categoryId: number;
-  category: Category;
-}
-
-export interface Category {
-  name: string;
-}
-
-export interface Stock {
-  sum: number;
-}
-
-export interface Warehouse {
-  latitude: number;
-  longtitude: number;
-  location: string;
-  name: string;
+  data: Product[];
+  count: number;
 }
 
 interface PaginationQueryParams {
@@ -53,6 +17,8 @@ interface PaginationQueryParams {
 
 interface GetProductsArg extends PaginationQueryParams {
   filter?: string;
+  size?: string;
+  color?: string;
   warehouse?: number;
 }
 
@@ -65,21 +31,24 @@ export const useGetProducts = (queryParams?: {
   const [query, setQuery] = useState<GetProductsArg>({
     page: queryParams?.page || 1,
     take: queryParams?.take || 9,
+    filter: '',
   });
   const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const { axiosInstance } = useAxios();
 
   const getProduct = async () => {
     try {
       const response = await axiosInstance.get<GetProductsResponse>(
-        '/product',
+        '/products',
         {
-          params: { ...query, search, userId: 1 },
+          params: { ...query },
         },
       );
       setData(response.data);
+      console.log('ini response', response);
     } catch (error) {
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 500);
     }
   };
 
@@ -89,6 +58,8 @@ export const useGetProducts = (queryParams?: {
   }, [
     query.page,
     query.filter,
+    query.size,
+    query.color,
     query.sortBy,
     query.sortOrder,
     query.take,

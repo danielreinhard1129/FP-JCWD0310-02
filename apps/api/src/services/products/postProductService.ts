@@ -10,8 +10,8 @@ interface CreateProductParams {
     id: number;
   };
   warehouseId: number;
-  product: Pick<Product, 'name' | 'description'>;
-  category: string[];
+  product: Pick<Product, 'name' | 'description' | 'price'>;
+  categories: string[];
   image: Express.Multer.File[];
   variant: VariantWithStocks[];
 }
@@ -20,7 +20,7 @@ export const postProductService = async (body: CreateProductParams) => {
   try {
     const userId = Number(body.user.id);
     const warehouseId = Number(body.warehouseId);
-    const { product, image, variant, category } = body;
+    const { product, image, variant, categories } = body;
 
     const user = await prisma.users.findFirst({
       where: {
@@ -45,12 +45,12 @@ export const postProductService = async (body: CreateProductParams) => {
     if (
       !product.name &&
       !product.description &&
-      !category &&
+      !categories &&
       variant.length < 1
     ) {
       return new Error('Something is error with the input data');
     }
-    const categoryObj = category.map((val) => {
+    const categoryObj = categories.map((val) => {
       return { name: val.charAt(0).toUpperCase() + val.slice(1) };
     });
 
@@ -86,7 +86,7 @@ export const postProductService = async (body: CreateProductParams) => {
 
         const existCategory = await tx.category.findMany({
           where: {
-            OR: category.map((val) => {
+            OR: categories.map((val) => {
               return {
                 name: {
                   contains: val,

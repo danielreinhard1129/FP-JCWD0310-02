@@ -1,5 +1,5 @@
 import { StockController } from '@/controllers/stock.controller';
-import { verifyToken } from '@/lib/jswt';
+import { verifyToken } from '@/lib/jwt';
 import { Router } from 'express';
 
 export class StockRouter {

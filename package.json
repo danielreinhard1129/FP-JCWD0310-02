@@ -31,5 +31,8 @@
     "hooks": {
       "pre-commit": "npx lint-staged"
     }
+  },
+  "dependencies": {
+    "react-dropzone": "^14.2.3"
   }
 }

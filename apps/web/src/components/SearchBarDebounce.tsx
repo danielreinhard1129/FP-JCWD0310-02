@@ -25,7 +25,7 @@ const SearchBarDebounce = ({
             setValue(e.currentTarget.value);
             debounce(e.currentTarget.value);
           }}
-          className="w-full focus:outline-none"
+          className="w-full focus:outline-none bg-transparent"
         />
         <Search onClick={(e) => throttle(value)} height={15} />
       </div>

@@ -5,8 +5,22 @@ import { Prisma } from '@prisma/client';
 interface GetProductsQuery extends PaginationQueryParams {
   search: string;
   filter: {
-    name: { equals: string };
-  }[];
+    filter:
+      | {
+          name: { equals: string };
+        }[]
+      | undefined;
+    size:
+      | {
+          size: { equals: string };
+        }[]
+      | undefined;
+    color:
+      | {
+          color: { equals: string };
+        }[]
+      | undefined;
+  };
 }
 
 export const getProductsService = async (query: GetProductsQuery) => {
@@ -17,10 +31,29 @@ export const getProductsService = async (query: GetProductsQuery) => {
       name: { contains: search },
       productCategory: {
         some: {
-          category: { OR: [...filter] },
+          category: { OR: filter.filter },
+        },
+      },
+      variant: {
+        some: {
+          AND: [
+            { OR: filter.size },
+            {
+              NOT: {
+                color: { notIn: filter.color?.map((val) => val.color.equals) },
+              },
+            },
+          ],
         },
       },
     };
+
+    const countProduct = await prisma.product.findMany({
+      where: whereClause,
+      select: {
+        _count: true,
+      },
+    });
 
     const product = await prisma.product.findMany({
       where: whereClause,
@@ -52,8 +85,12 @@ export const getProductsService = async (query: GetProductsQuery) => {
       },
     });
 
-    if (!product) {
-      throw new Error('Cannot find the product');
+    if (!product.length) {
+      return {
+        messages: 'No products available',
+        data: [],
+        count: 0,
+      };
     }
 
     const productWithStock = product.map((val) => {
@@ -68,12 +105,9 @@ export const getProductsService = async (query: GetProductsQuery) => {
       return { ...val, stock };
     });
 
-    if (!product.length) {
-      throw new Error('No products found');
-    }
-
     return {
       data: productWithStock,
+      count: countProduct,
     };
   } catch (error) {
     throw error;
