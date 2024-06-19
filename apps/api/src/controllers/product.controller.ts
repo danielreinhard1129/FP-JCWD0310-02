@@ -58,13 +58,18 @@ export class ProductController {
       if (!files.length) {
         return res.status(200).send({ messages: 'no image uploaded' });
       }
+      const categories = JSON.parse(req.body.categories) as string;
       const data = {
         user: res.locals.user,
-        warehouseId: Number(req.body.warehouse),
-        product: { name: '', description: '', price: Number(req.body.price) },
-        categories: JSON.parse(req.body.categories),
+        warehouseId: Number(req.body.warehouse) || undefined,
+        product: {
+          name: JSON.parse(req.body.name),
+          description: JSON.parse(req.body.description),
+          price: Number(JSON.parse(req.body.price)),
+        },
+        categories: categories.split(','),
         image: files,
-        variant: JSON.parse(req.body.categories),
+        variant: JSON.parse(req.body.variant),
       };
       const response = await postProductService(data);
       return res.status(200).send(response);

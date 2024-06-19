@@ -16,7 +16,7 @@ import Image from 'next/image';
 import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
 import DataTables from '@/components/dashboard/DataTables';
 
-const AdminDashboardProductPage = () => {
+const AdminDashboardStocksPage = () => {
   const { data, isLoading, query, setQuery, setSearch } = useGetProducts({
     page: 1,
     take: 10,
@@ -47,4 +47,4 @@ const AdminDashboardProductPage = () => {
   );
 };
 
-export default AdminDashboardProductPage;
+export default AdminDashboardStocksPage;

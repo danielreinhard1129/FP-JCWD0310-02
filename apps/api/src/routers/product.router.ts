@@ -18,7 +18,7 @@ export class ProductRouter {
     this.router.get('/', this.productController.getProducts);
     this.router.post(
       '/',
-      // verifyToken,
+      verifyToken,
       uploader('IMG', '/images').array('images'),
       this.productController.postProduct,
     );

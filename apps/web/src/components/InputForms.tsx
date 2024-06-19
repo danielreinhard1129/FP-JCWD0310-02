@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import { Variant } from '@/types/product.type';
 import { useCreateProduct } from '@/hooks/products/useCreateProduct';
+import { useAppSelector } from '@/redux/hooks';
 
 interface DropzoneProps {
   label: string;

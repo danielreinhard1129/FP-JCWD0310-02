@@ -97,7 +97,7 @@ export const patchProductService = async (
             data: files.map((val) => {
               return {
                 productId: newProduct.id,
-                url: `/public/images/${val.filename}`,
+                url: `images/${val.filename}`,
               };
             }),
             skipDuplicates: true,

@@ -9,7 +9,9 @@ interface CreateProductPayload {
   product: {
     name: string;
     description: string;
+    price: string;
   };
+  warehouse: number;
   category: string[];
   variant: {
     color: string;
