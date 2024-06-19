@@ -85,6 +85,7 @@ model Order {
   shippingCost      Int
   shippingDetail    Int
   discount          Int
+  payment_method    String
   snap_token        String?     @db.VarChar(255)
   snap_redirect_url String?     @db.VarChar(255)
   createdAt         DateTime    @default(now())
