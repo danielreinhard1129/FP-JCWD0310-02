@@ -26,7 +26,7 @@ const useLogin = () => {
         payload,
       );
       dispatch(loginAction(data.data));
-
+      localStorage.setItem('token', data.token);
       alert('login sucess');
       router.replace('/');
     } catch (error) {

@@ -24,15 +24,11 @@ export const patchProductService = async (
     });
 
     if (!user) {
-      return {
-        message: 'You are not authorize for update product!',
-      };
+      throw new Error('You are not authorize for update product!');
     }
 
     if (!user.employee || user.role !== 'SUPER_ADMIN') {
-      return {
-        message: 'You are not authorize for update product!',
-      };
+      throw new Error('You are not authorize for update product!');
     }
 
     const product = await prisma.product.findFirst({
@@ -40,9 +36,7 @@ export const patchProductService = async (
     });
 
     if (!product) {
-      return {
-        message: 'Cannot found the product',
-      };
+      throw new Error('Cannot found the product');
     }
 
     const updateProduct = await prisma.$transaction(async (tx) => {
@@ -52,7 +46,37 @@ export const patchProductService = async (
           data: { name, description },
         });
 
-        const productImages = await tx.productImages.findMany({
+        const newCategory = await tx.category.createMany({
+          data: productCategory.map((val) => {
+            return { name: val };
+          }),
+          skipDuplicates: true,
+        });
+
+        const existCategory = await tx.category.findMany({
+          where: {
+            name: {
+              in: productCategory,
+            },
+          },
+        });
+
+        const deleteProductCategory = await tx.productCategory.deleteMany({
+          where: {
+            productId: newProduct.id,
+          },
+        });
+
+        const newProductCategory = await tx.productCategory.createMany({
+          data: existCategory.map((val) => {
+            return {
+              productId: newProduct.id,
+              CategoryId: val.id,
+            };
+          }),
+        });
+
+        const productImages = await tx.productImage.findMany({
           where: { productId: newProduct.id },
         });
 
@@ -63,17 +87,17 @@ export const patchProductService = async (
               fs.unlinkSync(imagePath);
             }
           });
-          const deleteImage = await tx.productImages.deleteMany({
+          const deleteImage = await tx.productImage.deleteMany({
             where: { productId: newProduct.id },
           });
         }
 
         if (files.length) {
-          const newImages = await tx.productImages.createMany({
+          const newImages = await tx.productImage.createMany({
             data: files.map((val) => {
               return {
                 productId: newProduct.id,
-                url: `/public/images/${val.filename}`,
+                url: `images/${val.filename}`,
               };
             }),
             skipDuplicates: true,

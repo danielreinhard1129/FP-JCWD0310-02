@@ -14,6 +14,11 @@ export class ProductRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.delete(
+      '/:id',
+      verifyToken,
+      this.productController.deleteProduct,
+    );
     this.router.get('/:id', this.productController.getProduct);
     this.router.get('/', this.productController.getProducts);
     this.router.post(

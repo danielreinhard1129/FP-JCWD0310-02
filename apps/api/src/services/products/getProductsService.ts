@@ -5,28 +5,55 @@ import { Prisma } from '@prisma/client';
 interface GetProductsQuery extends PaginationQueryParams {
   search: string;
   filter: {
-    name: { contains: string };
-  }[];
-  userId: number;
+    filter:
+      | {
+          name: { equals: string };
+        }[]
+      | undefined;
+    size:
+      | {
+          size: { equals: string };
+        }[]
+      | undefined;
+    color:
+      | {
+          color: { equals: string };
+        }[]
+      | undefined;
+  };
 }
 
 export const getProductsService = async (query: GetProductsQuery) => {
   try {
-    const { page, take, search, sortBy, sortOrder, filter, userId } = query;
-    const user = await prisma.users.findFirst({
-      where: {
-        id: userId || undefined,
-      },
-    });
+    const { page, take, search, sortBy, sortOrder, filter } = query;
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
       productCategory: {
         some: {
-          category: { OR: [...filter] },
+          category: { OR: filter.filter },
+        },
+      },
+      variant: {
+        some: {
+          AND: [
+            { OR: filter.size },
+            {
+              NOT: {
+                color: { notIn: filter.color?.map((val) => val.color.equals) },
+              },
+            },
+          ],
         },
       },
     };
+
+    const countProduct = await prisma.product.findMany({
+      where: whereClause,
+      select: {
+        _count: true,
+      },
+    });
 
     const product = await prisma.product.findMany({
       where: whereClause,
@@ -42,37 +69,28 @@ export const getProductsService = async (query: GetProductsQuery) => {
           },
         },
         variant: {
-          select: {
-            color: true,
-            size: true,
-            variantStocks:
-              user?.role == 'CUSTOMER'
-                ? {
-                    select: {
-                      quantity: true,
-                    },
-                  }
-                : {
-                    include: {
-                      warehouse: true,
-                    },
-                  },
+          include: {
+            variantStocks: {
+              include: {
+                warehouse: true,
+              },
+            },
           },
         },
         productCategory: {
-          select: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+          include: {
+            category: true,
           },
         },
       },
     });
 
-    if (!product) {
-      throw new Error('Cannot find the product');
+    if (!product.length) {
+      return {
+        messages: 'No products available',
+        data: [],
+        count: 0,
+      };
     }
 
     const productWithStock = product.map((val) => {
@@ -87,19 +105,9 @@ export const getProductsService = async (query: GetProductsQuery) => {
       return { ...val, stock };
     });
 
-    if (!product.length) {
-      return {
-        messages:
-          user?.role == 'CUSTOMER'
-            ? 'No data found'
-            : user?.role == 'SUPER_ADMIN'
-              ? 'No data in this warehouse'
-              : 'No data on your warehouse',
-      };
-    }
-
     return {
       data: productWithStock,
+      count: countProduct,
     };
   } catch (error) {
     throw error;

@@ -54,3 +54,26 @@ export const uploader = (
 
   return multer({ storage, fileFilter, limits });
 };
+
+export const uploaderCloudinary = (filelimit?: number) => {
+  const storage = multer.memoryStorage();
+
+  const fileFilter = (
+    req: Request,
+    file: Express.Multer.File,
+    cb: FileFilterCallback,
+  ) => {
+    const extAllowed = /\.(jpg|jpeg|png|webp|avif)$/;
+    const isExtMatch = file.originalname.toLowerCase().match(extAllowed);
+    if (isExtMatch) {
+      cb(null, true);
+    } else {
+      const error = new Error('Your file extension is denied');
+      cb(error);
+    }
+  };
+
+  const limits = { fileSize: filelimit || 2 * 1024 * 1024 }; // default 2mb
+
+  return multer({ storage, fileFilter, limits });
+};

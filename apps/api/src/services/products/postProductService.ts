@@ -1,26 +1,28 @@
 import prisma from '@/prisma';
-import { Product, Variant, VariantStocks } from '@prisma/client';
+import { Product, Variant, VariantStock } from '@prisma/client';
 
 interface VariantWithStocks extends Pick<Variant, 'size' | 'color'> {
-  stock: Pick<VariantStocks, 'quantity'>;
+  stock: Pick<VariantStock, 'quantity'>;
 }
 
 interface CreateProductParams {
   user: {
     id: number;
   };
-  warehouseId: number;
-  product: Pick<Product, 'name' | 'description'>;
-  category: string[];
+  warehouseId: number | undefined;
+  product: Pick<Product, 'name' | 'description' | 'price'>;
+  categories: string[];
   image: Express.Multer.File[];
   variant: VariantWithStocks[];
 }
 
 export const postProductService = async (body: CreateProductParams) => {
   try {
+    if (!body.user) {
+      throw new Error('Please Login');
+    }
     const userId = Number(body.user.id);
-    const warehouseId = Number(body.warehouseId);
-    const { product, image, variant, category } = body;
+    const { product, image, variant, categories } = body;
 
     const user = await prisma.users.findFirst({
       where: {
@@ -34,26 +36,26 @@ export const postProductService = async (body: CreateProductParams) => {
     });
 
     // Validation user data
-    if (!user) throw new Error('We cannot find your user data');
+    if (!user || !user.employee)
+      throw new Error('We cannot find your user data as employee');
 
     // Validation for user credential as super admin
     if (user.role !== 'SUPER_ADMIN') {
-      return {
-        messages: 'You are not a super admin',
-      };
       throw new Error('You are not a super admin');
     }
+
+    const warehouseId = Number(body.warehouseId) || user.employee.warehouseId;
 
     // Validation for body parameter
     if (
       !product.name &&
       !product.description &&
-      !category &&
+      !categories &&
       variant.length < 1
     ) {
       return new Error('Something is error with the input data');
     }
-    const categoryObj = category.map((val) => {
+    const categoryObj = categories.map((val) => {
       return { name: val.charAt(0).toUpperCase() + val.slice(1) };
     });
 
@@ -73,11 +75,11 @@ export const postProductService = async (body: CreateProductParams) => {
           data: product,
         });
 
-        const imageData = await tx.productImages.createMany({
+        const imageData = await tx.productImage.createMany({
           data: image.map((val) => {
             return {
               productId: newProduct.id,
-              url: `/public/images/${val.filename}`,
+              url: `images/${val.filename}`,
             };
           }),
         });
@@ -89,7 +91,7 @@ export const postProductService = async (body: CreateProductParams) => {
 
         const existCategory = await tx.category.findMany({
           where: {
-            OR: category.map((val) => {
+            OR: categories.map((val) => {
               return {
                 name: {
                   contains: val,
@@ -130,7 +132,10 @@ export const postProductService = async (body: CreateProductParams) => {
         });
 
         const productVariantStock = variant.reduce((prev: any, val) => {
-          return { ...prev, [`${val.color}_${val.size}`]: val.stock };
+          return {
+            ...prev,
+            [`${val.color}_${val.size}`]: val.stock || { quantity: 0 },
+          };
         }, {});
 
         const existProductVariantWithStock = existProductVariant.map((val) => {
@@ -143,7 +148,7 @@ export const postProductService = async (body: CreateProductParams) => {
           };
         });
 
-        const newVariantStock = await tx.variantStocks.createMany({
+        const newVariantStock = await tx.variantStock.createMany({
           data: existProductVariantWithStock,
         });
 
