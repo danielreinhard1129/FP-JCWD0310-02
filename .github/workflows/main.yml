@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           source: './apps/web/.next, ./apps/web/*, ./apps/web/.*, ./apps/api, ./deploy.config.js, ./package*.json, ./turbo.json, ./.husky'
           target: '${{ secrets.SSH_FOLDER }}'
       - name: Run App
@@ -36,12 +36,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             cd ${{ secrets.SSH_FOLDER }}
-            # pm2 stop ${{ secrets.PROJECT_NAME }}
-            # pm2 delete ${{ secrets.PROJECT_NAME }}
             npm install
-            # npx prisma migrate dev --schema=./apps/api/prisma/schema.prisma
-            # chown -R root:root .
+            npx prisma generate --schema=./apps/api/prisma/schema.prisma
             pm2 start deploy.config.js
