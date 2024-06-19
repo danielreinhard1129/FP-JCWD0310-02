@@ -1,5 +1,6 @@
 import { GetStockService } from '@/services/stock/getStockService';
 import { GetStocksService } from '@/services/stock/getStocksService';
+import { PostStockService } from '@/services/stock/postStockService';
 import { Request, Response } from 'express';
 export class StockController {
   async getStock(req: Request, res: Response) {
@@ -18,8 +19,8 @@ export class StockController {
     return res.status(200).send(response);
   }
   async postStock(req: Request, res: Response) {
-    // const id = Number(req.params.id);
-    // const response = await PostStockService();
+    const id = Number(req.params.id);
+    const response = await PostStockService();
     return res.status(200).send('response');
   }
 }

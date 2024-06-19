@@ -13,11 +13,21 @@ export const registerService = async (body: User) => {
     throw new Error('User already exists');
   }
 
-  const generateToken = sign({ email: email }, jwtSecretKey, {
-    expiresIn: '2h',
+  const hashPassword = await hashedPassword(password);
+  const user = await prisma.users.create({
+    data: {
+      ...body,
+      password: hashPassword,
+      role: 'CUSTOMER',
+      isDelete: false,
+      token: '0',
+    },
   });
 
-  const hashPassword = await hashedPassword(password);
+  const generateToken = sign({ id: user.id }, jwtSecretKey, {
+    expiresIn: '5h',
+  });
+
   // const token = req.headers.authorization?.split(' ')[1];
   transporter.sendMail({
     from: process.env.GMAIL_EMAIL,
@@ -27,13 +37,15 @@ export const registerService = async (body: User) => {
       'klick link di bawah ini untuk verivikasi akun anda ' +
       `http://localhost:3000/verify?token=${generateToken}`,
   });
-  return await prisma.users.create({
+  await prisma.users.update({
+    where: {
+      id: user.id,
+    },
     data: {
-      ...body,
-      password: hashPassword,
-      role: 'CUSTOMER',
-      isDelete: false,
       token: generateToken,
     },
   });
+  return {
+    message: `Verification email send to ${email}`,
+  };
 };
