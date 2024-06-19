@@ -1,6 +1,6 @@
 import prisma from '@/prisma';
 
-export const GetProductService = async (params: number) => {
+export const getProductService = async (params: number) => {
   try {
     const product = await prisma.product.findFirst({
       where: {
@@ -18,30 +18,17 @@ export const GetProductService = async (params: number) => {
           },
         },
         variant: {
-          select: {
-            color: true,
-            size: true,
-          },
           include: {
-            variantStocks: true,
+            variantStocks: {
+              include: { warehouse: true },
+            },
           },
         },
       },
     });
-
     if (!product) {
-      throw new Error('Product not fond');
+      throw new Error('Cannot find the product');
     }
-
-    // const variant = await prisma.variant.findMany({
-    //   where: {
-    //     productId: product.id,
-    //   },
-    //   include: {
-    //     variantStocks: true,
-    //   },
-    // });
-
     const stock = product.variant.reduce((a, b) => {
       return (
         a +
@@ -52,10 +39,9 @@ export const GetProductService = async (params: number) => {
     }, 0);
 
     return {
-      data: {
-        ...product,
-        stock,
-      },
+      data: { ...product, stock },
     };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };

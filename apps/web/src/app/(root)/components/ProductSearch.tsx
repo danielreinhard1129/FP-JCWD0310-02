@@ -1,5 +1,5 @@
 'use client';
-import { useGetProduct } from '@/hooks/product/useGetProduct';
+import { useGetProduct } from '@/hooks/products/useGetProduct';
 import React from 'react';
 import {
   Table,

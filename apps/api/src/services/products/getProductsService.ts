@@ -5,73 +5,55 @@ import { Prisma } from '@prisma/client';
 interface GetProductsQuery extends PaginationQueryParams {
   search: string;
   filter: {
-    name: { contains: string };
-  }[];
-  warehouse: number | undefined;
-  userRole: string | undefined;
-  userId: number;
+    filter:
+      | {
+          name: { equals: string };
+        }[]
+      | undefined;
+    size:
+      | {
+          size: { equals: string };
+        }[]
+      | undefined;
+    color:
+      | {
+          color: { equals: string };
+        }[]
+      | undefined;
+  };
 }
 
-export const GetProductsService = async (query: GetProductsQuery) => {
+export const getProductsService = async (query: GetProductsQuery) => {
   try {
-    const {
-      page,
-      take,
-      search,
-      sortBy,
-      sortOrder,
-      filter,
-      warehouse,
-      userId,
-      userRole,
-    } = query;
-
-    const user = await prisma.users.findFirst({
-      where: {
-        id: userId || undefined,
-      },
-      include: {
-        employee: {
-          select: {
-            warehouseId: true,
-          },
-        },
-      },
-    });
-
-    if (user && user.employee && user.role === 'WAREHOUSE_ADMIN') {
-      if (warehouse !== user.employee.warehouseId)
-        // return new Error('You are not an admin on this warehouse');
-        return {
-          message: 'You are not an admin on this warehouse',
-        };
-    }
+    const { page, take, search, sortBy, sortOrder, filter } = query;
 
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
-      variant:
-        userRole == 'ADMIN' && user && user.employee
-          ? {
-              every: {
-                variantStocks: {
-                  every: {
-                    warehouseId:
-                      user.role == 'ADMIN'
-                        ? warehouse || undefined
-                        : user.employee.warehouseId,
-                  },
-                },
-              },
-            }
-          : undefined,
       productCategory: {
-        every: {
-          category: {
-            AND: [...filter],
-          },
+        some: {
+          category: { OR: filter.filter },
+        },
+      },
+      variant: {
+        some: {
+          AND: [
+            { OR: filter.size },
+            {
+              NOT: {
+                color: { notIn: filter.color?.map((val) => val.color.equals) },
+              },
+            },
+          ],
         },
       },
     };
+
+    const countProduct = await prisma.product.findMany({
+      where: whereClause,
+      select: {
+        _count: true,
+      },
+    });
 
     const product = await prisma.product.findMany({
       where: whereClause,
@@ -87,37 +69,28 @@ export const GetProductsService = async (query: GetProductsQuery) => {
           },
         },
         variant: {
-          select: {
-            color: true,
-            size: true,
-            variantStocks:
-              userRole == 'ADMIN' && user?.employee
-                ? {
-                    include: {
-                      warehouse: true,
-                    },
-                  }
-                : {
-                    select: {
-                      quantity: true,
-                    },
-                  },
+          include: {
+            variantStocks: {
+              include: {
+                warehouse: true,
+              },
+            },
           },
         },
         productCategory: {
-          select: {
-            category: {
-              select: {
-                name: true,
-              },
-            },
+          include: {
+            category: true,
           },
         },
       },
     });
 
-    if (!product) {
-      throw new Error('Cannot find the product');
+    if (!product.length) {
+      return {
+        messages: 'No products available',
+        data: [],
+        count: 0,
+      };
     }
 
     const productWithStock = product.map((val) => {
@@ -132,19 +105,9 @@ export const GetProductsService = async (query: GetProductsQuery) => {
       return { ...val, stock };
     });
 
-    if (!product.length) {
-      return {
-        messages:
-          userRole == 'ADMIN'
-            ? user?.role == 'ADMIN'
-              ? 'No data in this warehouse'
-              : 'No data on your warehouse'
-            : 'No data found',
-      };
-    }
-
     return {
       data: productWithStock,
+      count: countProduct,
     };
   } catch (error) {
     throw error;

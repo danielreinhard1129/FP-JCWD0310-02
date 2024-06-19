@@ -1,52 +1,90 @@
-import { Request, Response } from 'express';
-import prisma from '@/prisma';
-import { GetProductService } from '@/services/products/getProductService';
-import { GetProductsService } from '@/services/products/getProductsService';
-import { PostProductService } from '@/services/products/postProductService';
-import { PatchProductService } from '@/services/products/patchProductService';
+import { NextFunction, Request, Response } from 'express';
+import { getProductService } from '@/services/products/getProductService';
+import { getProductsService } from '@/services/products/getProductsService';
+import { postProductService } from '@/services/products/postProductService';
+import { patchProductService } from '@/services/products/patchProductService';
 
 export class ProductController {
-  async getProduct(req: Request, res: Response) {
-    const id = Number(req.params.id);
-    const response = await GetProductService(id);
-    return res.status(200).send(response);
+  async getProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await getProductService(Number(req.params.id));
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
   }
-  async getProducts(req: Request, res: Response) {
-    const filterString = (req.query.filter as string) || '';
-    const filter =
-      filterString.length > 2
-        ? filterString.split(',').map((val, indx) => {
-            return {
-              name: { contains: val },
-            };
-          })
-        : [{ name: { contains: '' } }];
-    const query = {
-      take: parseInt(req.query.take as string) || 10,
-      page: parseInt(req.query.page as string) || 1,
-      sortBy: (req.query.sortBy as string) || 'createdAt',
-      sortOrder: (req.query.sortOrder as string) || 'desc',
-      search: (req.query.search as string) || '',
-      warehouse: Number(req.query.warehouse) || undefined,
-      userId: Number(req.query.userId),
-      userRole: (req.query.userRole as string) || undefined,
-      filter,
-    };
-    const response = await GetProductsService(query);
-    return res.status(200).send(response);
+  async getProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const filterString = (req.query.filter as string) || '';
+      const sizeString = (req.query.size as string) || '';
+      const colorString = (req.query.color as string) || '';
+      const query = {
+        take: parseInt(req.query.take as string) || 10,
+        page: parseInt(req.query.page as string) || 1,
+        sortBy: (req.query.sortBy as string) || 'createdAt',
+        sortOrder: (req.query.sortOrder as string) || 'desc',
+        search: (req.query.search as string) || '',
+        filter: {
+          size:
+            sizeString.length > 2
+              ? sizeString.split(',').map((val) => {
+                  return { size: { equals: val } };
+                })
+              : undefined,
+          color:
+            colorString.length > 2
+              ? colorString.split(',').map((val) => {
+                  return { color: { equals: val } };
+                })
+              : undefined,
+          filter:
+            filterString.length > 2
+              ? filterString.split(',').map((val) => {
+                  return { name: { equals: val } };
+                })
+              : undefined,
+        },
+      };
+      const response = await getProductsService(query);
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async postProduct(req: Request, res: Response) {
-    const files = req.files as Express.Multer.File[];
-    if (!files.length) {
-      return res.status(200).send({ messages: 'no image uploaded' });
+  async postProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const files = req.files as Express.Multer.File[];
+      if (!files.length) {
+        return res.status(200).send({ messages: 'no image uploaded' });
+      }
+      const data = {
+        user: res.locals.user,
+        warehouseId: Number(req.body.warehouse),
+        product: { name: '', description: '', price: Number(req.body.price) },
+        categories: JSON.parse(req.body.categories),
+        image: files,
+        variant: JSON.parse(req.body.categories),
+      };
+      const response = await postProductService(data);
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
     }
-    const response = await PostProductService({ ...req.body, image: files });
-    return res.status(200).send(response);
   }
-  async patchProduct(req: Request, res: Response) {
-    const id = Number(req.params.id);
-    const response = await PatchProductService(id, req.body);
-    return res.status(200).send(response);
+
+  async patchProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = Number(req.params.id);
+      const files = req.files as Express.Multer.File[];
+      const response = await patchProductService(
+        id,
+        { ...req.body, user: res.locals.user },
+        files,
+      );
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
   }
 }
