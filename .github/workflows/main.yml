@@ -43,5 +43,5 @@ jobs:
             # pm2 delete ${{ secrets.PROJECT_NAME }}
             npm install
             # npx prisma migrate dev --schema=./apps/api/prisma/schema.prisma
-            chown -R root:root .
+            # chown -R root:root .
             pm2 start deploy.config.js
