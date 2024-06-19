@@ -113,6 +113,7 @@ export const createTrxService = async (body: any) => {
           paymentMethod: 'MIDTRANS',
           snapToken: data.token,
           snapRedirectUrl: data.redirect_url,
+          orderId: transaction_id,
           // orderId: createOrder.id,
         },
       });
