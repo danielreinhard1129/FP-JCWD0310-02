@@ -213,6 +213,7 @@ model Product {
   name        String
   description String
   price       Int
+  isDelete    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt
 
