@@ -270,11 +270,7 @@ export const incrementQuantityAsync = createAsyncThunk<
 >('cart/incrementQuantityAsync', async (cartItem, { rejectWithValue }) => {
   try {
     const response = await axios.put(
-      `http://localhost:8000/api/carts/${cartItem.id}`,
-      {
-        ...cartItem,
-        quantity: cartItem.quantity + 1,
-      },
+      `http://localhost:8000/api/carts/increment/${cartItem.id}`,
     );
     return response.data;
   } catch (error: any) {
@@ -289,11 +285,7 @@ export const decrementQuantityAsync = createAsyncThunk<
 >('cart/decrementQuantityAsync', async (cartItem, { rejectWithValue }) => {
   try {
     const response = await axios.put(
-      `http://localhost:8000/api/carts/${cartItem.id}`,
-      {
-        ...cartItem,
-        quantity: cartItem.quantity - 1,
-      },
+      `http://localhost:8000/api/carts/decrement/${cartItem.id}`,
     );
     return response.data;
   } catch (error: any) {

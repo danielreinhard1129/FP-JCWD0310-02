@@ -210,12 +210,14 @@ import { RootState } from '@/redux/store';
 import { Cart } from '@/typess/cart.type';
 import { Heart, Minus, Plus, Trash } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const DetailCart: React.FC = () => {
   const carts = useAppSelector((state: RootState) => state.cart.cartItems);
   const totalPrice = useAppSelector(selectTotalPrice);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(fetchCartItems());
@@ -239,6 +241,61 @@ const DetailCart: React.FC = () => {
     } else {
       console.log('Minimum quantity reached');
     }
+  };
+
+  useEffect(() => {
+    const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY; // Use NEXT_PUBLIC prefix for environment variables used in the client-side
+    const script = document.createElement('script');
+    script.src = snapScript;
+    script.setAttribute('data-client-key', String(clientKey));
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const pay = async () => {
+    const data = {
+      products: carts.map(({ product, quantity }) => ({
+        id: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity,
+      })),
+      userId: 5,
+    };
+
+    const response = await fetch('http://localhost:8000/api/trx', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const res = await response.json();
+    console.log('Response:', res);
+
+    window.snap.pay(res.snap_token, {
+      onSuccess: function (result: any) {
+        alert('Transaction successful!');
+        router.push(`/order-status?transaction_id=${res.transaction_id}`);
+      },
+      onPending: function (result: any) {
+        alert('Transaction pending.');
+        router.push(`/order-status?transaction_id=${res.transaction_id}`);
+      },
+      onError: function (result: any) {
+        alert('Transaction failed.');
+        router.push(`/order-status?transaction_id=${res.transaction_id}`);
+      },
+      onClose: function () {
+        alert('Transaction closed.');
+      },
+    });
   };
 
   return (
@@ -323,7 +380,10 @@ const DetailCart: React.FC = () => {
             <p className="text-[20px] font-semibold">Total</p>
             <p className="text-[20px] font-semibold">${totalPrice}</p>
           </div>
-          <button className="w-full my-[24px] rounded-[8px] bg-[#232321] text-white text-[14px] font-medium px-[16px] py-[8px]">
+          <button
+            className="w-full my-[24px] rounded-[8px] bg-[#232321] text-white text-[14px] font-medium px-[16px] py-[8px]"
+            onClick={pay}
+          >
             Checkout
           </button>
         </div>
