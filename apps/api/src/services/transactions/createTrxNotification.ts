@@ -97,12 +97,12 @@ export const createTransactionNotificationService = async (
       });
       responseData = trans;
     } else if (transactionStatus === 'pending') {
-      const trans = await prisma.transaction.update({
+      const trans = await prisma.order.update({
         where: {
           id: transaction.id,
         },
         data: {
-          status: 'PENDING',
+          status: 'WAIT_USER',
           payment_method: data.payment_type,
         },
       });

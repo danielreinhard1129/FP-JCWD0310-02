@@ -14,8 +14,14 @@ export class CartRouter {
   private initializeRoutes(): void {
     this.router.post('/', this.cartController.CreateItemCartController);
     this.router.get('/:id', this.cartController.GetCartItemsByUserId);
-    this.router.put('/:id', this.cartController.IncrementItemController);
-    this.router.put('/:id', this.cartController.DecrementItemController);
+    this.router.put(
+      '/increment/:id',
+      this.cartController.IncrementItemController,
+    );
+    this.router.put(
+      '/decrement/:id',
+      this.cartController.DecrementItemController,
+    );
     this.router.delete('/:id', this.cartController.DeleteCartById);
   }
 

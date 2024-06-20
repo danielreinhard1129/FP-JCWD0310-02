@@ -86,6 +86,7 @@ export const createTrxService = async (body: any) => {
           id: transaction_id,
           status: 'WAIT_USER',
           total: gross_amount,
+          payment_method: 'MIDTRANS',
           shippingCost: 0,
           shippingDetail: 0,
           discount: 0,
@@ -107,16 +108,16 @@ export const createTrxService = async (body: any) => {
         })),
       });
 
-      const payment = await prisma.payments.create({
-        data: {
-          invoiceNumber: transaction_id,
-          paymentMethod: 'MIDTRANS',
-          snapToken: data.token,
-          snapRedirectUrl: data.redirect_url,
-          orderId: transaction_id,
-          // orderId: createOrder.id,
-        },
-      });
+      // const payment = await prisma.payments.create({
+      //   data: {
+      //     invoiceNumber: transaction_id,
+      //     paymentMethod: 'MIDTRANS',
+      //     snapToken: data.token,
+      //     snapRedirectUrl: data.redirect_url,
+      //     orderId: transaction_id,
+      //     // orderId: createOrder.id,
+      //   },
+      // });
 
       return createOrder;
     });

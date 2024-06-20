@@ -18,4 +18,19 @@ export class TrxController {
       next(error);
     }
   }
+
+  async createTrxNotification(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = req.body;
+      const result = await createTrxService(data);
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'OK',
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -13,6 +13,7 @@ export class TrxRouter {
 
   private initializeRoutes(): void {
     this.router.post('/', this.trxController.createTrxController);
+    this.router.post('/notification', this.trxController.createTrxNotification);
     this.router.get('/:transaction_id', this.trxController.getTrxById);
   }
 
