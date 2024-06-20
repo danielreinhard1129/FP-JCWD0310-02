@@ -21,6 +21,7 @@ model Users {
   password        String?
   profileImageUrl String?
   role            UserRoleType
+  isVerify        Boolean?     @default(false)
   isDelete        Boolean
   token           String
   createdAt       DateTime     @default(now())
@@ -215,6 +216,7 @@ model Product {
   name        String
   price       Int
   description String
+  isDelete    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt
 

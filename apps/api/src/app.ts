@@ -6,6 +6,7 @@ import express, {
   Response,
   NextFunction,
   Router,
+  static as static_,
 } from 'express';
 import cors from 'cors';
 import { PORT } from './config';
@@ -16,6 +17,7 @@ import { CartRouter } from './routers/cart.router';
 import { ProductRouter } from './routers/product.router';
 import { StockRouter } from './routers/stock.router';
 import { TrxRouter } from './routers/trx.router';
+import { join } from 'path';
 
 export default class App {
   private app: Express;
@@ -31,6 +33,7 @@ export default class App {
     this.app.use(cors());
     this.app.use(json());
     this.app.use(urlencoded({ extended: true }));
+    this.app.use('/api/assets', static_(join(__dirname, '../public')));
   }
 
   private handleError(): void {

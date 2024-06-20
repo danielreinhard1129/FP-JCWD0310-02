@@ -41,53 +41,64 @@ export const GetStocksService = async (
       throw new Error('You are not an Admin!!!');
     }
 
-    const ProductWhereClause: Prisma.ProductWhereInput = {
-      name: {
-        contains: search,
-      },
-    };
+    // const ProductWhereClause: Prisma.ProductWhereInput = {
+    //   name: {
+    //     contains: search,
+    //   },
+    // };
 
     // const VariantWhereClause: Prisma.VariantWhereInput = {
     // };
 
-    const VariantStockWhereClause: Prisma.VariantStockFindManyArgs = {
-      where: {
-        warehouseId:
-          user.role == 'WAREHOUSE_ADMIN'
-            ? user.employee.warehouseId
-            : warehouseId || user.employee.warehouseId,
-      },
-    };
+    // const VariantStockWhereClause: Prisma.VariantStockFindManyArgs = {
+    //   where: {
+    //     warehouseId:
+    //       user.role == 'WAREHOUSE_ADMIN'
+    //         ? user.employee.warehouseId
+    //         : warehouseId || user.employee.warehouseId,
+    //   },
+    // };
 
-    const product = await prisma.product
-      .findMany({
-        where: ProductWhereClause,
-        skip: (page - 1) * take,
-        take,
-        include: {
-          variant: {
-            include: {
-              variantStocks: VariantStockWhereClause,
-            },
+    // const product = await prisma.product
+    //   .findMany({
+    //     where: ProductWhereClause,
+    //     skip: (page - 1) * take,
+    //     take,
+    //     include: {
+    //       variant: {
+    //         include: {
+    //           variantStocks: VariantStockWhereClause,
+    //         },
+    //       },
+    //     },
+    //   })
+    //   .then((response) => {
+    //     return response.map((val) => {
+    //       return {
+    //         ...val,
+    //         variant: val.variant.map((val) => {
+    //           return {
+    //             ...val,
+    //             overallStock: val.variantStocks.reduce(
+    //               (a, b) => a + b.quantity,
+    //               0,
+    //             ),
+    //           };
+    //         }),
+    //       };
+    //     });
+    //   });
+
+    const product = await prisma.variant.findMany({
+      include: {
+        product: true,
+        variantStocks: {
+          include: {
+            warehouse: true,
           },
         },
-      })
-      .then((response) => {
-        return response.map((val) => {
-          return {
-            ...val,
-            variant: val.variant.map((val) => {
-              return {
-                ...val,
-                overallStock: val.variantStocks.reduce(
-                  (a, b) => a + b.quantity,
-                  0,
-                ),
-              };
-            }),
-          };
-        });
-      });
+      },
+    });
 
     return {
       data: product,

@@ -33,7 +33,7 @@ export const useGetProducts = (queryParams?: {
     take: queryParams?.take || 9,
     filter: '',
   });
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { axiosInstance } = useAxios();
 
   const getProduct = async () => {

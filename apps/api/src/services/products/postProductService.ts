@@ -9,7 +9,7 @@ interface CreateProductParams {
   user: {
     id: number;
   };
-  warehouseId: number;
+  warehouseId: number | undefined;
   product: Pick<Product, 'name' | 'description' | 'price'>;
   categories: string[];
   image: Express.Multer.File[];
@@ -18,8 +18,10 @@ interface CreateProductParams {
 
 export const postProductService = async (body: CreateProductParams) => {
   try {
+    if (!body.user) {
+      throw new Error('Please Login');
+    }
     const userId = Number(body.user.id);
-    const warehouseId = Number(body.warehouseId);
     const { product, image, variant, categories } = body;
 
     const user = await prisma.users.findFirst({
@@ -34,12 +36,15 @@ export const postProductService = async (body: CreateProductParams) => {
     });
 
     // Validation user data
-    if (!user) throw new Error('We cannot find your user data');
+    if (!user || !user.employee)
+      throw new Error('We cannot find your user data as employee');
 
     // Validation for user credential as super admin
     if (user.role !== 'SUPER_ADMIN') {
       throw new Error('You are not a super admin');
     }
+
+    const warehouseId = Number(body.warehouseId) || user.employee.warehouseId;
 
     // Validation for body parameter
     if (
@@ -74,7 +79,7 @@ export const postProductService = async (body: CreateProductParams) => {
           data: image.map((val) => {
             return {
               productId: newProduct.id,
-              url: `/public/images/${val.filename}`,
+              url: `images/${val.filename}`,
             };
           }),
         });
@@ -127,7 +132,10 @@ export const postProductService = async (body: CreateProductParams) => {
         });
 
         const productVariantStock = variant.reduce((prev: any, val) => {
-          return { ...prev, [`${val.color}_${val.size}`]: val.stock };
+          return {
+            ...prev,
+            [`${val.color}_${val.size}`]: val.stock || { quantity: 0 },
+          };
         }, {});
 
         const existProductVariantWithStock = existProductVariant.map((val) => {

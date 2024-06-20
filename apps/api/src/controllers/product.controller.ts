@@ -3,6 +3,7 @@ import { getProductService } from '@/services/products/getProductService';
 import { getProductsService } from '@/services/products/getProductsService';
 import { postProductService } from '@/services/products/postProductService';
 import { patchProductService } from '@/services/products/patchProductService';
+import { deleteProductService } from '@/services/products/deleteProductService';
 
 export class ProductController {
   async getProduct(req: Request, res: Response, next: NextFunction) {
@@ -58,13 +59,18 @@ export class ProductController {
       if (!files.length) {
         return res.status(200).send({ messages: 'no image uploaded' });
       }
+      const categories = JSON.parse(req.body.categories) as string;
       const data = {
         user: res.locals.user,
-        warehouseId: Number(req.body.warehouse),
-        product: { name: '', description: '', price: Number(req.body.price) },
-        categories: JSON.parse(req.body.categories),
+        warehouseId: Number(req.body.warehouse) || undefined,
+        product: {
+          name: JSON.parse(req.body.name),
+          description: JSON.parse(req.body.description),
+          price: Number(JSON.parse(req.body.price)),
+        },
+        categories: categories.split(','),
         image: files,
-        variant: JSON.parse(req.body.categories),
+        variant: JSON.parse(req.body.variant),
       };
       const response = await postProductService(data);
       return res.status(200).send(response);
@@ -81,6 +87,18 @@ export class ProductController {
         id,
         { ...req.body, user: res.locals.user },
         files,
+      );
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await deleteProductService(
+        res.locals.user,
+        Number(req.params.id),
       );
       return res.status(200).send(response);
     } catch (error) {
