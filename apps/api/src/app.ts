@@ -18,6 +18,7 @@ import { ProductRouter } from './routers/product.router';
 import { StockRouter } from './routers/stock.router';
 import { TrxRouter } from './routers/trx.router';
 import { join } from 'path';
+import { OrderRouter } from './routers/order.router';
 
 export default class App {
   private app: Express;
@@ -67,6 +68,7 @@ export default class App {
     const productRouter = new ProductRouter();
     const stockRouter = new StockRouter();
     const trxRouter = new TrxRouter();
+    const orderRouter = new OrderRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
@@ -79,6 +81,7 @@ export default class App {
     this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stocks', stockRouter.getRouter());
     this.app.use('/api/trx', trxRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
   }
 
   public start(): void {
