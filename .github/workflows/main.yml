@@ -38,8 +38,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
+            # export NVM_DIR=~/.nvm
+            # source ~/.nvm/nvm.sh
             cd ${{ secrets.SSH_FOLDER }}
             npm install
             npx prisma generate --schema=./apps/api/prisma/schema.prisma
