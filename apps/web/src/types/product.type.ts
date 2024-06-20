@@ -4,8 +4,8 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  price: number;
   isDelete: boolean;
+  price: number;
   createdAt: Date;
   updateAt: Date;
   productCategory: ProductCategory[];
