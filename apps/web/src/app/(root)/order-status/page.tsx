@@ -39,11 +39,11 @@ const OrderStatus = () => {
       {emptyMessage && <p>{emptyMessage}</p>}
       {transaction && (
         <div className="text-red-600">
-          <p>Transaction ID: {transaction.id}</p>
+          {/* <p>Transaction ID: {transaction.id}</p>
           <p>Status: {transaction.status}</p>
           <p>Total: {transaction.total}</p>
           <p>Customer: {transaction.customer_name}</p>
-          <p>Email: {transaction.customer_email}</p>
+          <p>Email: {transaction.customer_email}</p> */}
         </div>
       )}
     </div>

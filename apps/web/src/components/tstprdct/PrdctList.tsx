@@ -12,14 +12,14 @@ const ProductList = ({ data }: { data: any[] }) => {
   const dispatch = useAppDispatch();
 
   const handleClickBuy = (product: any) => {
-    dispatch(
-      addItemAsync({
-        userId: 5,
-        productId: product.id,
-        quantity: 1,
-        variantId: 1,
-      }),
-    );
+    // dispatch(
+    //   addItemAsync({
+    //     userId: 5,
+    //     productId: product.id,
+    //     quantity: 1,
+    //     variantId: 1,
+    //   }),
+    // );
     console.log('Item added to cart');
   };
 

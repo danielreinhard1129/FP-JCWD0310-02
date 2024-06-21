@@ -9,9 +9,10 @@ import { useEffect, useState } from 'react';
 interface userArgs extends User {
   password: string;
   email: string;
+  profileImageUrl: string;
 }
 
-const profilePage = () => {
+const ProfilePage = () => {
   const { updateUser } = useUpdateUser();
   const { getUser } = useGetUser();
   const [user, setUser] = useState<userArgs>({} as userArgs);
@@ -115,4 +116,4 @@ const profilePage = () => {
     </div>
   );
 };
-export default profilePage;
+export default ProfilePage;
