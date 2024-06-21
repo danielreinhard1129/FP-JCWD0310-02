@@ -1,5 +1,4 @@
 'use client';
-import { useGetProduct } from '@/hooks/products/useGetProduct';
 import React from 'react';
 import {
   Table,
@@ -14,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useGetProducts } from '@/hooks/products/useGetProducts';
 
 const StateData = (label: string) => {
   return (
@@ -28,7 +28,7 @@ const StateData = (label: string) => {
 };
 
 const ProductSearch = () => {
-  const { data, isLoading, query, setQuery, setSearch } = useGetProduct();
+  const { data, isLoading, query, setQuery } = useGetProducts();
   const handlePrevPage = () => {
     if (query.page == 1) {
       return;
@@ -55,8 +55,8 @@ const ProductSearch = () => {
           </TableHeader>
           <TableBody>
             {data
-              ? data.dataWithStock?.productWithStock
-                ? data.dataWithStock.productWithStock.map((val) => (
+              ? data.data
+                ? data.data.map((val) => (
                     <TableRow key={val.name}>
                       <TableCell className="font-medium">{val.id}</TableCell>
                       <TableCell>{val.name}</TableCell>
@@ -68,8 +68,8 @@ const ProductSearch = () => {
                           : ''}
                       </TableCell>
                       <TableCell>{val.price}</TableCell>
-                      <TableCell>{val.stock.sum}</TableCell>
-                      <TableCell>{val.warehouseId}</TableCell>
+                      <TableCell>{val.stock}</TableCell>
+                      <TableCell>{val.stock}</TableCell>
                     </TableRow>
                   ))
                 : StateData('No Data Found !')
@@ -79,7 +79,10 @@ const ProductSearch = () => {
         </Table>
         <Input
           onChange={(e) => {
-            setSearch(e.currentTarget.value);
+            setQuery({
+              ...query,
+              search: e.currentTarget.value,
+            });
           }}
           placeholder="search"
         />

@@ -16,7 +16,7 @@ interface PaginationComponentProps {
   query: any;
 
   /** count (jumlah data yang ada di database,untuk memberikan max pagination) */
-  count: number;
+  count: number | 0;
 }
 
 /** Komponen untuk membuat pagination button, memberikan output button sebelumnya ( previous ) dan seterusnya ( next ),komponen juga sudah include index indicator
@@ -32,8 +32,8 @@ const PaginationPage = (props: PaginationComponentProps) => {
   };
   const handleNextPage = () => {
     if (
-      Number((props.count / props.take).toFixed()) >= 1 &&
-      props.page !== Number((props.count / props.take).toFixed())
+      props.page !== Math.ceil(props.count / props.take) &&
+      Math.ceil(props.count / props.take)
     ) {
       props.setQuery({
         ...props.query,
@@ -73,16 +73,16 @@ const PaginationPage = (props: PaginationComponentProps) => {
         >
           <div className="text-sm">{props.page}</div>
         </div>
-        {props.page == Number((props.count / props.take).toFixed()) ? (
+        {props.page == Math.ceil(props.count / props.take) ? (
           ''
-        ) : Number(props.count / props.take) > 0 ? (
+        ) : Number(props.count / props.take) > 1 ? (
           <>
             <div
               id="select-next-page-active"
               className="rounded-lg border bg-white text-black w-6 h-6 text-center flex justify-center items-center"
             >
               <div className="text-sm">
-                {(props.count / props.take).toFixed()}
+                {Math.ceil(props.count / props.take)}
               </div>
             </div>
           </>

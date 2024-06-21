@@ -35,7 +35,7 @@ export function SideNav({ items, setOpen, className }: SideNavProps) {
       setLastOpenItem(openItem);
       setOpenItem('');
     }
-  }, [isOpen]);
+  }, [isOpen, lastOpenItem, openItem]);
 
   return (
     <nav className="space-y-2 max-h-screen h-auto overflow-y-scroll no-scrollbar no-scrollbar::-webkit-scrollbar">

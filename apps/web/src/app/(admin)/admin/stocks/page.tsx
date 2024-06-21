@@ -17,7 +17,7 @@ import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
 import DataTables from '@/components/dashboard/DataTables';
 
 const AdminDashboardStocksPage = () => {
-  const { data, isLoading, query, setQuery, setSearch } = useGetProducts({
+  const { data, isLoading, query, setQuery, getProduct } = useGetProducts({
     page: 1,
     take: 10,
   });
@@ -38,7 +38,7 @@ const AdminDashboardStocksPage = () => {
             <DataTables
               loading={isLoading}
               data={data ? data.data : undefined}
-              type="products"
+              refetch={getProduct}
             />
           </CardContent>
         </Card>

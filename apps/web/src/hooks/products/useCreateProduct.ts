@@ -4,14 +4,14 @@ import { useState } from 'react';
 import useAxios from '../useAxios';
 import { FileWithPath } from 'react-dropzone';
 
-interface CreateProductPayload {
+export interface CreateProductPayload {
   image: File[];
   product: {
     name: string;
     description: string;
     price: string;
   };
-  warehouse: number;
+  warehouse: number | undefined;
   category: string[];
   variant: {
     color: string;

@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import SearchBarDebounce from '@/components/SearchBarDebounce';
 import { Label } from '@/components/ui/label';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -13,7 +14,14 @@ const Loading = () => {
   const elementLoading = index.split('').map((val, index) => {
     return (
       <>
-        <ProductCard category="" key={index} price={0} title="" skeleton />
+        <ProductCard
+          created={new Date(0)}
+          category=""
+          key={index}
+          price={0}
+          title=""
+          skeleton
+        />
       </>
     );
   });
@@ -24,13 +32,14 @@ const ProductsPage = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [size, setSize] = useState<string[]>([]);
   const [color, setColor] = useState<string[]>([]);
-  const { data, isLoading, query, setQuery, setSearch } = useGetProducts({
+  const { data, isLoading, query, setQuery } = useGetProducts({
     page: 1,
     take: 3,
   });
   const debounceCategory = useDebouncedCallback(() => {
     setQuery({
       ...query,
+      page: 1,
       filter: categories.join(','),
       size: size.join(','),
       color: color.join(','),
@@ -42,7 +51,9 @@ const ProductsPage = () => {
   return (
     <>
       <div className="w-screen px-20 py-8">
-        <SearchBarDebounce onValueChange={(e) => setSearch(e)} />
+        <SearchBarDebounce
+          onValueChange={(e) => setQuery({ ...query, page: 1, search: e })}
+        />
         <div id="title">
           <div id="top" className="flex flex-col">
             <div
@@ -66,22 +77,23 @@ const ProductsPage = () => {
           <div className="w-full flex-col">
             <div
               id="product-list"
-              className="grid grid-cols-[repeat(auto-fit,minmax(200px,200px))] justify-around"
+              className="grid grid-cols-[repeat(auto-fit,minmax(180px,auto))] gap-6 justify-center"
             >
               {isLoading ? (
                 Loading()
               ) : data?.data.length ? (
                 data.data.map((val, indx) => {
                   return (
-                    <>
+                    <Link key={indx} href={'/products/' + val.id}>
                       <ProductCard
-                        key={indx}
                         title={val.name}
-                        price={0}
+                        price={val.price}
+                        images={val.productImages[0]?.url}
+                        created={val.createdAt}
                         category="baju"
                         skeleton={false}
                       />
-                    </>
+                    </Link>
                   );
                 })
               ) : (

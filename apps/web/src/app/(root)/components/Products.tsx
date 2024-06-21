@@ -1,10 +1,14 @@
+import Image from 'next/image';
+
 export default function ProductsPage() {
   return (
     <section>
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-6 w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="/landing_page/foot.png"
               alt=""
               className="w-full h-full object-cover object-center rounded-3xl"
@@ -22,7 +26,9 @@ export default function ProductsPage() {
         </div>
         <div className="flex flex-col gap-y-6 w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="/landing_page/foot.png"
               alt=""
               className="w-full h-full object-cover object-center rounded-3xl"
@@ -40,7 +46,9 @@ export default function ProductsPage() {
         </div>
         <div className="flex flex-col gap-y-6 w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="/landing_page/foot.png"
               alt=""
               className="w-full h-full object-cover object-center rounded-3xl"
@@ -58,7 +66,9 @@ export default function ProductsPage() {
         </div>
         <div className="flex flex-col gap-y-6 w-72">
           <div className="relative bg-white w-full h-80 p-3 rounded-3xl">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="/landing_page/foot.png"
               alt=""
               className="w-full h-full object-cover object-center rounded-3xl"

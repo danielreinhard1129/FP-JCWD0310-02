@@ -14,6 +14,7 @@ import { NotificationInstance } from 'antd/es/notification/interface';
 interface DataTablesProps {
   data: Product[] | undefined;
   loading: boolean;
+  refetch: () => void;
 }
 
 interface DataTypeProducts {
@@ -55,7 +56,7 @@ const ModalConfirm = (
   });
 };
 
-const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
+const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
   const [api, contextHolder] = notification.useNotification();
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([
     {
@@ -71,7 +72,7 @@ const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
       warehouse: '',
     },
   ]);
-  const { deleteProduct } = useDeleteProduct();
+  const { deleteProduct, loading: deleteLoading } = useDeleteProduct();
   const numberFormat = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -138,7 +139,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
       render: (_, record) => (
         <Tag color={record.status ? 'red' : 'green'}>
           {record.status ? 'Deleted' : 'Listed'}
-          {record.status}
         </Tag>
       ),
       width: 80,
@@ -173,6 +173,10 @@ const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
   ];
 
   useEffect(() => {
+    refetch();
+  }, [deleteLoading]);
+
+  useEffect(() => {
     if (data) {
       setDataTable(
         data.map((val, indx) => {
@@ -183,7 +187,7 @@ const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
             stocks: val.stock,
             status: val.isDelete,
             categories: val.productCategory,
-            images: val.productImages[0].url,
+            images: val.productImages[0]?.url || '',
             price: numberFormat.format(val.price),
             variant: val.variant,
             warehouse: '',
@@ -195,12 +199,16 @@ const DataTables: FC<DataTablesProps> = ({ data, loading }) => {
 
   return (
     <>
-      {contextHolder}
-      <Table
-        columns={columnsProducts}
-        loading={loading}
-        dataSource={dataTable}
-      />
+      <div className="overflow-x-hidden">
+        <div className="overflow-x-scroll overflow-y-scroll no-scrollbar">
+          {contextHolder}
+          <Table
+            columns={columnsProducts}
+            loading={loading}
+            dataSource={dataTable}
+          />
+        </div>
+      </div>
     </>
   );
 };

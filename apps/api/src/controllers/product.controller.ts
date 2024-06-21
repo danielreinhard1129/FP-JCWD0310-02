@@ -4,6 +4,8 @@ import { getProductsService } from '@/services/products/getProductsService';
 import { postProductService } from '@/services/products/postProductService';
 import { patchProductService } from '@/services/products/patchProductService';
 import { deleteProductService } from '@/services/products/deleteProductService';
+import { Product } from '@prisma/client';
+import { CreateProductParams, ProductPostBody } from '@/types/product.type';
 
 export class ProductController {
   async getProduct(req: Request, res: Response, next: NextFunction) {
@@ -59,16 +61,12 @@ export class ProductController {
       if (!files.length) {
         return res.status(200).send({ messages: 'no image uploaded' });
       }
-      const categories = JSON.parse(req.body.categories) as string;
+      const categories = JSON.parse(req.body.category) as string[];
       const data = {
         user: res.locals.user,
         warehouseId: Number(req.body.warehouse) || undefined,
-        product: {
-          name: JSON.parse(req.body.name),
-          description: JSON.parse(req.body.description),
-          price: Number(JSON.parse(req.body.price)),
-        },
-        categories: categories.split(','),
+        product: JSON.parse(req.body.product) as ProductPostBody,
+        categories: categories,
         image: files,
         variant: JSON.parse(req.body.variant),
       };
@@ -83,11 +81,21 @@ export class ProductController {
     try {
       const id = Number(req.params.id);
       const files = req.files as Express.Multer.File[];
-      const response = await patchProductService(
-        id,
-        { ...req.body, user: res.locals.user },
-        files,
-      );
+      const categories = req.body.category
+        ? (JSON.parse(req.body.category) as string[])
+        : [];
+      const body = {
+        user: res.locals.user,
+        isDelete: req.body.isDelete ? JSON.parse(req.body.isDelete) : undefined,
+        warehouseId: Number(req.body.warehouse) || undefined,
+        product: req.body.product
+          ? (JSON.parse(req.body.product) as ProductPostBody)
+          : undefined,
+        categories: categories,
+        images: files,
+        variant: req.body.variant ? JSON.parse(req.body.variant) : [],
+      };
+      const response = await patchProductService(id, body);
       return res.status(200).send(response);
     } catch (error) {
       next(error);
