@@ -8,7 +8,7 @@ interface VerifyTokenArgs {
 const useVerifyToken = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const dispatch = useDispatch();
+
   const token = searchParams.get('token');
 
   console.log(searchParams.get('token'));
@@ -28,7 +28,7 @@ const useVerifyToken = () => {
           },
         },
       );
-
+      alert('Token Verified');
       console.log(response);
       router.replace('/login');
     } catch (error) {

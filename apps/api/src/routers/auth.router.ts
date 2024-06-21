@@ -32,6 +32,14 @@ export class AuthRouter {
       '/register/google',
       this.authController.registerGoogleController,
     );
+    this.router.post(
+      '/verify-email',
+      this.authController.verifyEmailController,
+    );
+    this.router.post(
+      '/reset-password',
+      this.authController.verifyEmailController,
+    );
   }
   getRouter(): Router {
     return this.router;

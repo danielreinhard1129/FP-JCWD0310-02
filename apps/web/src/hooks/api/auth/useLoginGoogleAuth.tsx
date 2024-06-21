@@ -1,14 +1,14 @@
 'use client';
 
-import useAxios from '@/hooks/useAxios';
 import { useAppDispatch } from '@/redux/hooks';
 import { loginAction } from '@/redux/slicers/userSlice';
 import { useGoogleLogin } from '@react-oauth/google';
 import { OAuth2Client } from 'google-auth-library';
 import { useRouter } from 'next/navigation';
+
 import { axiosInstance } from '@/lib/axios';
+
 const useLoginGoogleAuth = () => {
-  const { axiosInstance } = useAxios();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const googleLogin = useGoogleLogin({

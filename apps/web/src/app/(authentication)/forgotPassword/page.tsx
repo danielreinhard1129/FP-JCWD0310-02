@@ -1,18 +1,18 @@
 'use client';
-import useVerifyToken from '@/hooks/api/auth/useVerifyToken';
+import useVerifyEmail from '@/hooks/api/auth/useVerifyEmail';
 import { useFormik } from 'formik';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 const verify = () => {
-  const { verifyToken } = useVerifyToken();
+  const { verifyEmail } = useVerifyEmail();
   const formik = useFormik({
     initialValues: {
-      password: '',
+      email: '',
     },
     onSubmit: (values) => {
-      verifyToken(values);
+      verifyEmail(values);
     },
   });
+  console.log(formik.values);
   return (
     <>
       <div className="flex flex-col h-screen w-screen justify-center items-center">
@@ -21,16 +21,16 @@ const verify = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="text-3xl text-center text-semibold">
-            Verify your password
+            Verify your email
           </div>
-          <div className="text-xl text-semibold">Input your password</div>
+          <div className="text-xl text-semibold">Input your Email</div>
           <input
             className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
-            type="password"
-            name="password"
-            placeholder="Input your password"
+            type="email"
+            name="email"
+            placeholder="Input your email"
             onChange={formik.handleChange}
-            value={formik.values.password}
+            value={formik.values.email}
           ></input>
           <button
             className="p-4 w-full bg-black text-white rounded-lg"
