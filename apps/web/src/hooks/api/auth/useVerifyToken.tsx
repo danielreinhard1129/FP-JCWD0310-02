@@ -8,6 +8,8 @@ interface VerifyTokenArgs {
 const useVerifyToken = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const token = searchParams.get('token');
 
   const token = searchParams.get('token');
 

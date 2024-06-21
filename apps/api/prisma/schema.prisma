@@ -96,10 +96,11 @@ model Order {
   warehouseId Int
 
   orderItems OrderItems[]
-  payments   Payments?
+  // payments   Payments?    @relation(fields: [paymentsId], references: [id])
 
-  user      Users     @relation(fields: [userId], references: [id])
-  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+  user       Users     @relation(fields: [userId], references: [id])
+  warehouse  Warehouse @relation(fields: [warehouseId], references: [id])
+  paymentsId Int?
 
   @@map("orders")
 }
@@ -132,9 +133,10 @@ model Payments {
   createdAt       DateTime           @default(now())
   updateAt        DateTime           @updatedAt
 
-  orderId String @unique
+  // orderId String @unique
 
-  order Order @relation(fields: [orderId], references: [id])
+  // order Order @relation(fields: [orderId], references: [id])
+  // Order Order[]
 
   @@map("payments")
 }
@@ -212,8 +214,8 @@ model ProductImage {
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
-  description String
   price       Int
+  description String
   isDelete    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt
