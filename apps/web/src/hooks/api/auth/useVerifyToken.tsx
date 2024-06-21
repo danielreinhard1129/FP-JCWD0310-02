@@ -11,8 +11,6 @@ const useVerifyToken = () => {
   const dispatch = useDispatch();
   const token = searchParams.get('token');
 
-  const token = searchParams.get('token');
-
   console.log(searchParams.get('token'));
 
   const verifyToken = async (payload: VerifyTokenArgs) => {
