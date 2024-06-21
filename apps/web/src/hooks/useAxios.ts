@@ -1,6 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
 import { useAppDispatch } from '@/redux/hooks';
-// import { logoutAction } from '@/redux/slicers/userSlice';
 import { useEffect } from 'react';
 
 const useAxios = () => {
@@ -24,7 +23,6 @@ const useAxios = () => {
       (response) => response,
       (err) => {
         if (err?.response?.status === 403) {
-          //   dispatch(logoutAction());
           localStorage.removeItem('token');
         }
         return Promise.reject(err);

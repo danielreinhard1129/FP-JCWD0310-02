@@ -1,4 +1,4 @@
-import { jwtSecretKey } from '@/config';
+import { jwtSecretKey, NEXT_PUBLIC_BASE_WEB } from '@/config';
 import { transporter } from '@/lib/nodemailer';
 import prisma from '@/prisma';
 import { sign } from 'jsonwebtoken';
@@ -23,7 +23,7 @@ export const verifyEmail = async (body: User) => {
       subject: 'Register success ',
       text:
         'klick link di bawah ini untuk verivikasi akun anda ' +
-        `http://localhost:3000/forgotPassword/resetPassword?token=${generateToken}`,
+        `${NEXT_PUBLIC_BASE_WEB}/forgotPassword/resetPassword?token=${generateToken}`,
     });
     await prisma.users.update({
       where: {

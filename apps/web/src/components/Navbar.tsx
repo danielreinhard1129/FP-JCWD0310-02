@@ -21,6 +21,7 @@ import {
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface User {
   id: number;
@@ -47,7 +48,7 @@ export const Navbar = () => {
     <>
       {/* Mobile */}
       <div>
-        <div className="w-[358px] p-4 px-6 bg-neutral-50 rounded-xl flex justify-between items-start mt-8 md:hidden">
+        <div className="w-[90vw] p-4 px-6 bg-neutral-50 rounded-xl flex justify-between items-start mt-8 md:hidden">
           <div className="flex items-start gap-[90px]">
             <AlignJustify className="w-5 h-5" />
             <div className="w-20 h-5 flex justify-center items-center font-semibold">
@@ -61,8 +62,8 @@ export const Navbar = () => {
         </div>
       </div>
       {/* Dektop */}
-      <div className="w-[1320px] h-24 p-8 bg-white rounded-3xl flex justify-between items-center my-8 text-lg max-md:hidden">
-        <div className="flex items-start gap-10">
+      <div className="w-[90vw] h-24 p-8 bg-white rounded-3xl flex justify-between items-center my-8 text-lg max-md:hidden">
+        <Link href={'/products'} className="flex items-start gap-10">
           <div className="text-neutral-800 font-semibold">New Drops 🔥</div>
           <div className="flex items-center gap-0.5 text-neutral-800 font-semibold">
             Men
@@ -70,7 +71,7 @@ export const Navbar = () => {
           <div className="flex items-center gap-0.5 text-neutral-800 font-semibold">
             Women
           </div>
-        </div>
+        </Link>
         <div className="w-32 h-8 flex justify-center items-center font-extrabold text-center">
           LOGO
         </div>

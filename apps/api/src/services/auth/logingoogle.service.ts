@@ -1,4 +1,4 @@
-import { jwtSecretKey } from '@/config';
+import { jwtSecretKey, NEXT_PUBLIC_BASE_WEB } from '@/config';
 import prisma from '@/prisma';
 import { google } from 'googleapis';
 import { sign } from 'jsonwebtoken';
@@ -17,7 +17,7 @@ interface GoogleUser {
 const oAuth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_OAUTH_CLIENT_ID,
   process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-  'http://localhost:3000',
+  NEXT_PUBLIC_BASE_WEB,
 );
 
 export const loginGoogleService = async (code: string) => {

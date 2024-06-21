@@ -2,12 +2,14 @@
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import useAxios from '../useAxios';
 export const useGetImagesBlob = () => {
+  const { axiosInstance } = useAxios();
   const getImagesBlob = async (urls: string[]) => {
     try {
       const response = await axios.all(
         urls.map(async (val) => {
-          return await axios.get('http://localhost:8000/api/assets/' + val, {
+          return await axiosInstance.get('/assets/' + val, {
             responseType: 'blob',
           });
         }),

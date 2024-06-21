@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export const Footer = () => {
   return (
-    <footer className="w-full flex flex-col items-center relative mx-2 md:mx-8">
+    <footer className="w-[90vw] mt-20 flex flex-col items-center relative mx-2 md:mx-8">
       <div className="w-full rounded-[30px] px-4 md:px-10 bg-primary relative overflow-hidden">
         <div className="w-full py-10 flex flex-col md:flex-row justify-between gap-4">
           <div className="text-primary-foreground md:text-base text-sm tracking-tight">
@@ -49,7 +49,7 @@ export const Footer = () => {
         </div>
         <Image alt="logo" src={logoWhite} className="w-full h-auto" />
       </div>
-      <Label className="my-2">@Copyright KicksIn</Label>
+      {/* <Label className="my-2">@Copyright KicksIn</Label> */}
     </footer>
   );
 };

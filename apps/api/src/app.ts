@@ -71,7 +71,7 @@ export default class App {
       res.send(`Hello, Purwadhika Student !`);
     });
     this.app.use('/api/auth', authRouter.getRouter());
-    this.app.use('/api/product', productRouter.getRouter());
+    this.app.use('/api/products', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stocks', stockRouter.getRouter());
     this.app.use(`/api/user`, userRouter.getRouter());
