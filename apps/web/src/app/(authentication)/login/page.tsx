@@ -4,9 +4,12 @@ import useLoginGoogleAuth from '@/hooks/api/auth/useLoginGoogleAuth';
 import useLogin from '@/hooks/api/auth/useLogin';
 
 import { useFormik } from 'formik';
+import { Route } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const { login } = useLogin();
+  const router = useRouter();
   const { googleLogin } = useLoginGoogleAuth();
   const formik = useFormik({
     initialValues: {
@@ -18,6 +21,7 @@ const Login = () => {
       login(values);
     },
   });
+  console.log(formik.values);
   return (
     <div className="h-screen w-screen flex flex-col md:flex-row bg-white ">
       <div className="md:w-1/2 h-full flex justify-center items-center md:block relative">
@@ -38,7 +42,12 @@ const Login = () => {
             onSubmit={formik.handleSubmit}
           >
             <div className="text-4xl font-bold max-md:text-center">Login</div>
-            <div className="text-2xl font-semibold">Forgot your password?</div>
+            <div
+              className="text-2xl font-semibold"
+              onClick={() => router.replace('/forgotPassword')}
+            >
+              Forgot your password?
+            </div>
             <input
               className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
               placeholder="Email"

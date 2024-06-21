@@ -1,3 +1,4 @@
+'use client';
 import { ShoppingBag } from 'lucide-react';
 import { Search } from 'lucide-react';
 import { User } from 'lucide-react';
@@ -18,7 +19,30 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export default function Navbar() {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+interface User {
+  id: number;
+  email: string;
+  role: string;
+}
+export const Navbar = () => {
+  const [email, setEmail] = useState('');
+  const router = useRouter();
+  useEffect(() => {
+    const storeUser = localStorage.getItem('persist:shoes');
+    if (storeUser) {
+      const parseUser = JSON.parse(storeUser as string);
+      const findEmail = JSON.parse(parseUser?.user).email;
+      setEmail(findEmail);
+    }
+  }, []);
+  console.log(email);
+  const handleLogout = () => {
+    localStorage.removeItem('persist:shoes');
+    setEmail('');
+  };
   return (
     <>
       {/* Mobile */}
@@ -57,27 +81,42 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <User className="md:w-6 md:h-6" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="absolute -right-5 mt-2 w-32">
-                <DropdownMenuLabel className="pb-0">
-                  My Account
-                </DropdownMenuLabel>
-                <DropdownMenuItem disabled className="pt-0">
-                  Email
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Log out</DropdownMenuItem>
-              </DropdownMenuContent>
+              {!email ? (
+                <DropdownMenuContent className="  mt-2 px-1">
+                  <DropdownMenuLabel
+                    className="text-center  font-bold text-base"
+                    onClick={() => router.push('/login')}
+                  >
+                    Login
+                  </DropdownMenuLabel>
+                </DropdownMenuContent>
+              ) : (
+                <DropdownMenuContent className=" mt-2 px-1">
+                  <DropdownMenuLabel className="pb-0">
+                    My Account
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem disabled className="pt-0 ">
+                    {email}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => router.push('/profile')}>
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleLogout()}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              )}
             </DropdownMenu>
           </div>
-          {/* <User className="md:w-6 md:h-6" /> */}
+
           <ShoppingBag className="w-6 h-6" />
         </div>
       </div>
     </>
   );
-}
+};

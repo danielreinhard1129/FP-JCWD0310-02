@@ -11,6 +11,8 @@ const useVerifyToken = () => {
   const dispatch = useDispatch();
   const token = searchParams.get('token');
 
+  const token = searchParams.get('token');
+
   console.log(searchParams.get('token'));
 
   const verifyToken = async (payload: VerifyTokenArgs) => {
@@ -28,7 +30,7 @@ const useVerifyToken = () => {
           },
         },
       );
-
+      alert('Token Verified');
       console.log(response);
       router.replace('/login');
     } catch (error) {

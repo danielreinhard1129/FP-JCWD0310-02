@@ -18,6 +18,7 @@ import { ProductRouter } from './routers/product.router';
 import { StockRouter } from './routers/stock.router';
 import { TrxRouter } from './routers/trx.router';
 import { join } from 'path';
+import { UserRouter } from './routers/user.router';
 
 export default class App {
   private app: Express;
@@ -66,6 +67,9 @@ export default class App {
     const cartRouter = new CartRouter();
     const productRouter = new ProductRouter();
     const stockRouter = new StockRouter();
+
+    const userRouter = new UserRouter();
+
     const trxRouter = new TrxRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
@@ -78,6 +82,9 @@ export default class App {
     this.app.use('/api/product', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stocks', stockRouter.getRouter());
+
+    this.app.use(`/api/user`, userRouter.getRouter());
+
     this.app.use('/api/trx', trxRouter.getRouter());
   }
 

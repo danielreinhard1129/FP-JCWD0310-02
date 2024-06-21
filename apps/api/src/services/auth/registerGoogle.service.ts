@@ -47,6 +47,8 @@ export const registerGoogleService = async (code: string) => {
           role: 'CUSTOMER',
           isDelete: false,
           token: '',
+          profileImageUrl: data.picture,
+          isVerify: true,
         },
       });
     }

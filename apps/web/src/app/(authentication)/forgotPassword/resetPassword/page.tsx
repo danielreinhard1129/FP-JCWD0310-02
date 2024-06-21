@@ -1,16 +1,17 @@
 'use client';
+import useResetPassword from '@/hooks/api/auth/useResetPassword';
 import useVerifyToken from '@/hooks/api/auth/useVerifyToken';
 import { useFormik } from 'formik';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 const verify = () => {
-  const { verifyToken } = useVerifyToken();
+  const { resetPassword } = useResetPassword();
   const formik = useFormik({
     initialValues: {
       password: '',
     },
     onSubmit: (values) => {
-      verifyToken(values);
+      resetPassword(values);
     },
   });
   return (
@@ -21,7 +22,7 @@ const verify = () => {
           onSubmit={formik.handleSubmit}
         >
           <div className="text-3xl text-center text-semibold">
-            Verify your password
+            Update your password
           </div>
           <div className="text-xl text-semibold">Input your password</div>
           <input
@@ -36,7 +37,7 @@ const verify = () => {
             className="p-4 w-full bg-black text-white rounded-lg"
             type="submit"
           >
-            verify
+            Reset Password
           </button>
         </form>
       </div>

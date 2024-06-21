@@ -1,5 +1,5 @@
 import prisma from '@/prisma';
-import { comparePassword } from '@/lib/bcrypt';
+import { comparePassword, hashedPassword } from '@/lib/bcrypt';
 import jwt from 'jsonwebtoken';
 
 interface VerifyBody {
@@ -10,7 +10,7 @@ interface jwtPayload {
   id: number;
 }
 
-export const authVerifyService = async (body: VerifyBody) => {
+export const resetPassword = async (body: VerifyBody) => {
   try {
     const { token, password } = body;
 
@@ -26,21 +26,10 @@ export const authVerifyService = async (body: VerifyBody) => {
       throw new Error('User not found');
     }
 
-    if (!validateUser.password) {
-      throw new Error('Password not set for the user');
-    }
-
-    const isPasswordCorrect = await comparePassword(
-      password,
-      validateUser.password,
-    );
-    if (!isPasswordCorrect) {
-      throw new Error('Incorrect password');
-    }
-
     await prisma.users.update({
       where: { id: userId },
       data: {
+        password: await hashedPassword(password),
         isVerify: true,
       },
     });

@@ -25,7 +25,7 @@ export const registerService = async (body: User) => {
   });
 
   const generateToken = sign({ id: user.id }, jwtSecretKey, {
-    expiresIn: '5h',
+    expiresIn: '2h',
   });
 
   // const token = req.headers.authorization?.split(' ')[1];
