@@ -1,3 +1,4 @@
+import { NEXT_PUBLIC_BASE_WEB } from '@/config';
 import prisma from '@/prisma';
 import { nanoid } from 'nanoid';
 
@@ -52,9 +53,9 @@ export const createTrxService = async (body: any) => {
         name: product.name,
       })),
       callbacks: {
-        finish: `http://localhost:3000/order-status?transaction_id=${transaction_id}`,
-        error: `http://localhost:3000/order-status?transaction_id=${transaction_id}`,
-        pending: `http://localhost:3000/order-status?transaction_id=${transaction_id}`,
+        finish: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
+        error: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
+        pending: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
       },
     };
 

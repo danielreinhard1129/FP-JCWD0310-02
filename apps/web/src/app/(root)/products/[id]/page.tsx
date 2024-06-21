@@ -7,6 +7,17 @@ import ProductCard from '@/components/ProductCard';
 import { useGetProduct } from '@/hooks/products/useGetProduct';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
+import Image from 'next/image';
+import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import Link from 'next/link';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Card, CardContent } from '@/components/ui/card';
 
 const ProductDetailPage = ({ params }: { params: { id: number } }) => {
   const { data, isLoading } = useGetProduct(params.id);
@@ -23,15 +34,12 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
   return (
     <>
       <title>Jaket Kulit</title>
-      <section className="w-full bg-gray-300 py-8">
+      <section className="w-[80vw] bg-gray-300 py-8 rounded-xl">
         <div
           id="content"
-          className="p-4 grid md:grid-flow-col-dense grid-flow-row-dense gap-8"
+          className="p-4 flex flex-col md:flex-row w-full h-full gap-8"
         >
-          <div
-            id="left-content"
-            className="w-full h-fit grid grid-cols-2 gap-4"
-          >
+          <div id="left-content" className="w-full gap-4">
             {isLoading ? (
               <>
                 <Skeleton className="w-40 h-40" />
@@ -39,25 +47,53 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 <Skeleton className="w-40 h-40" />
                 <Skeleton className="w-40 h-40" />
               </>
+            ) : data?.data.productImages.length ? (
+              <div className="grid">
+                <Carousel className="w-full border border-input rounded-xl p-2 bg-slate-200">
+                  <CarouselContent>
+                    {data && data.data.productImages.length ? (
+                      data.data.productImages.map((val, index) => (
+                        <CarouselItem key={index}>
+                          <div className="p-1">
+                            <Card>
+                              <CardContent className="flex aspect-square items-center justify-center p-6 relative">
+                                <Image
+                                  src={`${NEXT_PUBLIC_BASE_API_URL}assets/${val.url}`}
+                                  alt="image"
+                                  width={200}
+                                  height={200}
+                                  className="w-full h-full rounded-lg"
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      ))
+                    ) : (
+                      <CarouselItem>
+                        <Card>
+                          <CardContent className="flex aspect-square items-center justify-center">
+                            <Label>
+                              No Images....Please upload your images
+                            </Label>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    )}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-4 border-black" />
+                  <CarouselNext className="right-4 border-black" />
+                </Carousel>
+              </div>
             ) : (
-              data?.data.productImages.map((val) => {
-                return (
-                  <>
-                    <img
-                      alt="image"
-                      src={`http://localhost:3000/api/${val.url}`}
-                      className=""
-                      width={100}
-                      height={100}
-                    />
-                  </>
-                );
-              })
+              <div className="w-full col-span-2 flex justify-center items-center rounded-lg h-full bg-white">
+                <Label>No images for this product</Label>
+              </div>
             )}
           </div>
           <div
             id="right-content"
-            className="md:w-[30vw] w-full flex flex-col gap-4"
+            className="max-w-[400px] w-full flex flex-col gap-4"
           >
             {isLoading ? (
               <>
@@ -73,12 +109,12 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 </Button>
                 <Label className="font-bold text-2xl">{data?.data.name}</Label>
                 <Label className="font-bold text-lg text-blue-500">
-                  {data ? priceFormat.format(0) : 'Rp Nan'}
+                  {data ? priceFormat.format(data.data.price) : 'Rp Nan'}
                 </Label>
               </>
             )}
 
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-4">
               {isLoading ? (
                 <>
                   <div className="flex justify-between mt-2 items-center">
@@ -89,33 +125,53 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between items-center">
-                    <Label className="text-base">SIZE</Label>
-                    <Label className="underline font-medium text-xs">
-                      SIZE CHART
-                    </Label>
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <Label className="text-base">SIZE</Label>
+                      <Label className="underline font-medium text-xs">
+                        SIZE CHART
+                      </Label>
+                    </div>
+                    <div
+                      id="size-select"
+                      className="grid grid-cols-[repeat(auto-fit,minmax(32px,32px))] gap-[4px] text-xs"
+                    >
+                      {data
+                        ? data.data.variant.map((variant, idx) => {
+                            return (
+                              <div
+                                key={idx}
+                                className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center"
+                              >
+                                {variant.size}
+                              </div>
+                            );
+                          })
+                        : null}
+                    </div>
                   </div>
-                  <div
-                    id="size-select"
-                    className="grid grid-cols-[repeat(auto-fit,minmax(32px,32px))] gap-[4px] text-xs"
-                  >
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      XS
+                  <div>
+                    <div className="flex justify-between items-center">
+                      <Label className="text-base">COLOR</Label>
+                      <Label className="underline font-medium text-xs">
+                        SIZE CHART
+                      </Label>
                     </div>
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      S
-                    </div>
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      M
-                    </div>
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      L
-                    </div>
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      XL
-                    </div>
-                    <div className="w-8 h-8 bg-primary text-primary-foreground rounded-md flex justify-center items-center">
-                      XXL
+                    <div
+                      id="size-select"
+                      className="grid grid-cols-[repeat(auto-fit,minmax(32px,32px))] gap-[4px] text-xs"
+                    >
+                      {data
+                        ? data.data.variant.map((variant, idx) => {
+                            return (
+                              <div
+                                key={idx}
+                                style={{ backgroundColor: variant.color }}
+                                className="w-8 h-8 text-primary-foreground rounded-md flex justify-center items-center text-xs"
+                              ></div>
+                            );
+                          })
+                        : null}
                     </div>
                   </div>
                 </>
@@ -173,18 +229,21 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                   <ProductCard
                     category="baju"
                     price={125000}
+                    created={new Date()}
                     title="ADIDAS 4DFWD X PARLEY RUNNING SHOES"
                     skeleton={isLoadingSuggestion}
                   />
                   <ProductCard
                     category="baju"
                     price={125000}
+                    created={new Date()}
                     title="ADIDAS 4DFWD X PARLEY RUNNING SHOES"
                     skeleton={isLoadingSuggestion}
                   />
                   <ProductCard
                     category="baju"
                     price={125000}
+                    created={new Date()}
                     title="ADIDAS 4DFWD X PARLEY RUNNING SHOES"
                     skeleton={isLoadingSuggestion}
                   />
@@ -193,15 +252,17 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
             ) : dataSuggestion?.data.length ? (
               dataSuggestion.data.map((val, indx) => {
                 return (
-                  <>
+                  <Link href={'/products/' + val.id} key={indx}>
                     <ProductCard
                       key={indx}
                       title={val.name}
-                      price={0}
+                      price={val.price}
+                      created={val.createdAt}
+                      images={val.productImages[0].url}
                       category="baju"
                       skeleton={false}
                     />
-                  </>
+                  </Link>
                 );
               })
             ) : (

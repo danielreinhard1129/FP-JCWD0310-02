@@ -19,6 +19,7 @@ interface GetProductsArg extends PaginationQueryParams {
   filter?: string;
   size?: string;
   color?: string;
+  search?: string;
   warehouse?: number;
 }
 
@@ -27,7 +28,6 @@ export const useGetProducts = (queryParams?: {
   take: number;
 }) => {
   const [data, setData] = useState<GetProductsResponse>();
-  const [search, setSearch] = useState<String>('');
   const [query, setQuery] = useState<GetProductsArg>({
     page: queryParams?.page || 1,
     take: queryParams?.take || 9,
@@ -45,7 +45,6 @@ export const useGetProducts = (queryParams?: {
         },
       );
       setData(response.data);
-      console.log('ini response', response);
     } catch (error) {
     } finally {
       setTimeout(() => setIsLoading(false), 500);
@@ -63,9 +62,9 @@ export const useGetProducts = (queryParams?: {
     query.sortBy,
     query.sortOrder,
     query.take,
+    query.search,
     query.warehouse,
-    search,
   ]);
 
-  return { data, isLoading, setQuery, setSearch, query };
+  return { data, isLoading, setQuery, query, getProduct };
 };

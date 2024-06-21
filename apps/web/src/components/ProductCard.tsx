@@ -1,10 +1,15 @@
 import React from 'react';
 import { Skeleton } from './ui/skeleton';
+import Image from 'next/image';
+import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { Label } from './ui/label';
 
 interface ProductCardAttribute {
   title: string | '';
   category: string | 'baju';
   price: number | 0;
+  created: Date;
+  images?: string;
   skeleton: boolean | Boolean | 'false';
 }
 
@@ -24,15 +29,26 @@ const ProductCard = (param: ProductCardAttribute) => {
             <>
               <Skeleton className="self-stretch w-[180px] relative rounded-3xl max-h-full object-cover z-0" />
             </>
+          ) : param.images ? (
+            <>
+              <Image
+                width={200}
+                height={200}
+                className="self-stretch w-[180px] relative rounded-3xl max-h-full object-cover z-0"
+                alt="Images"
+                src={`${NEXT_PUBLIC_BASE_API_URL}assets/${param.images || ''}`}
+              />
+              {new Date().setMonth(new Date().getMonth() - 1) <
+              +new Date(param.created) ? (
+                <div className="m-0 absolute rounded-tl-3xl rounded-tr-none rounded-br-3xl rounded-bl-none bg-yellow-500 flex flex-row items-start justify-start py-3 px-4 z-10">
+                  <div className="relative font-semibold">New</div>
+                </div>
+              ) : null}
+            </>
           ) : (
             <>
-              <img
-                className="self-stretch w-[180px] relative rounded-3xl max-h-full object-cover z-0"
-                alt=""
-                src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/99486859-0ff3-46b4-949b-2d16af2ad421/custom-nike-dunk-high-by-you-shoes.png"
-              />
-              <div className="m-0 absolute rounded-tl-3xl rounded-tr-none rounded-br-3xl rounded-bl-none bg-yellow-500 flex flex-row items-start justify-start py-3 px-4 z-10">
-                <div className="relative font-semibold">New</div>
+              <div className="flex justify-center items-center w-full h-full">
+                <Label className="text-xs">No images for this product</Label>
               </div>
             </>
           )}

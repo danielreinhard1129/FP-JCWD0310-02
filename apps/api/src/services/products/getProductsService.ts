@@ -48,11 +48,8 @@ export const getProductsService = async (query: GetProductsQuery) => {
       },
     };
 
-    const countProduct = await prisma.product.findMany({
+    const countProduct = await prisma.product.count({
       where: whereClause,
-      select: {
-        _count: true,
-      },
     });
 
     const product = await prisma.product.findMany({

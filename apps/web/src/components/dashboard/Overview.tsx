@@ -48,6 +48,7 @@ export function Overview({ data }: { data: DataProps[] }) {
         {data[0].data.map((val, indx) => {
           return (
             <Line
+              key={indx}
               type="monotone"
               name={val.title}
               strokeWidth={2}

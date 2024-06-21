@@ -1,9 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
+import { NEXT_PUBLIC_BASE_API_URL } from '../utils/config';
 
-const appConfig = { baseUrl: `http://localhost:8000/api` };
-const { baseUrl } = appConfig;
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: baseUrl,
+  baseURL: NEXT_PUBLIC_BASE_API_URL,
 });
 
 axiosInstance.interceptors.request.use(

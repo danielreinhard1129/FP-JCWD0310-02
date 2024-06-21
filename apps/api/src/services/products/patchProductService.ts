@@ -1,22 +1,33 @@
 import prisma from '@/prisma';
-import { Product } from '@prisma/client';
+import { Prisma, Product, Variant } from '@prisma/client';
 import fs from 'fs';
 import { join } from 'path';
 
-interface UpdateProductParams extends Pick<Product, 'name' | 'description'> {
-  productCategory: string[];
+interface UpdateProductParams {
+  categories: string[];
   user: {
     id: number;
   };
+  images: Express.Multer.File[];
+  product?: {
+    name: string;
+    description: string;
+    price: number;
+  };
+  variant: Variant[];
+  isDelete: boolean;
 }
 
 export const patchProductService = async (
   id: number,
   body: UpdateProductParams,
-  files: Express.Multer.File[],
 ) => {
   try {
-    const { name, description, productCategory, user: userData } = body;
+    const { categories, variant, images, isDelete, user: userData } = body;
+    const productParam = body.product
+      ? body.product
+      : { name: undefined, description: undefined, price: undefined };
+    const { description, name, price } = productParam;
 
     const user = await prisma.users.findFirst({
       where: { id: userData.id },
@@ -43,11 +54,41 @@ export const patchProductService = async (
       try {
         const newProduct = await tx.product.update({
           where: { id: product.id },
-          data: { name, description },
+          data: {
+            name,
+            description,
+            isDelete,
+            price: price ? Number(price) : undefined,
+          },
+        });
+
+        const existVariant = await tx.variant.findMany({
+          where: { productId: newProduct.id },
+        });
+
+        const uniqueVariant = variant.reduce(
+          (a: Prisma.VariantCreateManyInput[], b) => {
+            if (
+              existVariant.every((c) => c.color != b.color || c.size != b.size)
+            ) {
+              a.push({
+                color: b.color,
+                size: b.size,
+                productId: newProduct.id,
+                isDelete: false,
+              });
+            }
+            return a;
+          },
+          [],
+        );
+
+        const newVariant = await tx.variant.createMany({
+          data: uniqueVariant,
         });
 
         const newCategory = await tx.category.createMany({
-          data: productCategory.map((val) => {
+          data: categories.map((val) => {
             return { name: val };
           }),
           skipDuplicates: true,
@@ -56,7 +97,7 @@ export const patchProductService = async (
         const existCategory = await tx.category.findMany({
           where: {
             name: {
-              in: productCategory,
+              in: categories,
             },
           },
         });
@@ -80,7 +121,7 @@ export const patchProductService = async (
           where: { productId: newProduct.id },
         });
 
-        if (productImages.length && files.length) {
+        if (images.length) {
           productImages.map((val) => {
             const imagePath = join(__dirname, '../../..' + val.url);
             if (fs.existsSync(imagePath)) {
@@ -90,11 +131,8 @@ export const patchProductService = async (
           const deleteImage = await tx.productImage.deleteMany({
             where: { productId: newProduct.id },
           });
-        }
-
-        if (files.length) {
           const newImages = await tx.productImage.createMany({
-            data: files.map((val) => {
+            data: images.map((val) => {
               return {
                 productId: newProduct.id,
                 url: `images/${val.filename}`,
@@ -112,6 +150,7 @@ export const patchProductService = async (
     return {
       messages: 'Success Update',
       data: updateProduct,
+      images,
     };
   } catch (error) {
     throw error;

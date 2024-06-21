@@ -2,7 +2,7 @@
 import useVerifyEmail from '@/hooks/api/auth/useVerifyEmail';
 import { useFormik } from 'formik';
 
-const verify = () => {
+const VerifyPage = () => {
   const { verifyEmail } = useVerifyEmail();
   const formik = useFormik({
     initialValues: {
@@ -43,4 +43,4 @@ const verify = () => {
     </>
   );
 };
-export default verify;
+export default VerifyPage;

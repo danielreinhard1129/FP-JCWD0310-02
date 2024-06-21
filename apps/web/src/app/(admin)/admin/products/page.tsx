@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import DataTables from '@/components/dashboard/DataTables';
 const AdminDashboardProductPage = () => {
-  const { data, isLoading, query, setQuery, setSearch } = useGetProducts({
+  const { data, isLoading, query, setQuery, getProduct } = useGetProducts({
     page: 1,
     take: 10,
   });
@@ -30,7 +30,11 @@ const AdminDashboardProductPage = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <DataTables loading={isLoading} data={data?.data} />
+            <DataTables
+              loading={isLoading}
+              data={data?.data}
+              refetch={getProduct}
+            />
           </CardContent>
         </Card>
       </div>

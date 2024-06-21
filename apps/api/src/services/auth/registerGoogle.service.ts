@@ -1,6 +1,7 @@
 import prisma from '@/prisma';
 import { google } from 'googleapis';
 import { transporter } from '@/lib/nodemailer';
+import { NEXT_PUBLIC_BASE_WEB } from '@/config';
 
 interface GoogleUser {
   id: string;
@@ -16,7 +17,7 @@ interface GoogleUser {
 const oAuth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_OAUTH_CLIENT_ID,
   process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-  'http://localhost:3000',
+  NEXT_PUBLIC_BASE_WEB,
 );
 
 export const registerGoogleService = async (code: string) => {

@@ -4,7 +4,7 @@ import useVerifyToken from '@/hooks/api/auth/useVerifyToken';
 import { useFormik } from 'formik';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
-const verify = () => {
+const VerifyPage = () => {
   const { resetPassword } = useResetPassword();
   const formik = useFormik({
     initialValues: {
@@ -44,4 +44,4 @@ const verify = () => {
     </>
   );
 };
-export default verify;
+export default VerifyPage;

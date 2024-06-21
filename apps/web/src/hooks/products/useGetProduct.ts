@@ -7,14 +7,14 @@ export interface GetProductsResponse {
 }
 
 export const useGetProduct = (productId: number) => {
-  const [id, setId] = useState<Number>(productId);
   const [data, setData] = useState<GetProductsResponse>();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   const getProduct = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.get<GetProductsResponse>(
-        `/products/${id}`,
+        `/products/${productId}`,
       );
       setData(response.data);
     } catch (error) {
@@ -24,9 +24,8 @@ export const useGetProduct = (productId: number) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     getProduct();
-  }, [id]);
+  }, []);
 
-  return { data, isLoading, id, setId };
+  return { data, isLoading, getProduct };
 };

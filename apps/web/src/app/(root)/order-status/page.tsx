@@ -1,8 +1,9 @@
 'use client';
+import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = 'http://localhost:8000/api/trx';
+const API_URL = NEXT_PUBLIC_BASE_API_URL + '/trx';
 
 const OrderStatus = () => {
   const router = useRouter();
@@ -39,11 +40,11 @@ const OrderStatus = () => {
       {emptyMessage && <p>{emptyMessage}</p>}
       {transaction && (
         <div className="text-red-600">
-          <p>Transaction ID: {transaction.id}</p>
+          {/* <p>Transaction ID: {transaction.id}</p>
           <p>Status: {transaction.status}</p>
           <p>Total: {transaction.total}</p>
           <p>Customer: {transaction.customer_name}</p>
-          <p>Email: {transaction.customer_email}</p>
+          <p>Email: {transaction.customer_email}</p> */}
         </div>
       )}
     </div>

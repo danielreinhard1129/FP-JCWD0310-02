@@ -1,20 +1,6 @@
 import prisma from '@/prisma';
+import { CreateProductParams } from '@/types/product.type';
 import { Product, Variant, VariantStock } from '@prisma/client';
-
-interface VariantWithStocks extends Pick<Variant, 'size' | 'color'> {
-  stock: Pick<VariantStock, 'quantity'>;
-}
-
-interface CreateProductParams {
-  user: {
-    id: number;
-  };
-  warehouseId: number | undefined;
-  product: Pick<Product, 'name' | 'description' | 'price'>;
-  categories: string[];
-  image: Express.Multer.File[];
-  variant: VariantWithStocks[];
-}
 
 export const postProductService = async (body: CreateProductParams) => {
   try {
@@ -22,7 +8,12 @@ export const postProductService = async (body: CreateProductParams) => {
       throw new Error('Please Login');
     }
     const userId = Number(body.user.id);
-    const { product, image, variant, categories } = body;
+    const product = {
+      name: body.product.name,
+      description: body.product.description,
+      price: Number(body.product.price),
+    };
+    const { image, variant, categories } = body;
 
     const user = await prisma.users.findFirst({
       where: {

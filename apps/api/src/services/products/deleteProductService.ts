@@ -35,7 +35,7 @@ export const deleteProductService = async (
       throw new Error('The product is not exist');
     }
 
-    if (!product.isDelete) {
+    if (product.isDelete) {
       return {
         messages: 'The product is already deleted',
       };
