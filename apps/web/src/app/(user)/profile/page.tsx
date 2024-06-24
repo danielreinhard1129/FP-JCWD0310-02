@@ -6,6 +6,7 @@ import useGetUser from '@/hooks/api/user/useGetUser';
 import useUpdateUser from '@/hooks/api/user/useUpdateUser';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
+import { ProfileAddress } from './components/ProfileAddress';
 interface userArgs extends User {
   password: string;
   email: string;
@@ -47,10 +48,9 @@ const ProfilePage = () => {
       updateUser(values);
     },
   });
-  //   const{}=useAppSelector((state)=>state.user)
 
   return (
-    <div className=" h-full">
+    <div className="h-full flex flex-col">
       <div className="text-3xl">Profile</div>
       <form
         className="flex max-md:flex-col gap-10 mt-11 max-md:items-center"
@@ -74,7 +74,7 @@ const ProfilePage = () => {
             </label>
           </div>
         </div>
-        <div className="md:w-2/3 max-md:w-80 border-4 p-4 flex flex-col gap-y-4 text-black  font-normal border-gray-300 rounded-lg shadow-lg">
+        <div className="md:w-full max-md:w-80 border-4 p-4 flex flex-col gap-y-4 text-black  font-normal border-gray-300 rounded-lg shadow-lg">
           <div>
             <span className="ml-1 text-sm font-semibold">First Name</span>
             <Input
@@ -113,6 +113,22 @@ const ProfilePage = () => {
           </button>
         </div>
       </form>
+
+      <div className="flex justify-center items-center h-full  ">
+        {/* <div className="w-full h-full max mt-8 max-md:w-80 border-4 p-4 flex flex-col gap-y-4 text-black font-normal border-gray-300 rounded-lg shadow-lg">
+          <div className="flex justify-between">
+            <div className="text-xl">Address</div>
+            <button
+              className="ml-1 bg-black text-white font-medium p-2 rounded-md "
+              type="submit"
+            >
+              Add Address
+            </button>
+          </div>
+          <div>input</div>
+        </div> */}
+        <ProfileAddress />
+      </div>
     </div>
   );
 };

@@ -37,14 +37,14 @@ model Users {
 
 model Address {
   id         Int      @id @default(autoincrement())
-  name       String
+  name       String?
   lat        Float
   lon        Float
-  street     String
+  street     String?
   city       String
   province   String
-  postalCode String
-  isPrimary  Boolean
+  postalCode String?
+  isPrimary  Boolean  @default(false)
   createdAt  DateTime @default(now())
   updateAt   DateTime @updatedAt
 
@@ -53,6 +53,25 @@ model Address {
   user Users @relation(fields: [userId], references: [id])
 
   @@map("addresses")
+}
+
+model Province {
+  id           Int     @id
+  provinceName String? @db.VarChar(255)
+
+  City City[]
+
+  @@map("provinces")
+}
+
+model City {
+  id          Int       @id
+  provinceId  Int?
+  cityName    String?   @db.VarChar(255)
+  postal_code String?   @db.Char(5)
+  province    Province? @relation(fields: [provinceId], references: [id])
+
+  @@map("cities")
 }
 
 model Cart {

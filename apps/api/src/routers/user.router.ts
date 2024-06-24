@@ -13,6 +13,7 @@ export class UserRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.get('/geolocation', this.userController.createAddress);
     this.router.get('/:id', this.userController.getUser);
     this.router.post(
       '/update/:id',
