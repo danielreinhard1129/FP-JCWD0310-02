@@ -17,6 +17,7 @@ import { StockRouter } from './routers/stock.router';
 import { TrxRouter } from './routers/trx.router';
 import { join } from 'path';
 import { UserRouter } from './routers/user.router';
+import { StockMutationRouter } from './routers/stock-mutation.router';
 
 export default class App {
   private app: Express;
@@ -50,7 +51,7 @@ export default class App {
       (err: Error, req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api/')) {
           console.error('Error : ', err.stack);
-          res.status(500).send({ messages: err.message });
+          res.status(500).send({ message: err.message });
         } else {
           next();
         }
@@ -66,6 +67,7 @@ export default class App {
     const userRouter = new UserRouter();
     const trxRouter = new TrxRouter();
     const categoryRouter = new CategoryRouter();
+    const stockMutationRouter = new StockMutationRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
@@ -77,6 +79,7 @@ export default class App {
     this.app.use(`/api/user`, userRouter.getRouter());
     this.app.use('/api/trx', trxRouter.getRouter());
     this.app.use('/api/categories', categoryRouter.getRouter());
+    this.app.use('/api/stock-mutations', stockMutationRouter.getRouter());
   }
 
   public start(): void {

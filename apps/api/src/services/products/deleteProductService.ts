@@ -36,9 +36,7 @@ export const deleteProductService = async (
     }
 
     if (product.isDelete) {
-      return {
-        messages: 'The product is already deleted',
-      };
+      throw new Error('The product is already deleted');
     }
 
     const deleteProduct = await prisma.product.update({
@@ -51,7 +49,7 @@ export const deleteProductService = async (
     });
 
     return {
-      messages: 'Success delete the product',
+      message: 'Success delete the product',
     };
   } catch (error) {
     throw error;

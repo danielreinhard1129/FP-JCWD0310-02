@@ -87,6 +87,34 @@ export const patchProductService = async (
           data: uniqueVariant,
         });
 
+        const newExistVariant = await tx.variant.findMany({
+          where: {
+            id: {},
+          },
+        });
+
+        const allWarehouses = await tx.warehouse.findMany({});
+        const allVariant = await tx.variant.findMany({
+          where: {
+            OR: uniqueVariant,
+          },
+        });
+        const variantStocksBatchArr = allWarehouses.reduce((a: any, b) => {
+          return [
+            ...a,
+            ...allVariant.map((val) => {
+              return {
+                quantity: 0,
+                variantId: val.id,
+                warehouseId: b.id,
+              };
+            }),
+          ];
+        }, []);
+        const newVariantStock = await tx.variantStock.createMany({
+          data: variantStocksBatchArr,
+        });
+
         const newCategory = await tx.category.createMany({
           data: categories.map((val) => {
             return { name: val };
@@ -148,7 +176,7 @@ export const patchProductService = async (
     });
 
     return {
-      messages: 'Success Update',
+      message: 'Success Update ' + updateProduct.name,
       data: updateProduct,
       images,
     };

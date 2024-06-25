@@ -34,18 +34,23 @@ export const getProductsService = async (query: GetProductsQuery) => {
           category: { OR: filter.filter },
         },
       },
-      variant: {
-        some: {
-          AND: [
-            { OR: filter.size },
-            {
-              NOT: {
-                color: { notIn: filter.color?.map((val) => val.color.equals) },
+      variant:
+        filter.color || filter.size || filter.filter
+          ? {
+              some: {
+                AND: [
+                  { OR: filter.size },
+                  {
+                    NOT: {
+                      color: {
+                        notIn: filter.color?.map((val) => val.color.equals),
+                      },
+                    },
+                  },
+                ],
               },
-            },
-          ],
-        },
-      },
+            }
+          : undefined,
     };
 
     const countProduct = await prisma.product.count({
@@ -104,6 +109,7 @@ export const getProductsService = async (query: GetProductsQuery) => {
 
     return {
       data: productWithStock,
+      message: 'Success get products',
       count: countProduct,
     };
   } catch (error) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useAxios from '../useAxios';
 
 export const useDeleteProduct = () => {
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<string>('');
   const { axiosInstance } = useAxios();
   const deleteProduct = async (productId: number) => {
@@ -10,6 +10,7 @@ export const useDeleteProduct = () => {
       setLoading(true);
       const response = await axiosInstance.delete(`/products/${productId}`);
       setMessages(response.data.messages);
+      return response;
     } catch (error) {
       throw error;
     } finally {

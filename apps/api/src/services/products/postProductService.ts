@@ -59,7 +59,7 @@ export const postProductService = async (body: CreateProductParams) => {
         });
 
         if (isExistTitle) {
-          return { messages: 'Product title is used!' };
+          throw new Error('Product title is used!');
         }
 
         const newProduct = await tx.product.create({
@@ -116,39 +116,34 @@ export const postProductService = async (body: CreateProductParams) => {
           data: [...productVariant],
         });
 
-        const existProductVariant = await tx.variant.findMany({
+        const allWarehouses = await tx.warehouse.findMany({});
+        const allProductVariant = await tx.variant.findMany({
           where: {
             productId: newProduct.id,
           },
         });
+        const variantStocksBatchArr = allWarehouses.reduce((a: any, b) => {
+          return [
+            ...a,
+            ...allProductVariant.map((val) => {
+              return {
+                quantity: 0,
+                variantId: val.id,
+                warehouseId: b.id,
+              };
+            }),
+          ];
+        }, []);
 
-        const productVariantStock = variant.reduce((prev: any, val) => {
-          return {
-            ...prev,
-            [`${val.color}_${val.size}`]: val.stock || { quantity: 0 },
-          };
-        }, {});
-
-        const existProductVariantWithStock = existProductVariant.map((val) => {
-          return {
-            variantId: val.id,
-            quantity: Number(
-              productVariantStock[`${val.color}_${[val.size]}`].quantity,
-            ),
-            warehouseId,
-          };
-        });
-
-        const newVariantStock = await tx.variantStock.createMany({
-          data: existProductVariantWithStock,
+        const variantStock = await tx.variantStock.createMany({
+          data: variantStocksBatchArr,
         });
 
         return {
+          message: 'Success creating product',
           product: newProduct,
           image: imageData,
           category: existCategory,
-          variant: existProductVariant,
-          stock: existProductVariantWithStock,
         };
       } catch (error) {
         throw error;

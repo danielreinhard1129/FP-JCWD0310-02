@@ -1,15 +1,19 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { notification, Space, Table, Tag } from 'antd';
-import { TableColumnsType, Modal } from 'antd';
+import { Space, Table, Tag } from 'antd';
+import { TableColumnsType } from 'antd';
 import { Product, ProductCategory, Variant } from '@/types/product.type';
 import Image from 'next/image';
 import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
 import { Button } from '../ui/button';
-import { AlertCircle, Bolt, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { useDeleteProduct } from '@/hooks/products/useDeleteProduct';
-import { NotificationInstance } from 'antd/es/notification/interface';
+import useModal from '@/hooks/useModal';
+import { useNotification } from '@/hooks/useNotification';
+import { Bolt, Trash } from 'lucide-react';
+import blurImage from '../../../public/blur-image.jpg';
+import noImage from '../../../public/no-image.jpg';
+import DialogStock from './DialogStock';
 
 interface DataTablesProps {
   data: Product[] | undefined;
@@ -30,34 +34,10 @@ interface DataTypeProducts {
   warehouse: string;
 }
 
-const ModalConfirm = (
-  onDelete: (productId: number) => Promise<void>,
-  id: number,
-  onSuccess: NotificationInstance,
-) => {
-  Modal.confirm({
-    title: 'Are you sure delete this task?',
-    icon: <AlertCircle className="mr-2" />,
-    content: 'Some descriptions',
-    okText: 'Yes',
-    okType: 'danger',
-    cancelText: 'No',
-    onOk() {
-      onDelete(id)
-        .then((res) =>
-          onSuccess.success({
-            message: 'Success delete the product',
-          }),
-        )
-        .catch(() =>
-          onSuccess.error({ message: 'Something is error with the server!' }),
-        );
-    },
-  });
-};
-
 const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
-  const [api, contextHolder] = notification.useNotification();
+  const { contextHolder, openNotification } = useNotification();
+  const { ModalAsync, setOpen, setTitle } = useModal();
+  const [selected, setSelected] = useState<number>(0);
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([
     {
       key: 0,
@@ -83,22 +63,40 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       align: 'center',
       dataIndex: 'images',
       width: 100,
-      render: (val, _, indx) =>
-        val ? (
+      render: (val, render, indx) =>
+        render.images.length ? (
           <div
             key={indx}
-            className="w-full h-full flex justify-center items-center"
+            className="w-[100px] h-[100px] flex justify-center items-center"
+          >
+            <img
+              alt="image-product"
+              width={100}
+              height={100}
+              loading="lazy"
+              className="w-[100px] h-[100px] object-cover rounded-md border border-input"
+              src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${val}`}
+              onError={(
+                event: React.SyntheticEvent<HTMLImageElement, Event>,
+              ) => {
+                event.currentTarget.src = blurImage.src;
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            key={indx}
+            className="w-[100px] h-[100px] flex justify-center items-center"
           >
             <Image
               alt="image-product"
               width={100}
               height={100}
-              className="rounded-md border border-black"
-              src={`${NEXT_PUBLIC_BASE_API_URL}assets/${val}`}
+              loading="lazy"
+              className="w-[100px] h-[100px] object-cover rounded-md border border-input"
+              src={noImage}
             />
           </div>
-        ) : (
-          <div className="w-20 h-20 border border-black rounded-md"></div>
         ),
     },
     {
@@ -127,12 +125,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       ),
     },
     {
-      title: 'Stocks',
-      align: 'center',
-      dataIndex: 'stocks',
-      width: 80,
-    },
-    {
       title: 'Status',
       align: 'center',
       dataIndex: 'status',
@@ -144,11 +136,17 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       width: 80,
     },
     {
+      title: 'Stocks',
+      align: 'center',
+      dataIndex: 'stocks',
+      render: (_, record) => <DialogStock productId={record.productId} />,
+    },
+    {
       title: 'Action',
       align: 'center',
       key: 'action',
       width: 200,
-      render: (_, record) => (
+      render: (_, record, index) => (
         <Space size="middle" className="w-full justify-end">
           <Link href={`/admin/products/${record.key}`}>
             <Button
@@ -160,7 +158,10 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
             </Button>
           </Link>
           <Button
-            onClick={() => ModalConfirm(deleteProduct, record.productId, api)}
+            onClick={() => {
+              setOpen(true);
+              setSelected(index);
+            }}
             variant="outline"
             className="p-2 h-8 flex justify-around items-center gap-2"
           >
@@ -200,6 +201,17 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
   return (
     <>
       <div className="overflow-x-hidden">
+        <ModalAsync
+          description={
+            'Are you sure to delet product ' + dataTable[selected]?.name
+          }
+          handleOk={() =>
+            openNotification.async(
+              deleteProduct(dataTable[selected]?.productId),
+            )
+          }
+          loading={deleteLoading}
+        />
         <div className="overflow-x-scroll overflow-y-scroll no-scrollbar">
           {contextHolder}
           <Table

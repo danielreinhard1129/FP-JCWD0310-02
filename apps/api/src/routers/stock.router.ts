@@ -13,8 +13,8 @@ export class StockRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', verifyToken, this.stockController.getStocks);
     this.router.get('/:id', verifyToken, this.stockController.getStock);
+    this.router.get('/', verifyToken, this.stockController.getStocks);
     this.router.post('/:id', verifyToken, this.stockController.postStock);
   }
   getRouter(): Router {
