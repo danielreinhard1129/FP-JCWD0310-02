@@ -2,13 +2,16 @@ import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { RootState } from '@/redux/store';
 interface User {
-  addresses: {
-    name?: string;
+  Addresses: {
+    id: number;
+    name: string;
     lat: number;
     lon: number;
-    street?: string;
+    street: string;
     city: string;
     province: string;
+    postalCode: string;
+    isPrimary: boolean;
   }[];
 }
 const useGetAddress = () => {
@@ -19,7 +22,8 @@ const useGetAddress = () => {
       const response = await axiosInstance.get(`/user/${id}`, {
         params: { ...received },
       });
-      return response.data;
+      console.log(response.data.Addresses);
+      return response.data.Addresses;
     } catch (error) {
       throw error;
     }

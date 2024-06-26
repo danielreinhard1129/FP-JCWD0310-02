@@ -1,11 +1,9 @@
+'use client';
 import HeaderDashboard from '@/components/dashboard/HeaderDashboard';
 import SidebarDashboard from '@/components/dashboard/SidebarDashboard';
+import AuthGuard from '@/hoc/AuthGuard';
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <HeaderDashboard />
@@ -17,4 +15,8 @@ export default function AdminLayout({
       </div>
     </>
   );
-}
+};
+// const ProtectedAdminLayout = AuthGuard(AdminLayout);
+const ProtectedAdminLayout = AdminLayout;
+
+export default ProtectedAdminLayout;

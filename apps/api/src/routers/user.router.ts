@@ -20,7 +20,11 @@ export class UserRouter {
       verifyToken,
       this.userController.updateUser,
     );
+    this.router.post('/createAddress/:id', this.userController.createAddress);
+    this.router.delete('/deleteAddress/:id', this.userController.deleteAddress);
+    this.router.delete('/updateAddress/:id', this.userController.updateAddress);
   }
+
   getRouter(): Router {
     return this.router;
   }

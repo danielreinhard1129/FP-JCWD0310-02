@@ -47,11 +47,3 @@ const page = () => (
 );
 
 export default page;
-
-{
-  /* <div className="text-neutral-800 uppercase font-bold text-center w-full flex  :justify-between lg:text-[240px]">
-<span className="max-md:text-xl">DO</span>
-<span className="max-md:text-xl ">IT</span>
-<span className="text-indigo-500 max-md:text-xl">RIGHT</span>
-</div> */
-}

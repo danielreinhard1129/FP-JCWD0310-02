@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { userService } from '../services/user/getUser.service';
-import { updateUser } from '@/services/user/updateUser.service';
+import { updateUserService } from '@/services/user/updateUser.service';
 import axios from 'axios';
+import { createAddressService } from '@/services/user/createAddress.service';
+import { deleteAddressService } from '@/services/user/deleteAddress.service';
+import { updateAddressService } from '@/services/user/updateAddress.service';
 export class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
@@ -16,35 +19,44 @@ export class UserController {
   }
   async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await updateUser(req.body, Number(req.params.id));
+      const response = await updateUserService(req.body, Number(req.params.id));
       return res.status(200).send(response);
     } catch (error) {
       next(error);
     }
   }
   async createAddress(req: Request, res: Response, next: NextFunction) {
-    const OPEN_CAGE_API_KEY = '30d89911e50c41329178651b1a706345';
     try {
-      const response = await axios.get(
-        'https://api.opencagedata.com/geocode/v1/json',
-        {
-          params: {
-            // q: `${city}, ${province}`,
-            q: `Cirebon,Jawa Barat`,
-            key: OPEN_CAGE_API_KEY,
-          },
-        },
+      const response = await createAddressService(
+        req.body,
+        Number(req.params.id),
       );
-      console.log('ini response data' + response.data);
-      console.log(
-        'ini response data results[0].geometry' +
-          response.data.results[0].geometry,
-      );
-      res.status(200).send(response.data.results[0].geometry.lat);
+      return res.status(200).send(response);
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: 'Terjadi kesalahan saat mengambil data geolokasi' });
+      next(error);
+    }
+  }
+
+  async deleteAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await deleteAddressService(
+        Number(req.params.id),
+        req.body,
+      );
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async updateAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await updateAddressService(
+        req.body,
+        Number(req.params.id),
+      );
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
     }
   }
 }
