@@ -1,4 +1,5 @@
 import { getStockMutationsService } from '@/services/stock-mutations/getStockMutations';
+import { getStockWarehouses } from '@/services/stock-mutations/getStockWarehouses';
 import { postStockMutationsConfirmationService } from '@/services/stock-mutations/postStockConfirmation';
 import { NextFunction, Request, Response } from 'express';
 export class StockMutationController {
@@ -25,6 +26,16 @@ export class StockMutationController {
         req.body.type,
       );
       res.status(200).send(response);
+    } catch (error) {
+      next();
+    }
+  }
+  async getWarehouses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await getStockWarehouses(Number(req.query.warehouse));
+      res.status(200).send({
+        data: req.query,
+      });
     } catch (error) {
       next();
     }

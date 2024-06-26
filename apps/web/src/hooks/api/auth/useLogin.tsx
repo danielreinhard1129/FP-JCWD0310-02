@@ -1,5 +1,6 @@
 import { User } from '@/app/types/user.type';
 import { axiosInstance } from '@/lib/axios';
+import { adminLoginAction } from '@/redux/slicers/adminSlice';
 
 import { loginAction } from '@/redux/slicers/userSlice';
 import { useRouter } from 'next/navigation';
@@ -25,7 +26,13 @@ const useLogin = () => {
         '/auth/login',
         payload,
       );
+
       dispatch(loginAction(data.data));
+
+      if (data.data.role !== 'CUSTOMER' && data.data.employee) {
+        dispatch(adminLoginAction(data.data.employee));
+      }
+
       localStorage.setItem('token', data.token);
       alert('login sucess');
       router.replace('/');

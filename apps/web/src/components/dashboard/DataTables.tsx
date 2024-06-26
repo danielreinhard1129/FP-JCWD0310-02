@@ -26,7 +26,6 @@ interface DataTypeProducts {
   name: string;
   price: string;
   images: string;
-  stocks: number;
   status: boolean;
   variant: Variant[];
   categories: ProductCategory[];
@@ -44,7 +43,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       name: '',
       images: '',
       price: '',
-      stocks: 0,
       status: false,
       categories: [],
       variant: [],
@@ -136,18 +134,12 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       width: 80,
     },
     {
-      title: 'Stocks',
-      align: 'center',
-      dataIndex: 'stocks',
-      render: (_, record) => <DialogStock productId={record.productId} />,
-    },
-    {
-      title: 'Action',
+      title: 'Edit',
       align: 'center',
       key: 'action',
       width: 200,
       render: (_, record, index) => (
-        <Space size="middle" className="w-full justify-end">
+        <Space size="middle" className="w-full flex justify-center">
           <Link href={`/admin/products/${record.key}`}>
             <Button
               variant="outline"
@@ -157,17 +149,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
               <Bolt width={15} /> Edit
             </Button>
           </Link>
-          <Button
-            onClick={() => {
-              setOpen(true);
-              setSelected(index);
-            }}
-            variant="outline"
-            className="p-2 h-8 flex justify-around items-center gap-2"
-          >
-            {' '}
-            <Trash width={15} /> Delete
-          </Button>
         </Space>
       ),
     },
@@ -185,7 +166,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
             key: val.id,
             productId: val.id,
             name: val.name,
-            stocks: val.stock,
             status: val.isDelete,
             categories: val.productCategory,
             images: val.productImages[0]?.url || '',
@@ -201,19 +181,8 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
   return (
     <>
       <div className="overflow-x-hidden">
-        <ModalAsync
-          description={
-            'Are you sure to delet product ' + dataTable[selected]?.name
-          }
-          handleOk={() =>
-            openNotification.async(
-              deleteProduct(dataTable[selected]?.productId),
-            )
-          }
-          loading={deleteLoading}
-        />
+        {contextHolder}
         <div className="overflow-x-scroll overflow-y-scroll no-scrollbar">
-          {contextHolder}
           <Table
             columns={columnsProducts}
             loading={loading}

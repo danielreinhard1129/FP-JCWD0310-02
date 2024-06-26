@@ -29,24 +29,6 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([]);
   const columnsProducts: TableColumnsType<DataTypeProducts> = [
     {
-      title: 'View',
-      dataIndex: 'id',
-      align: 'center',
-      width: 40,
-      // render: () => <DialogStockMutations />,
-    },
-    {
-      title: 'Product Id',
-      dataIndex: 'id',
-      align: 'center',
-      width: 40,
-    },
-    {
-      title: 'SKU',
-      dataIndex: 'sku',
-      width: 90,
-    },
-    {
       title: 'Product',
       dataIndex: 'product',
       width: 90,
@@ -109,15 +91,8 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
       width: 90,
     },
     {
-      title: 'Created',
+      title: 'Time',
       dataIndex: 'createdAt',
-      align: 'center',
-      width: 90,
-      render: (val) => new Date(val).toDateString(),
-    },
-    {
-      title: 'Last Update',
-      dataIndex: 'updateAt',
       align: 'center',
       width: 90,
       render: (val) => new Date(val).toDateString(),

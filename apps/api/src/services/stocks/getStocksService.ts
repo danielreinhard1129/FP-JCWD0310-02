@@ -17,7 +17,7 @@ export const GetStocksService = async (
   query: QueryGetStocksService,
 ) => {
   try {
-    const { search, take, page } = query;
+    const { take, page } = query;
     const warehouseId = Number(query.warehouseId);
 
     const user = await prisma.users.findFirst({
@@ -43,7 +43,10 @@ export const GetStocksService = async (
 
     const warehouse = await prisma.warehouse.findFirst({
       where: {
-        id: warehouseId || user.employee.warehouseId,
+        id:
+          user.role == 'WAREHOUSE_ADMIN'
+            ? user.employee.warehouseId
+            : warehouseId || undefined,
       },
     });
 
@@ -58,12 +61,14 @@ export const GetStocksService = async (
           include: {
             variantStocks: {
               where: {
-                warehouseId: 1,
+                warehouseId: warehouse.id,
               },
             },
           },
         },
       },
+      take,
+      skip: (page - 1) * take,
     });
 
     const productWithTotalStock = product.reduce((a: any, b) => {
@@ -71,6 +76,8 @@ export const GetStocksService = async (
         ...a,
         {
           ...b,
+          warehouse: warehouse.name,
+          warehouseId: warehouse.id,
           stock: b.variant.reduce((a, b) => {
             return a + b.variantStocks.reduce((a, b) => a + b.quantity, 0);
           }, 0),

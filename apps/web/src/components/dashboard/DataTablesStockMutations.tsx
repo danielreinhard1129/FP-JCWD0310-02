@@ -2,9 +2,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 import { TableColumnsType } from 'antd';
-import AddStockPopover from '../stock/AddStockPopover';
 import { StockMutations } from '@/types/stock.type';
-import RequestStockPopover from '../stock/RequestStockPopover';
 import DialogStockMutations from './DialogStockMutations';
 
 interface DataTablesProps {
@@ -28,11 +26,6 @@ const DataTablesStockMutations: FC<DataTablesProps> = ({
 }) => {
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([]);
   const columnsProducts: TableColumnsType<DataTypeProducts> = [
-    {
-      title: 'SKU',
-      dataIndex: 'sku',
-      width: 90,
-    },
     {
       title: 'Product',
       dataIndex: 'product',

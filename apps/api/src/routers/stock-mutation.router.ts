@@ -14,6 +14,11 @@ export class StockMutationRouter {
 
   private initializeRoutes(): void {
     this.router.get(
+      '/warehouses',
+      verifyToken,
+      this.stockMutationController.getWarehouses,
+    );
+    this.router.get(
       '/',
       verifyToken,
       this.stockMutationController.getStockMutations,

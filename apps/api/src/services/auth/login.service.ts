@@ -13,6 +13,13 @@ export const loginService = async (body: User) => {
     const { email, password } = body;
     const existingUser = await prisma.users.findFirst({
       where: { email },
+      include: {
+        employee: {
+          include: {
+            warehouse: true,
+          },
+        },
+      },
     });
 
     if (!existingUser) {
@@ -36,7 +43,20 @@ export const loginService = async (body: User) => {
       expiresIn: '2h',
     });
 
-    return { message: 'Login successful', data: existingUser, token };
+    return {
+      message: 'Login successful',
+      data: {
+        ...existingUser,
+        employee:
+          existingUser.role == 'CUSTOMER'
+            ? undefined
+            : {
+                warehouseId: existingUser.employee?.warehouse,
+                warehouse: existingUser.employee?.warehouse.name,
+              },
+      },
+      token,
+    };
   } catch (error) {
     throw error;
   }

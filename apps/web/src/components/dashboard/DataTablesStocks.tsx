@@ -2,12 +2,16 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 import { TableColumnsType } from 'antd';
-import AddStockPopover from '../stock/AddStockPopover';
-import RequestStockPopover from '../stock/RequestStockPopover';
 import { Product } from '@/types/product.type';
+import DetailStockPopover from './stock/DetailStockPopover';
+
+interface DataTablesStock extends Product {
+  warehouse: string;
+  warehouseId: number;
+}
 
 interface DataTablesProps {
-  data: Product[] | undefined;
+  data: DataTablesStock[] | undefined;
   loading: boolean;
   refetch: () => void;
 }
@@ -15,6 +19,8 @@ interface DataTablesProps {
 interface DataTypeProducts extends Product {
   key: React.Key;
   status: string;
+  warehouse: string;
+  warehouseId: number;
 }
 
 const DataTablesStocks: FC<DataTablesProps> = ({ data, loading, refetch }) => {
@@ -50,15 +56,14 @@ const DataTablesStocks: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       width: 150,
     },
     {
-      title: 'Action',
+      title: 'Manage',
       align: 'center',
       key: 'action',
       width: 200,
       render: (_, record: any, index) => (
-        <Space size="middle" className="w-full justify-end">
-          {/* <AddStockPopover data={record} refetch={() => refetch()} /> */}
-          {/* <RequestStockPopover data={record} refetch={() => refetch()} /> */}
-        </Space>
+        <div className="w-full flex justify-center items-center">
+          <DetailStockPopover data={record} refetch={() => refetch()} />
+        </div>
       ),
     },
   ];
@@ -78,6 +83,8 @@ const DataTablesStocks: FC<DataTablesProps> = ({ data, loading, refetch }) => {
                   ? 'Less stock'
                   : 'Out of stock',
             stock: val.stock,
+            warehouse: val.warehouse,
+            warehouseId: val.warehouseId,
             createdAt: val.createdAt,
             description: val.description,
             id: val.id,

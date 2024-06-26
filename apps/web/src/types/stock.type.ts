@@ -28,3 +28,16 @@ export interface StockMutations {
   product: Omit<Product, 'productCategory' | 'productImages' | 'variant'>;
   variant: Omit<Variant, 'variantStocks'>;
 }
+
+export interface DataTablesStock extends Omit<Product, 'variant'> {
+  variant: {
+    id: number;
+    color: string;
+    size: string;
+    productId: number;
+    isDelete: boolean;
+    variantStocks: VariantStock[];
+  }[];
+  warehouse: string;
+  warehouseId: number;
+}

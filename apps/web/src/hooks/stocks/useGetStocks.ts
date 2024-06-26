@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import useAxios from '../useAxios';
 import { Stock } from '@/types/stock.type';
 import { Product } from '@/types/product.type';
+import { Warehouse } from 'lucide-react';
+
+interface IProductStocks extends Product {
+  warehouse: string;
+  warehouseId: number;
+}
 
 interface GetStocksResponse {
-  data: Product[];
+  data: IProductStocks[];
   message: string;
 }
 
-const useGetStocks = (queryArgs?: { take: number; page: number }) => {
+const useGetStocks = (queryArgs: {
+  take?: number;
+  page?: number;
+  warehouseId: number;
+}) => {
   const { axiosInstance } = useAxios();
   const [data, setData] = useState<Product[]>();
   const [query, setQuery] = useState({
-    page: queryArgs?.page || 1,
-    take: queryArgs?.take || 10,
+    page: queryArgs.page || 1,
+    take: queryArgs.take || 10,
+    warehouseId: queryArgs.warehouseId,
   });
 
   const getStocks = async () => {
@@ -33,7 +44,11 @@ const useGetStocks = (queryArgs?: { take: number; page: number }) => {
     mutationFn: () => getStocks(),
   });
 
-  return { data, setQuery, mutation };
+  useEffect(() => {
+    mutation.mutate();
+  }, [query.page, query.take, query.warehouseId]);
+
+  return { data, setQuery, mutation, query };
 };
 
 export default useGetStocks;

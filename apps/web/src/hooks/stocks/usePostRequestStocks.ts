@@ -1,14 +1,14 @@
-'use client';
 import { useState } from 'react';
 import useAxios from '../useAxios';
 
-export const usePostRequestStocks = (variantId: number) => {
+export const usePostRequestStocks = () => {
   const [data, setData] = useState();
   const { axiosInstance } = useAxios();
   const postRequestStocks = async (
     quantity: number,
     fromWarehouse: number,
     toWarehouse: number,
+    variantId: number,
   ) => {
     try {
       const response = await axiosInstance.post('/stocks/' + variantId, {

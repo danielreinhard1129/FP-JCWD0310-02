@@ -22,7 +22,7 @@ export class StockController {
         take: Number(req.query.take as string) || 5,
         page: Number(req.query.page as string) || 1,
         search: (req.query.search as string) || '',
-        warehouseId: (req.query.warehouseId as string) || undefined,
+        warehouseId: req.query.warehouseId as string,
       };
       const response = await GetStocksService(res.locals.user, query);
       return res.status(200).send(response);
