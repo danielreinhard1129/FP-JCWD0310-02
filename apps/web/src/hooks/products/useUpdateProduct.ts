@@ -21,7 +21,9 @@ export const useUpdateProduct = () => {
         '/products/' + productId,
         formData,
       );
+      return response;
     } catch (error) {
+      throw error;
     } finally {
       setLoading(false);
     }

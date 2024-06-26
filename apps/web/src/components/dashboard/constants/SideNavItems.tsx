@@ -45,10 +45,28 @@ export const NavItems: NavItem[] = [
     color: '',
   },
   {
-    title: 'Stock Mutation',
+    title: 'Stocks',
     icon: ArrowLeftRight,
     href: '/admin/stocks',
     color: '',
+    isChidren: true,
+    children: [
+      {
+        title: 'Stock management',
+        href: '/admin/stocks',
+        icon: ArrowLeftRight,
+      },
+      {
+        title: 'Stock mutations',
+        href: '/admin/stocks/mutations',
+        icon: ArrowLeftRight,
+      },
+      {
+        title: 'Stock journal',
+        href: '/admin/stocks/journal',
+        icon: ArrowLeftRight,
+      },
+    ],
   },
   {
     title: 'Product',

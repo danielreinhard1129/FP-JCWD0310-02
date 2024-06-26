@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import userReducer from './slicers/userSlice';
+import userReducer from '@/redux//slicers/userSlice';
 import cartReducer from '@/redux/slicers/cartSlice';
+import adminReducer from '@/redux/slicers/adminSlice';
 
 const createNoopStorage = () => {
   return {
@@ -32,6 +33,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
+  admin: adminReducer,
 });
 
 const makeConfiguredStore = () =>

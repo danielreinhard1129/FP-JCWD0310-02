@@ -59,7 +59,7 @@ export class ProductController {
     try {
       const files = req.files as Express.Multer.File[];
       if (!files.length) {
-        return res.status(200).send({ messages: 'no image uploaded' });
+        return res.status(400).send({ message: 'no image uploaded' });
       }
       const categories = JSON.parse(req.body.category) as string[];
       const data = {

@@ -5,8 +5,9 @@ interface UserTokenLocals {
 }
 
 export const GetStockService = async (
-  params: number,
+  variantId: number,
   userToken: UserTokenLocals,
+  warehouseId: number,
 ) => {
   try {
     const userId = userToken.id;
@@ -32,24 +33,35 @@ export const GetStockService = async (
       throw new Error('You are not an Admin!!!');
     }
 
-    const product = await prisma.product.findFirst({
-      where: { id: params },
+    const product = await prisma.variantStock.findFirst({
+      where: {
+        variantId,
+        warehouseId,
+      },
       include: {
         variant: {
           include: {
-            variantStocks: {
-              include: {
-                warehouse: true,
-              },
-            },
+            product: true,
           },
         },
+        warehouse: true,
       },
     });
 
     if (!product) {
       throw new Error('Cannot find the product!');
     }
+    const { id, quantity, variant, warehouse } = product;
+    const sku =
+      `${variant.product.name.replace(' ', '-')}-${variant.color}-${variant.size}-${new Date(variant.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase();
+    return {
+      data: {
+        ...product,
+        warehouse: `${warehouse.id}-${warehouse.name}`,
+        sku: sku,
+      },
+      message: 'success get stock',
+    };
   } catch (error) {
     throw error;
   }
