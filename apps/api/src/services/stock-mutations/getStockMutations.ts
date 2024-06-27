@@ -1,6 +1,13 @@
 import prisma from '@/prisma';
 
-export const getStockMutationsService = async (userId: number) => {
+export const getStockMutationsService = async (
+  userId: number,
+  query: {
+    page: number;
+    take: number;
+    status: 'DONE' | 'WAIT_CONFIRMATION' | 'ON_PROGRESS' | undefined;
+  },
+) => {
   try {
     const user = await prisma.users.findFirst({
       where: {
@@ -19,14 +26,14 @@ export const getStockMutationsService = async (userId: number) => {
     if (!user.employee) throw new Error('Sorry you are not an admin!');
 
     const stockMutations = await prisma.stockMutation.findMany({
+      take: query.take,
+      skip: (query.page - 1) * query.take,
       where: {
+        status: { equals: query.status },
         OR: [
           { fromWarehouseId: user.employee.warehouseId },
           { toWarehouseId: user.employee.warehouseId },
         ],
-        // status: {
-        //   not: 'DONE',
-        // },
       },
       include: {
         fromWarehouse: true,

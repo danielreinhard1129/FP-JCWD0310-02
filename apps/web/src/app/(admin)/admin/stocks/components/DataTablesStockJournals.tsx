@@ -19,7 +19,7 @@ interface DataTypeProducts
   product: string;
 }
 
-const DataTablesStockMutations: FC<DataTablesProps> = ({
+const DataTablesStockJournals: FC<DataTablesProps> = ({
   data,
   loading,
   refetch,
@@ -89,13 +89,11 @@ const DataTablesStockMutations: FC<DataTablesProps> = ({
       width: 90,
     },
     {
-      title: 'Action',
-      dataIndex: 'id',
+      title: 'Time',
+      dataIndex: 'createdAt',
       align: 'center',
-      width: 40,
-      render: (_, record) => (
-        <DialogStockMutations data={record} refetch={refetch} />
-      ),
+      width: 90,
+      render: (val) => new Date(val).toDateString(),
     },
   ];
 
@@ -112,9 +110,9 @@ const DataTablesStockMutations: FC<DataTablesProps> = ({
             sku: val.sku,
             createdAt: new Date(),
             updateAt: new Date(),
-            fromWarehouseId: val.fromWarehouseId,
+            fromWarehouseId: 0,
             fromWarehouse: val.fromWarehouse ? val.fromWarehouse.name : '-',
-            toWarehouseId: val.toWarehouseId,
+            toWarehouseId: 0,
             toWarehouse: val.toWarehouse.name,
             product: val.product.name,
             variant: val.variant,
@@ -139,4 +137,4 @@ const DataTablesStockMutations: FC<DataTablesProps> = ({
   );
 };
 
-export default DataTablesStockMutations;
+export default DataTablesStockJournals;

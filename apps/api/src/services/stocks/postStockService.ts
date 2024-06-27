@@ -157,6 +157,9 @@ const requestStock = async (
 
     if (!variantStock) throw new Error('Cannot find this variant stocks');
 
+    if (variantStock.quantity < quantity)
+      throw new Error('Quantity is not enough on this warehouse');
+
     const stockMutation = await prisma.stockMutation.create({
       data: {
         quantity,

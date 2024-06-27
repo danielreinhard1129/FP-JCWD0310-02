@@ -16,9 +16,6 @@ export interface CreateProductPayload {
   variant: {
     color: string;
     size: string;
-    stock: {
-      quantity: number;
-    };
   }[];
 }
 export const useCreateProduct = () => {
