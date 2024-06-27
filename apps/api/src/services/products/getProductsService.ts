@@ -30,27 +30,24 @@ export const getProductsService = async (query: GetProductsQuery) => {
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
       productCategory: {
-        some: {
+        some: filter.filter && {
           category: { OR: filter.filter },
         },
       },
-      variant:
-        filter.color || filter.size || filter.filter
-          ? {
-              some: {
-                AND: [
-                  { OR: filter.size },
-                  {
-                    NOT: {
-                      color: {
-                        notIn: filter.color?.map((val) => val.color.equals),
-                      },
-                    },
-                  },
-                ],
+      variant: (filter.color || filter.size || filter.filter) && {
+        some: {
+          AND: [
+            { OR: filter.size },
+            {
+              NOT: {
+                color: {
+                  notIn: filter.color?.map((val) => val.color.equals),
+                },
               },
-            }
-          : undefined,
+            },
+          ],
+        },
+      },
     };
 
     const countProduct = await prisma.product.count({

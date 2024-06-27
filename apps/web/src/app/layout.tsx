@@ -3,6 +3,7 @@ import './globals.css';
 import StoreProvider from '@/providers/storeProvider';
 import { ThemeProvider } from '@/providers/themeProvider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { NotificationProvider } from '@/providers/notificationProvider';
 
 export const metadata: Metadata = {
   title: 'FINPRO',
@@ -25,7 +26,7 @@ export default function BaseLayout({
               enableSystem
               disableTransitionOnChange
             >
-              {children}
+              <NotificationProvider>{children}</NotificationProvider>
             </ThemeProvider>
           </StoreProvider>
         </GoogleOAuthProvider>

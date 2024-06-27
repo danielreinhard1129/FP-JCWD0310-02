@@ -1,14 +1,6 @@
 'use client';
-import { notification } from 'antd';
+import { notificationApi } from '@/providers/notificationProvider';
 import { AxiosResponse } from 'axios';
-import { ReactNode } from 'react';
-import {
-  NotificationDescription,
-  NotificationMessages,
-  NotificationCloseIcon,
-  NotificationOpenIcon,
-} from '../components/Notification';
-
 /** Example using for this hooks
  *
  *  const { openNotification , contextHolder } = useNotification();
@@ -32,7 +24,7 @@ import {
  */
 
 export const useNotification = () => {
-  const [api, contextHolder] = notification.useNotification();
+  const api = notificationApi();
   const openNotification = {
     open: api.open,
     warning: api.warning,
@@ -70,5 +62,5 @@ export const useNotification = () => {
     },
   };
 
-  return { contextHolder, openNotification };
+  return { openNotification };
 };

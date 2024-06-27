@@ -57,7 +57,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       },
       category: [],
       image: [],
-      variant: [],
+      variant: [{ color: '', size: '' }],
       warehouse: 0,
     },
     onSubmit: (result: CreateProductPayload) => {
@@ -217,14 +217,6 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               />
             </div>
           </div>
-          <div>
-            <Label>Warehouse</Label>
-            <Input
-              value={values.warehouse}
-              id="warehouse"
-              onChange={handleChange}
-            ></Input>
-          </div>
           <div className="flex flex-col gap-4">
             {values.variant.length > 0 && values.variant ? (
               <div className="flex flex-col gap-4">
@@ -296,7 +288,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
           />
         </div>
       </div>
-      <div className="flex md:justify-end justify-between gap-4">
+      <div className="flex md:justify-end mt-8 justify-between gap-4">
         <Button onClick={() => handleSubmitFormik()} className="w-32">
           Update
         </Button>

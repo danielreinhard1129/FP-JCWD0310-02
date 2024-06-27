@@ -6,10 +6,9 @@ import React, { useEffect } from 'react';
 
 const CreateProductAdminPage = () => {
   const { createProduct, messages } = useCreateProduct();
-  const { contextHolder, openNotification } = useNotification();
+  const { openNotification } = useNotification();
   return (
     <>
-      {contextHolder}
       <div className="px-6 py-8">
         <div className="rounded-lg bg-white p-4">
           <h1 className="mb-4 font-bold text-xl">Create Product</h1>

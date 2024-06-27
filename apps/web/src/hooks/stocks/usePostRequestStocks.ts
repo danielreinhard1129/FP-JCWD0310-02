@@ -5,9 +5,9 @@ export const usePostRequestStocks = () => {
   const [data, setData] = useState();
   const { axiosInstance } = useAxios();
   const postRequestStocks = async (
-    quantity: number,
-    fromWarehouse: number,
     toWarehouse: number,
+    fromWarehouse: number,
+    quantity: number,
     variantId: number,
   ) => {
     try {

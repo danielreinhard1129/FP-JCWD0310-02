@@ -1,10 +1,8 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Table, Tag } from 'antd';
 import { TableColumnsType } from 'antd';
-import AddStockPopover from '../stock/AddStockPopover';
 import { StockMutations } from '@/types/stock.type';
-import RequestStockPopover from '../stock/RequestStockPopover';
 import DialogStockMutations from './DialogStockMutations';
 
 interface DataTablesProps {
@@ -21,7 +19,7 @@ interface DataTypeProducts
   product: string;
 }
 
-const DataTablesStockJournals: FC<DataTablesProps> = ({
+const DataTablesStockMutations: FC<DataTablesProps> = ({
   data,
   loading,
   refetch,
@@ -91,11 +89,13 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
       width: 90,
     },
     {
-      title: 'Time',
-      dataIndex: 'createdAt',
+      title: 'Action',
+      dataIndex: 'id',
       align: 'center',
-      width: 90,
-      render: (val) => new Date(val).toDateString(),
+      width: 40,
+      render: (_, record) => (
+        <DialogStockMutations data={record} refetch={refetch} />
+      ),
     },
   ];
 
@@ -112,9 +112,9 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
             sku: val.sku,
             createdAt: new Date(),
             updateAt: new Date(),
-            fromWarehouseId: 0,
+            fromWarehouseId: val.fromWarehouseId,
             fromWarehouse: val.fromWarehouse ? val.fromWarehouse.name : '-',
-            toWarehouseId: 0,
+            toWarehouseId: val.toWarehouseId,
             toWarehouse: val.toWarehouse.name,
             product: val.product.name,
             variant: val.variant,
@@ -132,6 +132,7 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
             columns={columnsProducts}
             loading={loading}
             dataSource={dataTable}
+            pagination={{ style: { display: 'none' } }}
           />
         </div>
       </div>
@@ -139,4 +140,4 @@ const DataTablesStockJournals: FC<DataTablesProps> = ({
   );
 };
 
-export default DataTablesStockJournals;
+export default DataTablesStockMutations;

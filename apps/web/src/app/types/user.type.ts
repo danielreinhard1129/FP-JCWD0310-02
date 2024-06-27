@@ -6,5 +6,6 @@ export interface User {
   role: string;
   employee?: {
     warehouseId: number;
+    warehouse: string;
   };
 }
