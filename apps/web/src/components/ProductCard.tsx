@@ -1,7 +1,7 @@
 import React from 'react';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { Label } from './ui/label';
 
 interface ProductCardAttribute {
@@ -36,7 +36,7 @@ const ProductCard = (param: ProductCardAttribute) => {
                 height={200}
                 className="self-stretch w-[180px] relative rounded-3xl max-h-full object-cover z-0"
                 alt="Images"
-                src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${param.images || ''}`}
+                src={`${BASE_API_URL}/assets/${param.images || ''}`}
               />
               {new Date().setMonth(new Date().getMonth() - 1) <
               +new Date(param.created) ? (
