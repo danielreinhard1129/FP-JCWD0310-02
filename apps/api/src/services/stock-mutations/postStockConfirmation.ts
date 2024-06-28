@@ -145,7 +145,7 @@ const rejectStockMutations = async (stockMutationId: number) => {
     const updateStockMutations = await prisma.stockMutation.update({
       where: { id: stockMutationId },
       data: {
-        status: 'DONE',
+        status: 'REJECT',
       },
     });
     return {

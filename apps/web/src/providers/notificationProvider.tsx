@@ -18,4 +18,4 @@ export const NotificationProvider = ({
   );
 };
 
-export const notificationApi = () => useContext(NotificationContext);
+export const NotificationApi = () => useContext(NotificationContext);

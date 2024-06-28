@@ -13,7 +13,7 @@ interface UserArgs {
   password: string;
 }
 
-const manageDataUserPage = () => {
+const ManageDataUserPage = () => {
   const { getWarehousesAdmin } = useWarehousesAdmin();
   const [users, setUsers] = useState<UserArgs[]>([]);
 
@@ -28,7 +28,7 @@ const manageDataUserPage = () => {
       }
     };
     fetchUser();
-  }, [getWarehousesAdmin]);
+  }, []);
   console.log(users);
   return (
     <div className="px-4 py-4">
@@ -36,7 +36,7 @@ const manageDataUserPage = () => {
         <CardHeader>
           <div className="flex justify-between">
             <CardTitle>List Warehouse Admin</CardTitle>
-            <Link href="">
+            <Link href="/admin/manage-data/create">
               <Button>Create Warehouse Admin</Button>
             </Link>
           </div>
@@ -59,7 +59,7 @@ const manageDataUserPage = () => {
               </thead>
               <tbody className="overscroll-contain font-medium text-center">
                 {users
-                  // .filter((users) => users.role !== 'CUSTOMER')
+                  .filter((users) => users.role !== 'CUSTOMER')
                   .map((user, index) => (
                     <tr key={user.id}>
                       <td className="px-4 py-2">{index + 1}</td>
@@ -84,4 +84,4 @@ const manageDataUserPage = () => {
   );
 };
 
-export default manageDataUserPage;
+export default ManageDataUserPage;

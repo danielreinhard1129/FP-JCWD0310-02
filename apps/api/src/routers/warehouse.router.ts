@@ -1,5 +1,4 @@
 import { WarehouseController } from '@/controllers/warehouse.controller';
-
 import { verifyToken } from '@/lib/jwt';
 import { Router } from 'express';
 
@@ -19,6 +18,10 @@ export class WarehouseRouter {
       this.warehouseController.createWarehouse,
     );
     this.router.get('/getWarehouses', this.warehouseController.getWarehouses);
+    this.router.post(
+      '/createWarehouse',
+      this.warehouseController.createWarehouseAdmin,
+    );
   }
 
   getRouter(): Router {
