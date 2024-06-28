@@ -27,7 +27,7 @@ interface ITabsRequestStockProps {
 }
 
 const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
-  const { getWarehouses } = useGetWarehouses();
+  const { getWarehouses } = useGetWarehouses(data.warehouseId);
   const user = useAppSelector((state) => state.user);
   const { postRequestStocks } = usePostRequestStocks();
   const { openNotification } = useNotification();
@@ -52,10 +52,6 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
         );
       },
     });
-
-  useEffect(() => {
-    getWarehouses.(user.role == 'SUPER_ADMIN' ? '' : data.warehouseId);
-  }, []);
 
   return (
     <div>
@@ -82,8 +78,8 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
               <SelectContent className="rounded-none">
                 <SelectGroup>
                   <SelectLabel>Warehouse</SelectLabel>
-                  {mutate.isSuccess &&
-                    mutate.data.data.map((val, indx) => {
+                  {getWarehouses.isSuccess &&
+                    getWarehouses.data.data.data.map((val, indx) => {
                       return (
                         <SelectItem key={indx} value={val.id.toString()}>
                           {val.name}

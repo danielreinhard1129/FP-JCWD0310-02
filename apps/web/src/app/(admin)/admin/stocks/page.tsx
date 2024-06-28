@@ -10,18 +10,12 @@ import { Label } from '@/components/ui/label';
 import { RotateCcw } from 'lucide-react';
 
 const AdminDashboardStocksPage = () => {
-  const { mutate } = useGetWarehouses();
   const user = useAppSelector((state) => state.user);
   const warehouse = useAppSelector((state) => state.admin);
+  const { getWarehouses } = useGetWarehouses(warehouse.warehouseId);
   const { mutation, setQuery, query } = useGetStocks({
     warehouseId: Number(warehouse.warehouseId),
   });
-  useEffect(() => {
-    if (user.role == 'SUPER_ADMIN') {
-      mutate.mutate('');
-    }
-    mutation.mutate();
-  }, []);
   return (
     <>
       <div className="px-4 py-4">
@@ -53,7 +47,7 @@ const AdminDashboardStocksPage = () => {
                     setQuery({ ...query, warehouseId: Number(e) })
                   }
                   loading={mutation.isLoading}
-                  options={mutate.data?.data.map((val) => {
+                  options={getWarehouses.data?.data?.data.map((val) => {
                     return {
                       value: val.id,
                       label: val.name,

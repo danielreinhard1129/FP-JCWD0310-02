@@ -26,7 +26,6 @@ const DetailStockPopover = ({
   data: DataTablesStock;
   refetch: () => void;
 }) => {
-  const { mutate } = useGetWarehouses();
   const user = useAppSelector((state) => state.user);
   const [type, setType] = useState<'request' | 'add'>('request');
   const [open, setOpen] = useState(false);

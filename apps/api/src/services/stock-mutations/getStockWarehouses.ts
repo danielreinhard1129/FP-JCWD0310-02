@@ -1,6 +1,8 @@
 import prisma from '@/prisma';
 
-export const getStockWarehouses = async (filterWarehouseId: number) => {
+export const getStockWarehouses = async (
+  filterWarehouseId: number | undefined,
+) => {
   try {
     const warehouse = await prisma.warehouse.findMany({
       where: {
