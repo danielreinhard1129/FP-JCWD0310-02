@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { NEXT_PUBLIC_BASE_API_URL } from '../utils/config';
+import { BASE_API_URL } from '../utils/config';
 
 const getToken = () => {
   try {
@@ -11,7 +11,7 @@ const getToken = () => {
 };
 
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: NEXT_PUBLIC_BASE_API_URL,
+  baseURL: BASE_API_URL,
   headers: { 'Access-Control-Allow-Origin': '*' },
 });
 

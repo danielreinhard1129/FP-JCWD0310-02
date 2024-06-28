@@ -186,7 +186,7 @@
 
 // export default cartSlice.reducer;
 import { Cart } from '@/typess/cart.type';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -208,7 +208,7 @@ export const fetchCartItems = createAsyncThunk<
   { rejectValue: string }
 >('cart/fetchCartItems', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(NEXT_PUBLIC_BASE_API_URL + '/carts/5');
+    const response = await axios.get(BASE_API_URL + '/carts/5');
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || error.message);
@@ -221,7 +221,7 @@ export const deleteCartItemAsync = createAsyncThunk<
   { rejectValue: string }
 >('cart/deleteCartItemAsync', async (itemId, { rejectWithValue }) => {
   try {
-    await axios.delete(NEXT_PUBLIC_BASE_API_URL + `/carts/${itemId}`);
+    await axios.delete(BASE_API_URL + `/carts/${itemId}`);
     return itemId;
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || error.message);
@@ -241,7 +241,7 @@ export const addItemAsync = createAsyncThunk<
   if (existingItem) {
     try {
       const response = await axios.put(
-        `${NEXT_PUBLIC_BASE_API_URL}/carts/${existingItem.id}`,
+        `${BASE_API_URL}/carts/${existingItem.id}`,
         {
           ...existingItem,
           quantity: existingItem.quantity + 1,
@@ -253,10 +253,7 @@ export const addItemAsync = createAsyncThunk<
     }
   } else {
     try {
-      const response = await axios.post(
-        NEXT_PUBLIC_BASE_API_URL + '/carts',
-        newItem,
-      );
+      const response = await axios.post(BASE_API_URL + '/carts', newItem);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || error.message);
@@ -271,7 +268,7 @@ export const incrementQuantityAsync = createAsyncThunk<
 >('cart/incrementQuantityAsync', async (cartItem, { rejectWithValue }) => {
   try {
     const response = await axios.put(
-      `${NEXT_PUBLIC_BASE_API_URL}/carts/increment/${cartItem.id}`,
+      `${BASE_API_URL}/carts/increment/${cartItem.id}`,
     );
     return response.data;
   } catch (error: any) {
@@ -286,7 +283,7 @@ export const decrementQuantityAsync = createAsyncThunk<
 >('cart/decrementQuantityAsync', async (cartItem, { rejectWithValue }) => {
   try {
     const response = await axios.put(
-      `${NEXT_PUBLIC_BASE_API_URL}/carts/decrement/${cartItem.id}`,
+      `${BASE_API_URL}/carts/decrement/${cartItem.id}`,
     );
     return response.data;
   } catch (error: any) {
