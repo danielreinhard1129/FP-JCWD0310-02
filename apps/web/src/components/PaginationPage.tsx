@@ -1,6 +1,7 @@
 'use client';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React from 'react';
+import { Label } from './ui/label';
 
 interface PaginationComponentProps {
   /** State take */
@@ -43,25 +44,26 @@ const PaginationPage = (props: PaginationComponentProps) => {
   };
   return (
     <>
-      <div
-        id="pagination-page"
-        className="flex w-full justify-center mt-8 mb-16 gap-3"
-      >
+      <div id="pagination-page" className="flex w-full justify-center gap-3">
         <div
           id="prev-page"
           onClick={handlePrevPage}
-          className="rounded-lg border cursor-pointer border-black w-24 h-6 px-2 flex justify-between items-center"
+          className="rounded-lg border cursor-pointer border-black h-8 px-2 flex justify-between gap-2 items-center"
         >
           <ArrowLeft width={10} />
-          <p className="text-sm h-full">Previous</p>
+          <p className="text-sm font-inter tracking-wide font-semibold ">
+            Previous
+          </p>
         </div>
         {props.page > 1 ? (
           <>
             <div
               id="select-prev-page-active"
-              className="rounded-lg border bg-white text-black w-6 h-6 text-center flex justify-center items-center"
+              className="rounded-lg border bg-white text-blackmi n-w-8 h-8 text-center flex justify-center items-center"
             >
-              <div className="text-sm">{props.page - 1}</div>
+              <div className="text-sm font-inter tracking-wide font-semibold">
+                {props.page - 1}
+              </div>
             </div>
           </>
         ) : (
@@ -69,9 +71,11 @@ const PaginationPage = (props: PaginationComponentProps) => {
         )}
         <div
           id="select-current-page-active"
-          className="rounded-lg bg-black text-white w-6 h-6 text-center flex justify-center items-center"
+          className="rounded-lg bg-black text-white min-w-8 h-8 text-center flex justify-center items-center"
         >
-          <div className="text-sm">{props.page}</div>
+          <div className="text-sm font-inter tracking-wide font-semibold">
+            {props.page}
+          </div>
         </div>
         {props.page == Math.ceil(props.count / props.take) ? (
           ''
@@ -79,9 +83,9 @@ const PaginationPage = (props: PaginationComponentProps) => {
           <>
             <div
               id="select-next-page-active"
-              className="rounded-lg border bg-white text-black w-6 h-6 text-center flex justify-center items-center"
+              className="rounded-lg border bg-white text-black min-w-8 h-8 text-center flex justify-center items-center"
             >
-              <div className="text-sm">
+              <div className="text-sm font-inter tracking-wide font-semibold">
                 {Math.ceil(props.count / props.take)}
               </div>
             </div>
@@ -92,9 +96,9 @@ const PaginationPage = (props: PaginationComponentProps) => {
         <div
           id="next-page"
           onClick={handleNextPage}
-          className="rounded-lg border cursor-pointer border-black w-24 h-6 px-2 flex justify-between items-center"
+          className="rounded-lg border cursor-pointer border-black h-8 px-2 flex justify-between gap-2 items-center"
         >
-          <p className="text-sm h-full">Next</p>
+          <p className="text-sm font-inter tracking-wide font-semibold">Next</p>
           <ArrowRight width={10} />
         </div>
       </div>

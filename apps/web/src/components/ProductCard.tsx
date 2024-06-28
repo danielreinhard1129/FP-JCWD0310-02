@@ -36,7 +36,7 @@ const ProductCard = (param: ProductCardAttribute) => {
                 height={200}
                 className="self-stretch w-[180px] relative rounded-3xl max-h-full object-cover z-0"
                 alt="Images"
-                src={`${NEXT_PUBLIC_BASE_API_URL}assets/${param.images || ''}`}
+                src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${param.images || ''}`}
               />
               {new Date().setMonth(new Date().getMonth() - 1) <
               +new Date(param.created) ? (
@@ -64,7 +64,7 @@ const ProductCard = (param: ProductCardAttribute) => {
           ) : (
             <>
               <div className="flex flex-col items-start justify-start">
-                <div className="w-[180px] text-primary relative font-semibold inline-block h-14 shrink-0">
+                <div className="w-[180px] text-primary relative text-base font-semibold font-rubik inline-block h-14">
                   {param.title}
                 </div>
               </div>
@@ -78,8 +78,8 @@ const ProductCard = (param: ProductCardAttribute) => {
                 </>
               ) : (
                 <>
-                  <div className="relative tracking-[0.25px] uppercase font-medium">
-                    View Product - {priceFormat.format(param.price)}
+                  <div className="relative tracking-[0.25px] font-semibold font-rubik">
+                    {priceFormat.format(param.price)}
                   </div>
                 </>
               )}
