@@ -5,7 +5,7 @@ export const getStockMutationsService = async (
   query: {
     page: number;
     take: number;
-    status: 'DONE' | 'WAIT_CONFIRMATION' | 'ON_PROGRESS' | undefined;
+    status: 'WAIT_CONFIRMATION' | 'ON_PROGRESS' | 'DONE' | 'REJECT' | undefined;
   },
 ) => {
   try {

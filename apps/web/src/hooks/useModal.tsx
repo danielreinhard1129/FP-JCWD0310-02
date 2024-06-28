@@ -14,21 +14,21 @@ export const useModal = (title?: string) => {
     handleOk: () => void;
     description: string;
   }) => {
+    const Description = <div className="w-full font-bold">{description}</div>;
+
     const handleConfirm = () => {
       setOpen(false);
       handleOk();
     };
     return (
-      <>
-        <Modal
-          title={modalTitle}
-          open={open}
-          children={<div className="w-full font-bold">{description}</div>}
-          onOk={handleConfirm}
-          confirmLoading={loading}
-          onCancel={() => setOpen(false)}
-        />
-      </>
+      <Modal
+        title={modalTitle}
+        open={open}
+        children={Description}
+        onOk={handleConfirm}
+        confirmLoading={loading}
+        onCancel={() => setOpen(false)}
+      />
     );
   };
   return { setOpen, setTitle, ModalAsync };

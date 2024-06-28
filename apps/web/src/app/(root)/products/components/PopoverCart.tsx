@@ -101,9 +101,10 @@ const PopoverCart: FC<IPopoverCartProps> = ({ product }) => {
                         Select product variant
                       </Label>
                     </SelectLabel>
-                    {product?.variant.map((val) => {
+                    {product?.variant.map((val, indx) => {
                       return (
                         <SelectItem
+                          key={indx}
                           className="font-rubik font-medium"
                           value={val.id.toString()}
                         >

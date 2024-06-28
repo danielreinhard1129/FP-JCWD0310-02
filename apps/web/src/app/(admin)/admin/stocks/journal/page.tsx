@@ -7,16 +7,16 @@ import { RotateCcw } from 'lucide-react';
 import React from 'react';
 
 const StockJournalsPage = () => {
-  const { data, loading, refetch } = useGetStockJournals();
+  // const { data, loading, refetch } = useGetStockJournals();
   return (
     <div className="px-4 py-4">
       <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>List Stock Mutations</CardTitle>
+            <CardTitle>Stock journal</CardTitle>
             <Popover content="Refresh the tables">
               <div
-                onClick={() => refetch()}
+                // onClick={() => refetch()}
                 className="flex cursor-pointer justify-center items-center px-2 py-2 w-10 h-10 rounded-lg border border-input"
               >
                 <RotateCcw />
@@ -25,11 +25,11 @@ const StockJournalsPage = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <DataTablesStockJournals
+          {/* <DataTablesStockJournals
             data={data}
             loading={loading}
             refetch={refetch}
-          />
+          /> */}
         </CardContent>
       </Card>
     </div>

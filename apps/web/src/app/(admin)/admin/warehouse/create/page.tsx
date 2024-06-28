@@ -17,7 +17,7 @@ interface Province {
   }[];
 }
 
-const createWarehousePage = () => {
+const CreateWarehousePage = () => {
   const { createWarehouse } = useCreateWarehouse();
   const { getProvince } = useGetProvince();
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -192,4 +192,4 @@ const createWarehousePage = () => {
     </div>
   );
 };
-export default createWarehousePage;
+export default CreateWarehousePage;
