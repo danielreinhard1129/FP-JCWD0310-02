@@ -38,7 +38,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
           id="content"
           className="p-4 flex flex-col md:flex-row w-full h-full gap-8"
         >
-          <div id="left-content" className="w-full gap-4">
+          <div id="left-content" className="w-[60%] gap-4">
             {isLoading ? (
               <>
                 <Skeleton className="w-40 h-40" />
@@ -94,7 +94,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
           </div>
           <div
             id="right-content"
-            className="max-w-[400px] w-full flex flex-col justify-between gap-4"
+            className="w-[40%] flex flex-col justify-between gap-4"
           >
             {isLoading ? (
               <>
