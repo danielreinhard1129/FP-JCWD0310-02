@@ -22,7 +22,6 @@ export const useModal = (title?: string) => {
       <Modal
         title={modalTitle}
         open={open}
-        // children={Description}
         onOk={handleConfirm}
         confirmLoading={loading}
         onCancel={() => setOpen(false)}
