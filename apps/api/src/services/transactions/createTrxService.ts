@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_BASE_WEB } from '@/config';
+import { BASE_WEB } from '@/config';
 import prisma from '@/prisma';
 import { nanoid } from 'nanoid';
 
@@ -53,9 +53,9 @@ export const createTrxService = async (body: any) => {
         name: product.name,
       })),
       callbacks: {
-        finish: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
-        error: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
-        pending: `${NEXT_PUBLIC_BASE_WEB}/order-status?transaction_id=${transaction_id}`,
+        finish: `${BASE_WEB}/order-status?transaction_id=${transaction_id}`,
+        error: `${BASE_WEB}/order-status?transaction_id=${transaction_id}`,
+        pending: `${BASE_WEB}/order-status?transaction_id=${transaction_id}`,
       },
     };
 
@@ -84,7 +84,7 @@ export const createTrxService = async (body: any) => {
     const order = await prisma.$transaction(async (tx) => {
       const createOrder = await tx.order.create({
         data: {
-          id: transaction_id,
+          id: 0,
           status: 'WAIT_USER',
           total: gross_amount,
           payment_method: 'MIDTRANS',
@@ -98,16 +98,16 @@ export const createTrxService = async (body: any) => {
         },
       });
 
-      const detailOrder = await tx.orderItems.createMany({
-        data: productsFromDB.map((item) => ({
-          //   id: `TRX-ITEM-${nanoid(10)}`,
-          orderId: transaction_id,
-          productId: item.id,
-          variantId: 1,
-          //   quantity:
-          //     productsWithQuantity.find((p) => p.id === item.id)?.quantity ?? 0,
-        })),
-      });
+      // const detailOrder = await tx.orderItems.createMany({
+      //   data: productsFromDB.map((item) => ({
+      //     //   id: `TRX-ITEM-${nanoid(10)}`,
+      //     orderId: transaction_id,
+      //     productId: item.id,
+      //     variantId: 1,
+      //   quantity:
+      //     productsWithQuantity.find((p) => p.id === item.id)?.quantity ?? 0,
+      //   })),
+      // });
 
       // const payment = await prisma.payments.create({
       //   data: {
