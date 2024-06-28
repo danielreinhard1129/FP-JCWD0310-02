@@ -1,5 +1,6 @@
 import { User } from '@/app/types/user.type';
 import { axiosInstance } from '@/lib/axios';
+import { useAppSelector } from '@/redux/hooks';
 import { adminLoginAction } from '@/redux/slicers/adminSlice';
 
 import { loginAction } from '@/redux/slicers/userSlice';
@@ -20,6 +21,7 @@ interface LoginResponse {
 const useLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { role } = useAppSelector((state) => state.user);
   const login = async (payload: LoginArgs) => {
     try {
       const { data } = await axiosInstance.post<LoginResponse>(

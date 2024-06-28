@@ -36,23 +36,56 @@ model Users {
 }
 
 model Address {
-  id         Int      @id @default(autoincrement())
-  name       String
-  lat        Float
-  lon        Float
-  street     String
-  city       String
-  province   String
-  postalCode String
-  isPrimary  Boolean
-  createdAt  DateTime @default(now())
-  updateAt   DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String?
+  lat         Float
+  lon         Float
+  street      String?
+  city        String
+  subdistrict String
+  province    String
+  postalCode  String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
 
   userId Int
 
   user Users @relation(fields: [userId], references: [id])
 
   @@map("addresses")
+}
+
+model City {
+  id           Int           @id
+  provinceId   Int?
+  cityName     String?       @db.VarChar(255)
+  postal_code  String?       @db.Char(5)
+  province     Province?     @relation(fields: [provinceId], references: [id])
+  subdistricts Subdistrict[]
+
+  // addresses Address[]
+
+  @@map("cities")
+}
+
+model Province {
+  id           Int     @id
+  provinceName String? @db.VarChar(255)
+  cities       City[]
+  // addresses    Address[]
+
+  @@map("provinces")
+}
+
+model Subdistrict {
+  id              Int     @id
+  cityId          Int?
+  subdistrictName String? @db.VarChar(255)
+  city            City?   @relation(fields: [cityId], references: [id])
+  // Address         Address[]
+
+  @@map("subdistricts")
 }
 
 model Cart {
@@ -160,14 +193,15 @@ model Employee {
 }
 
 model Warehouse {
-  id       Int    @id @default(autoincrement())
-  name     String
-  street   String
-  city     String
-  province String
-  state    String
-  lat      Float
-  lon      Float
+  id          Int     @id @default(autoincrement())
+  name        String
+  street      String
+  city        String
+  province    String
+  state       String
+  lat         Float
+  lon         Float
+  subdistrict String?
 
   employee                    Employee[]
   order                       Order[]

@@ -18,6 +18,7 @@ import { TrxRouter } from './routers/trx.router';
 import { join } from 'path';
 import { UserRouter } from './routers/user.router';
 import { StockMutationRouter } from './routers/stock-mutation.router';
+import { WarehouseRouter } from './routers/warehouse.router';
 
 export default class App {
   private app: Express;
@@ -68,6 +69,7 @@ export default class App {
     const trxRouter = new TrxRouter();
     const categoryRouter = new CategoryRouter();
     const stockMutationRouter = new StockMutationRouter();
+    const warehouseRouter = new WarehouseRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
@@ -80,6 +82,7 @@ export default class App {
     this.app.use('/api/trx', trxRouter.getRouter());
     this.app.use('/api/categories', categoryRouter.getRouter());
     this.app.use('/api/stock-mutations', stockMutationRouter.getRouter());
+    this.app.use(`/api/warehouse`, warehouseRouter.getRouter());
   }
 
   public start(): void {

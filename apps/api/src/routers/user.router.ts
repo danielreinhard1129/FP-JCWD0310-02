@@ -13,13 +13,21 @@ export class UserRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.get('/geolocation', this.userController.createAddress);
+    // this.router.get('/admin', this.userController.getAdmin);
+    this.router.get('/getUsers', this.userController.getUsers);
+    this.router.get('/provinces', this.userController.getAddress);
     this.router.get('/:id', this.userController.getUser);
     this.router.post(
       '/update/:id',
       verifyToken,
       this.userController.updateUser,
     );
+    this.router.post('/createAddress/:id', this.userController.createAddress);
+    this.router.delete('/deleteAddress/:id', this.userController.deleteAddress);
+    this.router.post('/updateAddress/:id', this.userController.updateAddress);
   }
+
   getRouter(): Router {
     return this.router;
   }

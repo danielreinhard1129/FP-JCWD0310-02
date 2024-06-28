@@ -9,7 +9,7 @@ interface User {
   //   isVerify: boolean;
 }
 
-export const updateUser = async (body: User, id: number) => {
+export const updateUserService = async (body: User, id: number) => {
   try {
     const { password } = body;
     const existingUser = await prisma.users.findFirst({
