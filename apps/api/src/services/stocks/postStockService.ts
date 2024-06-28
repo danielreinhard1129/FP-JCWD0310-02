@@ -11,7 +11,7 @@ interface PostStockService {
   fromWarehouseId?: number;
   variantId: number;
   quantity: number;
-  type: 'ADD' | 'REQUEST';
+  type: 'ADD' | 'REQUEST' | 'AUTOMATION';
 }
 
 export const PostStockService = async (body: PostStockService) => {
@@ -124,7 +124,7 @@ const addStock = async (
       data: {
         quantity: addVariantStock.quantity,
         status: 'DONE',
-        type: 'IMPORT',
+        type: 'ADD',
         toWarehouseId: warehouseId,
         variantId: addVariantStock.variantId,
         productId: addVariantStock.variant.productId,
@@ -166,7 +166,7 @@ const requestStock = async (
         fromWarehouseId,
         toWarehouseId,
         status: 'WAIT_CONFIRMATION',
-        type: 'IMPORT',
+        type: 'REQUEST',
         variantId: variantStock.variantId,
         productId: variantStock.variant.productId,
       },

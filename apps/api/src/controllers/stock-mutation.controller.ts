@@ -7,19 +7,22 @@ type getStockMutationsStatus =
   | 'DONE'
   | 'WAIT_CONFIRMATION'
   | 'ON_PROGRESS'
+  | 'REJECT'
   | undefined;
 
 export class StockMutationController {
   async getStockMutations(req: Request, res: Response, next: NextFunction) {
     try {
       const status: getStockMutationsStatus =
-        req.query.status == 'DONE'
-          ? 'DONE'
+        req.query.status == 'WAIT_CONFIRMATION'
+          ? 'WAIT_CONFIRMATION'
           : req.query.status == 'ON_PROGRESS'
             ? 'ON_PROGRESS'
-            : req.query.status == 'WAIT_CONFIRMATION'
-              ? 'WAIT_CONFIRMATION'
-              : undefined;
+            : req.query.status == 'DONE'
+              ? 'DONE'
+              : req.query.status == 'REJECT'
+                ? 'REJECT'
+                : undefined;
       const query = {
         page: Number(req.query.page),
         take: Number(req.query.take),

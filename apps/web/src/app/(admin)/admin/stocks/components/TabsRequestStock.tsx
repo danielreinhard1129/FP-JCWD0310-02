@@ -27,7 +27,7 @@ interface ITabsRequestStockProps {
 }
 
 const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
-  const { mutate } = useGetWarehouses();
+  const { getWarehouses } = useGetWarehouses();
   const user = useAppSelector((state) => state.user);
   const { postRequestStocks } = usePostRequestStocks();
   const { openNotification } = useNotification();
@@ -54,7 +54,7 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
     });
 
   useEffect(() => {
-    mutate.mutate(user.role == 'SUPER_ADMIN' ? '' : data.warehouseId);
+    getWarehouses.(user.role == 'SUPER_ADMIN' ? '' : data.warehouseId);
   }, []);
 
   return (
@@ -85,7 +85,7 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
                   {mutate.isSuccess &&
                     mutate.data.data.map((val, indx) => {
                       return (
-                        <SelectItem value={val.id.toString()}>
+                        <SelectItem key={indx} value={val.id.toString()}>
                           {val.name}
                         </SelectItem>
                       );
@@ -114,7 +114,7 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
                   <SelectLabel>Variant</SelectLabel>
                   {data.variant.map((val, indx) => {
                     return (
-                      <SelectItem value={val.id.toString()}>
+                      <SelectItem key={indx} value={val.id.toString()}>
                         {val.color} - {val.size}
                       </SelectItem>
                     );

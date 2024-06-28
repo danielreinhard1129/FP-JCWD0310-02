@@ -1,5 +1,5 @@
 'use client';
-import { notificationApi } from '@/providers/notificationProvider';
+import { NotificationApi } from '@/providers/notificationProvider';
 import { AxiosResponse } from 'axios';
 /** Example using for this hooks
  *
@@ -24,7 +24,7 @@ import { AxiosResponse } from 'axios';
  */
 
 export const useNotification = () => {
-  const api = notificationApi();
+  const api = NotificationApi();
   const openNotification = {
     open: api.open,
     warning: api.warning,

@@ -13,7 +13,7 @@ interface UserArgs {
   password: string;
 }
 
-const manageDataUserPage = () => {
+const ManageDataUserPage = () => {
   const { getWarehousesAdmin } = useWarehousesAdmin();
   const [users, setUsers] = useState<UserArgs[]>([]);
 
@@ -84,4 +84,4 @@ const manageDataUserPage = () => {
   );
 };
 
-export default manageDataUserPage;
+export default ManageDataUserPage;

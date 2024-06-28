@@ -66,7 +66,7 @@ const TabsAddRequestStock: FC<ITabsAddRequestStockProps> = ({
                   <SelectLabel>Variant</SelectLabel>
                   {data.variant.map((val, indx) => {
                     return (
-                      <SelectItem value={val.id.toString()}>
+                      <SelectItem key={indx} value={val.id.toString()}>
                         {val.color} - {val.size}
                       </SelectItem>
                     );
