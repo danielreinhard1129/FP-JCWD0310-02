@@ -72,7 +72,7 @@ const Login = () => {
                 <span>applies to all login options below. More info.</span>
               </div>
             </div>
-            <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold">
+            <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold -mb-3">
               Login
             </button>
             <div className="text-center md:my-2 font-bold max-md:">OR</div>
@@ -91,6 +91,20 @@ const Login = () => {
             />
             Sign in with Google
           </button>
+          {/* <div className=" text-base">
+            Not a member ?{' '}
+            <span className="text-lg font-semibold"> Sing up now</span>
+          </div> */}
+          <div className="text-base text-gray-600">
+            Not a member?{' '}
+            <a
+              href="#"
+              onClick={() => router.replace('/register')}
+              className="text-lg font-semibold text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out"
+            >
+              Sign up now
+            </a>
+          </div>
         </div>
       </div>
     </div>

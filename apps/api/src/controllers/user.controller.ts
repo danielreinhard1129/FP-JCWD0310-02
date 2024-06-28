@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-import { userService } from '../services/user/getUser.service';
-import { updateUserService } from '@/services/user/updateUser.service';
-import axios from 'axios';
 import { createAddressService } from '@/services/user/createAddress.service';
 import { deleteAddressService } from '@/services/user/deleteAddress.service';
+import { getAddressProvince } from '@/services/user/getAddressProvince.service';
+import { getUsersService } from '@/services/user/getUsers.service';
 import { updateAddressService } from '@/services/user/updateAddress.service';
+import { updateUserService } from '@/services/user/updateUser.service';
+import { NextFunction, Request, Response } from 'express';
+import { userService } from '../services/user/getUser.service';
 export class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
@@ -54,6 +55,30 @@ export class UserController {
         req.body,
         Number(req.params.id),
       );
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+  // async getAdmin(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const response = await getWarehouseAdmins(req.body);
+  //     return res.status(200).send(response);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+  async getUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await getUsersService();
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getAddress(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await getAddressProvince();
       return res.status(200).send(response);
     } catch (error) {
       next(error);

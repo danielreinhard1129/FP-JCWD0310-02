@@ -38,6 +38,7 @@ export const useCreateProduct = () => {
       });
       const response = await axiosInstance.post('/products', formData);
       setMessages(response.data);
+      return response;
     } catch (error) {
       throw error;
     }

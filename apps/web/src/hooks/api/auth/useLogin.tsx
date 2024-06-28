@@ -1,5 +1,7 @@
 import { User } from '@/app/types/user.type';
 import { axiosInstance } from '@/lib/axios';
+import { useAppSelector } from '@/redux/hooks';
+import { adminLoginAction } from '@/redux/slicers/adminSlice';
 
 import { loginAction } from '@/redux/slicers/userSlice';
 import { useRouter } from 'next/navigation';
@@ -19,13 +21,22 @@ interface LoginResponse {
 const useLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { role } = useAppSelector((state) => state.user);
   const login = async (payload: LoginArgs) => {
     try {
       const { data } = await axiosInstance.post<LoginResponse>(
         '/auth/login',
         payload,
       );
+
       dispatch(loginAction(data.data));
+
+      if (data.data.role !== 'CUSTOMER' && data.data.employee) {
+        dispatch(adminLoginAction(data.data.employee));
+      }
+      if (role !== 'CUSTOMER') {
+        router.replace('/admin');
+      }
       localStorage.setItem('token', data.token);
       alert('login sucess');
       router.replace('/');

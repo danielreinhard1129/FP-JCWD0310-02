@@ -2,12 +2,14 @@
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 interface Address {
+  id: number;
   name: string;
   street: string;
   city: string;
   province: string;
   postalCode: string;
   isPrimary: boolean;
+  subdistricts: string;
 }
 interface RootState {
   user: {

@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import { makeStore, AppStore } from '@/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
+import LoadingPage from '@/components/LoadingPage';
 
 export default function StoreProvider({
   children,
@@ -20,7 +21,7 @@ export default function StoreProvider({
   return (
     <Provider store={storeRef.current}>
       <PersistGate
-        loading={<h1>Loading...</h1>}
+        loading={LoadingPage()}
         persistor={persistStore(storeRef.current)}
       >
         {children}

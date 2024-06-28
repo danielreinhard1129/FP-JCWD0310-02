@@ -22,6 +22,7 @@ const useCreateAddress = () => {
   console.log(id);
 
   const createAddress = async (payload: Address) => {
+    console.log(payload);
     try {
       const { data } = await axiosInstance.post(`/user/createAddress/${id}`, {
         ...payload,
