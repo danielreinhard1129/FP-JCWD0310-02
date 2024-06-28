@@ -10,7 +10,7 @@ export default function AuthGuard(Component: any) {
     useEffect(() => {
       if (!id) {
         redirect(`/login`);
-      } else if (role == 'CUSTOMER') {
+      } else if (role === 'CUSTOMER') {
         redirect('/unauthorized');
       }
     }, [id, role]);

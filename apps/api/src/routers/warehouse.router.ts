@@ -17,6 +17,11 @@ export class WarehouseRouter {
       '/createWarehouse',
       this.warehouseController.createWarehouse,
     );
+    this.router.get('/getWarehouses', this.warehouseController.getWarehouses);
+    this.router.post(
+      '/createWarehouse',
+      this.warehouseController.createWarehouseAdmin,
+    );
   }
 
   getRouter(): Router {

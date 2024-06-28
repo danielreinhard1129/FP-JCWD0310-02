@@ -28,15 +28,15 @@ const ManageDataUserPage = () => {
       }
     };
     fetchUser();
-  }, [getWarehousesAdmin]);
-
+  }, []);
+  console.log(users);
   return (
     <div className="px-4 py-4">
       <Card>
         <CardHeader>
           <div className="flex justify-between">
             <CardTitle>List Warehouse Admin</CardTitle>
-            <Link href="">
+            <Link href="/admin/manage-data/create">
               <Button>Create Warehouse Admin</Button>
             </Link>
           </div>
