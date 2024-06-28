@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,12 +7,322 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum UserRoleType {
+  CUSTOMER
+  SUPER_ADMIN
+  WAREHOUSE_ADMIN
+}
 
-  @@map("samples") // if you want to use snake_case format
+model Users {
+  id              Int          @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String
+  password        String?
+  profileImageUrl String?
+  role            UserRoleType
+  isVerify        Boolean?     @default(false)
+  isDelete        Boolean
+  token           String
+  createdAt       DateTime     @default(now())
+  updateAt        DateTime     @updatedAt
+
+  Addresses Address[]
+  order     Order[]
+  carts     Cart[]
+  employee  Employee?
+
+  @@map("users")
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  lat         Float
+  lon         Float
+  street      String?
+  city        String
+  subdistrict String
+  province    String
+  postalCode  String?
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  userId Int
+
+  user Users @relation(fields: [userId], references: [id])
+
+  @@map("addresses")
+}
+
+model City {
+  id           Int           @id
+  provinceId   Int?
+  cityName     String?       @db.VarChar(255)
+  postal_code  String?       @db.Char(5)
+  province     Province?     @relation(fields: [provinceId], references: [id])
+  subdistricts Subdistrict[]
+
+  // addresses Address[]
+
+  @@map("cities")
+}
+
+model Province {
+  id           Int     @id
+  provinceName String? @db.VarChar(255)
+  cities       City[]
+  // addresses    Address[]
+
+  @@map("provinces")
+}
+
+model Subdistrict {
+  id              Int     @id
+  cityId          Int?
+  subdistrictName String? @db.VarChar(255)
+  city            City?   @relation(fields: [cityId], references: [id])
+  // Address         Address[]
+
+  @@map("subdistricts")
+}
+
+model Cart {
+  id       Int @id @default(autoincrement())
+  quantity Int
+
+  productId Int
+  variantId Int
+  userId    Int
+
+  user    Users   @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@map("carts")
+}
+
+enum OrderStatus {
+  WAIT_USER
+  CONFIRMATION_PAYMENT
+  ON_PROGRESS
+  ON_SHIPPING
+  DONE
+  CANCEL
+}
+
+model Order {
+  id                String      @id @db.VarChar(110)
+  status            OrderStatus
+  total             Int
+  shippingCost      Int
+  shippingDetail    Int
+  discount          Int
+  payment_method    String
+  snap_token        String?     @db.VarChar(255)
+  snap_redirect_url String?     @db.VarChar(255)
+  createdAt         DateTime    @default(now())
+  updateAt          DateTime    @updatedAt
+
+  userId      Int
+  warehouseId Int
+
+  orderItems OrderItems[]
+  // payments   Payments?    @relation(fields: [paymentsId], references: [id])
+
+  user       Users     @relation(fields: [userId], references: [id])
+  warehouse  Warehouse @relation(fields: [warehouseId], references: [id])
+  paymentsId Int?
+
+  @@map("orders")
+}
+
+model OrderItems {
+  id        Int    @id @default(autoincrement())
+  orderId   String
+  productId Int
+  variantId Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  variant Variant @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+enum PaymentsMethodType {
+  MANUAL
+  MIDTRANS
+}
+
+model Payments {
+  id              Int                @id @default(autoincrement())
+  invoiceNumber   String             @unique
+  paymentMethod   PaymentsMethodType
+  snapToken       String?
+  snapRedirectUrl String?
+  paymentProof    String?
+  createdAt       DateTime           @default(now())
+  updateAt        DateTime           @updatedAt
+
+  // orderId String @unique
+
+  // order Order @relation(fields: [orderId], references: [id])
+  // Order Order[]
+
+  @@map("payments")
+}
+
+model Employee {
+  id        Int      @id @default(autoincrement())
+  ktp       String
+  npwp      String?
+  salary    Int
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  userId      Int @unique
+  warehouseId Int
+
+  user      Users?     @relation(fields: [userId], references: [id])
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+
+  @@map("employees")
+}
+
+model Warehouse {
+  id          Int     @id @default(autoincrement())
+  name        String
+  street      String
+  city        String
+  province    String
+  state       String
+  lat         Float
+  lon         Float
+  subdistrict String?
+
+  employee                    Employee[]
+  order                       Order[]
+  variantStocks               VariantStock[]
+  toWarehouseStockMutations   StockMutation[] @relation("toWarehouseStockMutations")
+  fromWarehouseStockMutations StockMutation[] @relation("fromWarehouseStockMutations")
+
+  @@map("warehouses")
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  productCategory ProductCategory[]
+
+  @@map("categories")
+}
+
+model ProductCategory {
+  id         Int @id @default(autoincrement())
+  productId  Int
+  CategoryId Int
+
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [CategoryId], references: [id])
+
+  @@map("product_categories")
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  productId Int
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("product_images")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
+  description String
+  isDelete    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  productImages   ProductImage[]
+  productCategory ProductCategory[]
+  variant         Variant[]
+  carts           Cart[]
+  stockMutations  StockMutation[]
+  orderItems      OrderItems[]
+
+  @@map("products")
+}
+
+model Variant {
+  id        Int     @id @default(autoincrement())
+  color     String
+  size      String
+  productId Int
+  isDelete  Boolean @default(false)
+
+  carts          Cart[]
+  variantStocks  VariantStock[]
+  stockMutations StockMutation[]
+
+  product    Product      @relation(fields: [productId], references: [id])
+  orderItems OrderItems[]
+
+  @@map("variants")
+}
+
+model VariantStock {
+  id       Int @id @default(autoincrement())
+  quantity Int
+
+  warehouseId Int
+  variantId   Int
+
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+  variant   Variant   @relation(fields: [variantId], references: [id])
+
+  @@map("variant_stocks")
+}
+
+enum StockMutationsStatus {
+  WAIT_CONFIRMATION
+  ON_PROGRESS
+  DONE
+  REJECT
+}
+
+enum StockMutationsType {
+  REQUEST
+  AUTOMATION
+  ADD
+}
+
+model StockMutation {
+  id        Int                  @id @default(autoincrement())
+  quantity  Int
+  status    StockMutationsStatus
+  type      StockMutationsType
+  createdAt DateTime             @default(now())
+  updateAt  DateTime             @updatedAt
+
+  productId       Int
+  variantId       Int
+  fromWarehouseId Int?
+  toWarehouseId   Int
+
+  product       Product    @relation(fields: [productId], references: [id])
+  variant       Variant    @relation(fields: [variantId], references: [id])
+  fromWarehouse Warehouse? @relation("fromWarehouseStockMutations", fields: [fromWarehouseId], references: [id])
+  toWarehouse   Warehouse  @relation("toWarehouseStockMutations", fields: [toWarehouseId], references: [id])
+
+  @@map("stock_mutations")
 }

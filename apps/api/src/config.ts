@@ -12,3 +12,6 @@ config({ path: resolve(__dirname, `../${envFile}.local`), override: true });
 
 export const PORT = process.env.PORT || 8000;
 export const DATABASE_URL = process.env.DATABASE_URL || '';
+export const NEXT_PUBLIC_BASE_WEB =
+  process.env.NEXT_PUBLIC_BASE_WEB || 'http://localhost:3000';
+export const jwtSecretKey = process.env.JWT_SECRET_KEY || 'secret';
