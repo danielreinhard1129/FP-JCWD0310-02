@@ -14,11 +14,11 @@ import { CartRouter } from './routers/cart.router';
 import { CategoryRouter } from './routers/category.router';
 import { ProductRouter } from './routers/product.router';
 import { StockRouter } from './routers/stock.router';
-import { TrxRouter } from './routers/trx.router';
 import { join } from 'path';
 import { UserRouter } from './routers/user.router';
 import { StockMutationRouter } from './routers/stock-mutation.router';
 import { WarehouseRouter } from './routers/warehouse.router';
+import { OrderRouter } from './routers/order.router';
 
 export default class App {
   private app: Express;
@@ -66,23 +66,20 @@ export default class App {
     const productRouter = new ProductRouter();
     const stockRouter = new StockRouter();
     const userRouter = new UserRouter();
-    const trxRouter = new TrxRouter();
     const categoryRouter = new CategoryRouter();
     const stockMutationRouter = new StockMutationRouter();
     const warehouseRouter = new WarehouseRouter();
+    const orderRouter = new OrderRouter();
 
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send(`Hello, Purwadhika Student !`);
-    });
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/products', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stocks', stockRouter.getRouter());
     this.app.use(`/api/user`, userRouter.getRouter());
-    this.app.use('/api/trx', trxRouter.getRouter());
     this.app.use('/api/categories', categoryRouter.getRouter());
     this.app.use('/api/stock-mutations', stockMutationRouter.getRouter());
-    this.app.use(`/api/warehouse`, warehouseRouter.getRouter());
+    this.app.use('/api/warehouse', warehouseRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
   }
 
   public start(): void {
