@@ -58,7 +58,9 @@ export class StockMutationController {
   }
   async getWarehouses(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await getStockWarehouses(Number(req.query.warehouse));
+      const response = await getStockWarehouses(
+        Number(req.query.warehouse) || undefined,
+      );
       res.status(200).send(response);
     } catch (error) {
       next();

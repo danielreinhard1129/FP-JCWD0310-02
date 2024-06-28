@@ -1,6 +1,6 @@
 'use client';
 import { Modal } from 'antd';
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 
 export const useModal = (title?: string) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -14,8 +14,6 @@ export const useModal = (title?: string) => {
     handleOk: () => void;
     description: string;
   }) => {
-    const Description = <div className="w-full font-bold">{description}</div>;
-
     const handleConfirm = () => {
       setOpen(false);
       handleOk();
@@ -24,11 +22,12 @@ export const useModal = (title?: string) => {
       <Modal
         title={modalTitle}
         open={open}
-        children={Description}
         onOk={handleConfirm}
         confirmLoading={loading}
         onCancel={() => setOpen(false)}
-      />
+      >
+        <div className="w-full font-bold">{description}</div>
+      </Modal>
     );
   };
   return { setOpen, setTitle, ModalAsync };

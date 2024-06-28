@@ -6,7 +6,7 @@ interface IWarehouseResponse {
   data: Warehouse[];
 }
 
-export const useGetWarehouses = (filteredWarehouse: number) => {
+export const useGetWarehouses = (filteredWarehouse: number | undefined) => {
   const { axiosInstance } = useAxios();
   const getWarehouses = useQuery({
     queryKey: ['filtered-warehouse', filteredWarehouse],
