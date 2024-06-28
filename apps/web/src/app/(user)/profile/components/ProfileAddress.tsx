@@ -13,6 +13,7 @@ interface Address {
   street: string;
   city: string;
   province: string;
+  subdistricts: string;
   postalCode: string;
   isPrimary: boolean;
 }
