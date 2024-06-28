@@ -29,7 +29,7 @@ const manageDataUserPage = () => {
     };
     fetchUser();
   }, [getWarehousesAdmin]);
-
+  console.log(users);
   return (
     <div className="px-4 py-4">
       <Card>
@@ -59,7 +59,7 @@ const manageDataUserPage = () => {
               </thead>
               <tbody className="overscroll-contain font-medium text-center">
                 {users
-                  .filter((users) => users.role !== 'CUSTOMER')
+                  // .filter((users) => users.role !== 'CUSTOMER')
                   .map((user, index) => (
                     <tr key={user.id}>
                       <td className="px-4 py-2">{index + 1}</td>
