@@ -1,22 +1,14 @@
 'use client';
 import HeaderDashboard from '@/components/dashboard/HeaderDashboard';
 import SidebarDashboard from '@/components/dashboard/SidebarDashboard';
-// <<<<<<< HEAD
-// import AuthGuard from '@/hoc/AuthGuard';
 
-// const AdminLayout = ({ children }: { children: React.ReactNode }) => {
-// =======
+import AuthGuard from '@/hoc/AuthGuard';
 import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
-
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const user = useAppSelector((state) => state.user);
   const token = localStorage.getItem('token');
@@ -40,8 +32,8 @@ export default function AdminLayout({
       </div>
     </QueryClientProvider>
   );
-}
-// // const ProtectedAdminLayout = AuthGuard(AdminLayout);
+};
+const ProtectedAdminLayout = AuthGuard(AdminLayout);
 // const ProtectedAdminLayout = AdminLayout;
 
-// export default ProtectedAdminLayout;
+export default ProtectedAdminLayout;

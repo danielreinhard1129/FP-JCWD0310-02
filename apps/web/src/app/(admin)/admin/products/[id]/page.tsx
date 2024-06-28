@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 
 const AdminProductDetails = ({ params }: { params: { id: number } }) => {
   const { data, getProduct } = useGetProduct(params.id);
-  const { contextHolder, openNotification } = useNotification();
+  const { openNotification } = useNotification();
   const { ModalAsync, setOpen, setTitle } = useModal();
   const { updateProduct, loading } = useUpdateProduct();
   useEffect(() => {
@@ -18,7 +18,6 @@ const AdminProductDetails = ({ params }: { params: { id: number } }) => {
 
   return (
     <div className="px-6 py-8">
-      {contextHolder}
       <ModalAsync
         description={
           data?.data.isDelete

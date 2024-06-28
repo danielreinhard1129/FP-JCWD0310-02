@@ -28,18 +28,23 @@ const useLogin = () => {
         '/auth/login',
         payload,
       );
-
-      dispatch(loginAction(data.data));
-
-      if (data.data.role !== 'CUSTOMER' && data.data.employee) {
-        dispatch(adminLoginAction(data.data.employee));
+      if (data.data) {
+        if (data.data.role == 'CUSTOMER') {
+          dispatch(loginAction(data.data));
+        } else if (
+          data.data.employee &&
+          (data.data.role == 'WAREHOUSE_ADMIN' ||
+            data.data.role == 'SUPER_ADMIN')
+        ) {
+          dispatch(loginAction(data.data));
+          dispatch(adminLoginAction(data.data.employee));
+        }
+        localStorage.setItem('token', data.token);
+        alert('login sucess');
+        router.replace('/');
+      } else {
+        alert('login failed');
       }
-      if (role !== 'CUSTOMER') {
-        router.replace('/admin');
-      }
-      localStorage.setItem('token', data.token);
-      alert('login sucess');
-      router.replace('/');
     } catch (error) {
       alert(error);
     }

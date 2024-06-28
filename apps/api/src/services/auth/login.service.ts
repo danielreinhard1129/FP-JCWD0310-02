@@ -51,7 +51,7 @@ export const loginService = async (body: User) => {
           existingUser.role == 'CUSTOMER'
             ? undefined
             : {
-                warehouseId: existingUser.employee?.warehouse,
+                warehouseId: existingUser.employee?.warehouse.id,
                 warehouse: existingUser.employee?.warehouse.name,
               },
       },

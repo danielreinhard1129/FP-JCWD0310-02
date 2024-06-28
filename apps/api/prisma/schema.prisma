@@ -298,11 +298,13 @@ enum StockMutationsStatus {
   WAIT_CONFIRMATION
   ON_PROGRESS
   DONE
+  REJECT
 }
 
 enum StockMutationsType {
-  IMPORT
-  EXPORT
+  REQUEST
+  AUTOMATION
+  ADD
 }
 
 model StockMutation {

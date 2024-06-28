@@ -10,6 +10,8 @@ export const postStockMutationsConfirmationService = async (
   type: 'CONFIRM' | 'ARRIVED' | 'REJECT',
 ) => {
   try {
+    if (quantity == 0) throw new Error('Quantity cannot be 0');
+
     const user = await prisma.users.findFirst({
       where: { id: userId },
       include: {
@@ -30,10 +32,18 @@ export const postStockMutationsConfirmationService = async (
         fromWarehouseId,
         toWarehouseId,
       },
-      include: {},
     });
 
     if (!stockMutation) throw new Error('Cannot found stock mutations');
+
+    const stockVariant = await prisma.variantStock.findFirst({
+      where: { variantId: stockMutation.variantId },
+    });
+
+    if (!stockVariant) throw new Error('Cannot found stock variant!');
+
+    if (stockVariant.quantity < quantity)
+      throw new Error('Quantity is not enough!');
 
     if (stockMutation.status == 'DONE')
       throw new Error('This stock mutations is already done!');
@@ -52,7 +62,7 @@ export const postStockMutationsConfirmationService = async (
         };
       }
       if (type == 'REJECT') {
-        const updateStockMutations = await confirmStockMutations(
+        const updateStockMutations = await rejectStockMutations(
           stockMutation.id,
         );
         return {
@@ -121,7 +131,10 @@ const confirmStockMutations = async (stockMutationId: number) => {
         status: 'ON_PROGRESS',
       },
     });
-    return updateStockMutations;
+    return {
+      data: updateStockMutations,
+      message: 'Success confirm stock mutations',
+    };
   } catch (error) {
     throw error;
   }
@@ -135,7 +148,10 @@ const rejectStockMutations = async (stockMutationId: number) => {
         status: 'DONE',
       },
     });
-    return updateStockMutations;
+    return {
+      data: updateStockMutations,
+      message: 'Success reject stock mutations',
+    };
   } catch (error) {
     throw error;
   }
@@ -170,6 +186,7 @@ const arrivedStockMutations = async (
     return {
       from: updateFromVariantStocks,
       to: updateToVariantStocks,
+      message: 'Success confirm arrived stocks',
     };
   } catch (error) {
     throw error;

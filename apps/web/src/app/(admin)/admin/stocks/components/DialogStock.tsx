@@ -8,13 +8,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog';
+} from '../../../../../components/ui/dialog';
 import { Boxes, Import, SquarePlus } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Label } from '../ui/label';
+import { Button } from '../../../../../components/ui/button';
+import { Label } from '../../../../../components/ui/label';
 import { Popover, Select } from 'antd';
-import { Input } from '../ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Input } from '../../../../../components/ui/input';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../../../../../components/ui/tabs';
 
 const DialogStock = ({ productId }: { productId: number }) => {
   const [selected, setSelected] = useState([

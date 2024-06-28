@@ -14,9 +14,9 @@ export const usePostAddStocks = () => {
   ) => {
     try {
       const response = await axiosInstance.post('/stocks/' + variantId, {
-        toWarehouse,
         quantity,
         type: 'ADD',
+        toWarehouse,
       });
       setData(response.data);
       return response;

@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 import { TableColumnsType } from 'antd';
 import { Product } from '@/types/product.type';
-import DetailStockPopover from './stock/DetailStockPopover';
+import DetailStockPopover from './DetailStockPopover';
 
 interface DataTablesStock extends Product {
   warehouse: string;
@@ -62,7 +62,7 @@ const DataTablesStocks: FC<DataTablesProps> = ({ data, loading, refetch }) => {
       width: 200,
       render: (_, record: any, index) => (
         <div className="w-full flex justify-center items-center">
-          <DetailStockPopover data={record} refetch={() => refetch()} />
+          <DetailStockPopover data={record} refetch={refetch} />
         </div>
       ),
     },

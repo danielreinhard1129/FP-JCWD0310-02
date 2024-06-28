@@ -13,7 +13,7 @@ import { useNotification } from '@/hooks/useNotification';
 import { Bolt, Trash } from 'lucide-react';
 import blurImage from '../../../public/blur-image.jpg';
 import noImage from '../../../public/no-image.jpg';
-import DialogStock from './DialogStock';
+import DialogStock from '../../app/(admin)/admin/stocks/components/DialogStock';
 
 interface DataTablesProps {
   data: Product[] | undefined;
@@ -34,7 +34,7 @@ interface DataTypeProducts {
 }
 
 const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
-  const { contextHolder, openNotification } = useNotification();
+  const { openNotification } = useNotification();
   const { ModalAsync, setOpen, setTitle } = useModal();
   const [selected, setSelected] = useState<number>(0);
   const [dataTable, setDataTable] = useState<DataTypeProducts[]>([
@@ -181,7 +181,6 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
   return (
     <>
       <div className="overflow-x-hidden">
-        {contextHolder}
         <div className="overflow-x-scroll overflow-y-scroll no-scrollbar">
           <Table
             columns={columnsProducts}
