@@ -39,6 +39,7 @@ export const useNotification = () => {
       asyncFunc
         .then((success) => {
           api.success({
+            className: 'font-rubik font-semibold',
             message: 'Success!',
             description:
               success.data &&
@@ -52,6 +53,7 @@ export const useNotification = () => {
         .catch((error) => {
           api.error({
             message: 'Something is error!',
+            className: 'font-rubik font-semibold',
             description:
               error.response.data && error.response.data.message
                 ? error.response.data.message

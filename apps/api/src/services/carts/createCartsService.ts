@@ -1,33 +1,71 @@
 import prisma from '@/prisma';
 import { Cart } from '@prisma/client';
 
-interface CartBody extends Omit<Cart, 'id'> {}
+interface ICreateCartServicesPayload {
+  productId: number;
+  userId: number;
+  quantity: number;
+  variantId: number;
+}
 
-export const createCartsService = async (body: CartBody) => {
+export const createCartsService = async (body: ICreateCartServicesPayload) => {
   const { productId, userId, quantity, variantId } = body;
   try {
-    const existingItem = await prisma.cart.findFirst({
-      where: { userId, productId },
+    if (!productId && !userId && !quantity && !variantId)
+      throw new Error('Something is error');
+
+    const cart = await prisma.$transaction(async (tx) => {
+      try {
+        const user = await tx.users.findFirst({
+          where: { id: userId },
+        });
+        if (!user)
+          throw new Error('Cannot find your user account please login');
+
+        const variant = await tx.variant.findFirst({
+          where: {
+            productId,
+            id: variantId,
+          },
+        });
+
+        if (!variant)
+          throw new Error('Something is error.cannot find product variant!');
+
+        const existCart = await tx.cart.findFirst({
+          where: {
+            userId: user.id,
+            productId: variant.productId,
+            variantId: variant.id,
+          },
+        });
+
+        if (!existCart) {
+          const cartItem = await tx.cart.create({
+            data: {
+              quantity,
+              productId: variant.productId,
+              variantId: variant.id,
+              userId: user.id,
+            },
+          });
+
+          return cartItem;
+        }
+
+        const updateCart = await tx.cart.update({
+          where: { id: existCart.id },
+          data: { quantity: existCart.quantity + quantity },
+        });
+      } catch (error) {
+        throw error;
+      }
     });
-    if (existingItem) {
-      const updatedItem = await prisma.cart.update({
-        where: { id: existingItem.id },
-        data: {
-          quantity: existingItem.quantity + quantity,
-        },
-      });
-      return updatedItem;
-    } else {
-      const newItemCart = await prisma.cart.create({
-        data: {
-          userId: Number(userId),
-          productId: Number(productId),
-          variantId: Number(variantId),
-          quantity: Number(quantity),
-        },
-      });
-      return newItemCart;
-    }
+
+    return {
+      message: 'Success add to your cart',
+      data: cart,
+    };
   } catch (error) {
     throw error;
   }

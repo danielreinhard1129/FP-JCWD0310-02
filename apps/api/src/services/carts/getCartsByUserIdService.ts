@@ -7,7 +7,11 @@ export const getUserCartByIdService = async (userId: number) => {
         userId: Number(userId),
       },
       include: {
-        product: true,
+        product: {
+          include: {
+            productImages: true,
+          },
+        },
         variant: true,
       },
     });

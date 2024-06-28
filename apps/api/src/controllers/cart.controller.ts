@@ -12,7 +12,13 @@ export class CartController {
     next: NextFunction,
   ) {
     try {
-      const result = await createCartsService(req.body);
+      const body = {
+        productId: Number(req.body.productId),
+        userId: Number(req.body.userId),
+        quantity: Number(req.body.quantity),
+        variantId: Number(req.body.variantId),
+      };
+      const result = await createCartsService(body);
 
       return res.status(201).send(result);
     } catch (error) {

@@ -50,18 +50,23 @@ const ProductsPage = () => {
   }, [size, categories, color]);
   return (
     <div className="w-full">
-      <SearchBarDebounce
-        onValueChange={(e) => setQuery({ ...query, page: 1, search: e })}
-      />
       <div id="title">
         <div id="top" className="flex flex-col">
           <div
             id="title-summary"
-            className="flex flex-row justify-between items-center"
+            className="flex flex-row justify-between items-center gap-8"
           >
-            <Label className="md:text-3xl text-xl">Life Style Shoes</Label>
+            <Label className="md:text-3xl min-w-fit h-full text-xl font-rubik">
+              Life Style Shoes
+            </Label>
+            <div className="min-w-48 w-80">
+              <SearchBarDebounce
+                onValueChange={(e) =>
+                  setQuery({ ...query, page: 1, search: e })
+                }
+              />
+            </div>
           </div>
-          <Label className="text-xs">122 Items</Label>
         </div>
       </div>
       <div id="content-product" className="flex gap-8 pt-8">
@@ -98,15 +103,20 @@ const ProductsPage = () => {
             ) : (
               <>
                 <div className="w-full flex justify-center items-center">
-                  <Label>Product is not available</Label>
+                  <Label className="font-rubik font-semibold">
+                    Product is not available
+                  </Label>
                 </div>
               </>
             )}
           </div>
           <div
             id="pagination-page"
-            className="flex w-full justify-center mt-8 mb-16 gap-3"
+            className="flex flex-col w-full items-center justify-center mt-8 gap-4"
           >
+            <Label className="text-xs font-rubik font-medium">
+              {data?.count} Items found
+            </Label>
             <PaginationPage
               take={query.take}
               page={query.page}
