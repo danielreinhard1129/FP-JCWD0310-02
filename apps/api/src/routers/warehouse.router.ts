@@ -19,8 +19,12 @@ export class WarehouseRouter {
     );
     this.router.get('/getWarehouses', this.warehouseController.getWarehouses);
     this.router.post(
-      '/createWarehouse',
+      '/createWarehouseAdmin',
       this.warehouseController.createWarehouseAdmin,
+    );
+    this.router.delete(
+      '/delete-warehouse-admin/:id',
+      this.warehouseController.deletedWarehouseAdmin,
     );
   }
 

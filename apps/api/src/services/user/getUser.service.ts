@@ -12,7 +12,7 @@ export const userService = async (body: User, id: number) => {
   try {
     console.log(id);
     const existingUser = await prisma.users.findFirst({
-      where: { id },
+      where: { id, isDelete: false },
       include: { Addresses: true },
     });
     console.log(existingUser);

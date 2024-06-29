@@ -4,6 +4,10 @@ import useWarehousesAdmin from '@/hooks/api/user/useGetAdmins';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { FilePenLine, Trash2 } from 'lucide-react';
+import useDeleteWarehouseAdmin from '@/hooks/warehouses/useDeleteWarehouseAdmin';
+import UpdateWarehouseAdminPage from './edit/page';
+import { useRouter } from 'next/navigation';
 
 interface UserArgs {
   id: number;
@@ -14,8 +18,10 @@ interface UserArgs {
 }
 
 const ManageDataUserPage = () => {
+  const router = useRouter();
   const { getWarehousesAdmin } = useWarehousesAdmin();
   const [users, setUsers] = useState<UserArgs[]>([]);
+  const { deleteWarehouseAdmin } = useDeleteWarehouseAdmin();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,7 +60,7 @@ const ManageDataUserPage = () => {
                   <th className="px-4 py-2">Email</th>
                   <th className="px-4 py-2 max-md:hidden">Password</th>
                   <th className="px-4 py-2 max-md:hidden">Role</th>
-                  <th className="px-4 py-2">Edit</th>
+                  <th className="px-4 py-2">Action</th>
                 </tr>
               </thead>
               <tbody className="overscroll-contain font-medium text-center">
@@ -70,8 +76,19 @@ const ManageDataUserPage = () => {
                         {'**********'}
                       </td>
                       <td className="px-4 py-2 max-md:hidden">{user.role}</td>
-                      <td className="px-4 py-2">
-                        <Button>Edit</Button>
+                      <td className="px-4 py-2 flex justify-center gap-4">
+                        {/* <Button>Edit</Button> */}
+                        <Trash2
+                          className="cursor-pointer"
+                          onClick={() => deleteWarehouseAdmin(user.id)}
+                        />
+                        <FilePenLine
+                          className="cursor-pointer"
+                          onClick={() => {
+                            UpdateWarehouseAdminPage(user.id);
+                            router.push('/admin/manage-data/edit');
+                          }}
+                        />
                       </td>
                     </tr>
                   ))}

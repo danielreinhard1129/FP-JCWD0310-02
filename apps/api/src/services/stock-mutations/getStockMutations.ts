@@ -32,7 +32,7 @@ export const getStockMutationsService = async (
         status: { equals: query.status },
         OR: [
           { fromWarehouseId: user.employee.warehouseId },
-          { toWarehouseId: user.employee.warehouseId },
+          // { toWarehouseId: user.employee.warehouseId },
         ],
       },
       include: {

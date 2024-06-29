@@ -1,7 +1,13 @@
 import { hashedPassword } from '@/lib/bcrypt';
 import prisma from '@/prisma';
 import { User } from '@/types/user.type';
-export const createWarehouseAdminService = async (body: User) => {
+interface UserArgs extends User {
+  password: string;
+  ktp: string;
+  npwp: string;
+  salary: number;
+}
+export const createWarehouseAdminService = async (body: UserArgs) => {
   try {
     const { email, password } = body;
     const existingUser = await prisma.users.findFirst({
@@ -13,11 +19,20 @@ export const createWarehouseAdminService = async (body: User) => {
     const hashPassword = await hashedPassword(password);
     const user = await prisma.users.create({
       data: {
-        ...body,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
         password: hashPassword,
         role: 'WAREHOUSE_ADMIN',
         isDelete: false,
         token: '0',
+        employee: {
+          create: {
+            ktp: body.ktp,
+            npwp: body.npwp,
+            salary: Number(body.salary),
+          },
+        },
       },
     });
     return user;
