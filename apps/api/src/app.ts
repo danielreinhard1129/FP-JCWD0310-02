@@ -69,8 +69,8 @@ export default class App {
     const stockMutationRouter = new StockMutationRouter();
     const warehouseRouter = new WarehouseRouter();
 
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send(`Hello, Purwadhika Student !`);
+    this.app.get('/api', (req: Request, res: Response) => {
+      res.send(`Hello, Purwadhika Student API !`);
     });
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/products', productRouter.getRouter());
