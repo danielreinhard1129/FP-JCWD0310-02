@@ -18,6 +18,8 @@ import { join } from 'path';
 import { UserRouter } from './routers/user.router';
 import { StockMutationRouter } from './routers/stock-mutation.router';
 import { WarehouseRouter } from './routers/warehouse.router';
+import { OrderRouter } from './routers/order.router';
+import { TransactionRouter } from './routers/transaction.router';
 
 export default class App {
   private app: Express;
@@ -68,10 +70,9 @@ export default class App {
     const categoryRouter = new CategoryRouter();
     const stockMutationRouter = new StockMutationRouter();
     const warehouseRouter = new WarehouseRouter();
+    const orderRouter = new OrderRouter();
+    const transactionRouter = new TransactionRouter();
 
-    this.app.get('/api', (req: Request, res: Response) => {
-      res.send(`Hello, Purwadhika Student API !`);
-    });
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/products', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
@@ -79,7 +80,9 @@ export default class App {
     this.app.use(`/api/user`, userRouter.getRouter());
     this.app.use('/api/categories', categoryRouter.getRouter());
     this.app.use('/api/stock-mutations', stockMutationRouter.getRouter());
-    this.app.use(`/api/warehouse`, warehouseRouter.getRouter());
+    this.app.use('/api/warehouse', warehouseRouter.getRouter());
+    this.app.use('/api/orders', orderRouter.getRouter());
+    this.app.use('/api/transactions', transactionRouter.getRouter());
   }
 
   public start(): void {

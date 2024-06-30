@@ -1,6 +1,6 @@
-import { getStockMutationsService } from '@/services/stock-mutations/getStockMutations';
-import { getStockWarehouses } from '@/services/stock-mutations/getStockWarehouses';
-import { postStockMutationsConfirmationService } from '@/services/stock-mutations/postStockConfirmation';
+import { getStockMutationsService } from '@/services/stock-mutation/getStockMutations';
+import { getStockWarehouses } from '@/services/stock-mutation/getStockWarehouses';
+import { postStockMutationsConfirmationService } from '@/services/stock-mutation/postStockConfirmation';
 import { NextFunction, Request, Response } from 'express';
 
 type getStockMutationsStatus =

@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
       },
+      {
+        protocol: 'https',
+        hostname: 'jcwd031002.purwadhikabootcamp.com',
+      },
     ],
   },
 };
