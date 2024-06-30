@@ -6,9 +6,10 @@ import ProductsPage from './components/Products';
 
 const page = () => (
   <section>
-    <div className="flex flex-col border-2 border-black rounded-lg">
-      <h1 className="font-rubik font-extrabold text-black">{BASE_API_URL}</h1>
-      <h1 className="font-rubik font-extrabold text-black">{BASE_WEB}</h1>
+    <div className="flex flex-col font-rubik text-lg text-black border-2 border-black rounded-lg">
+      <h1>{BASE_WEB}</h1>
+      <h1>{BASE_API_URL}</h1>
+      <h1></h1>
     </div>
     <div className="flex flex-col gap-y-8 w-[90vw] mx-auto max-md:p-5">
       <div className="text-neutral-800 uppercase font-bold  lg:text-[220px] w-full flex justify-between text-center max-md:text-5xl ">
