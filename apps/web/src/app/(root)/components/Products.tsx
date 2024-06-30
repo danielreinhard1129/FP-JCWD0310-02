@@ -13,7 +13,7 @@ export default function ProductsPage() {
     <section>
       <div className="flex justify-between">
         {data &&
-          data.data.map((product, index) => {
+          data?.data?.map((product, index) => {
             return (
               <div key={index} className="flex flex-col gap-y-6 w-72">
                 <Link
