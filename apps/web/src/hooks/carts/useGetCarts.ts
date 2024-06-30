@@ -1,21 +1,13 @@
-import { useMutation } from 'react-query';
+import { useQuery } from 'react-query';
 import useAxios from '../useAxios';
 import { Carts } from '@/types/cart.types';
 
-export const useGetCarts = () => {
+export const useGetCarts = (userId: number) => {
   const { axiosInstance } = useAxios();
-  const getCarts = async (userId: number) => {
-    try {
-      const response = axiosInstance.get<Carts[]>('/carts/' + userId);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const mutate = useMutation({
-    mutationFn: getCarts,
+  const { data, isSuccess, refetch } = useQuery({
+    queryKey: ['userId', userId],
+    queryFn: () => axiosInstance.get<Carts[]>('/carts/' + userId),
   });
 
-  return { mutate };
+  return { data, isSuccess, refetch };
 };

@@ -1,8 +1,8 @@
-import { createCartsService } from '@/services/carts/createCartsService';
-import { decreaseCartService } from '@/services/carts/decreaseCart';
-import { deleteCartservice } from '@/services/carts/deleteCartItemService';
-import { getUserCartByIdService } from '@/services/carts/getCartsByUserIdService';
-import { increaseCartService } from '@/services/carts/incrementCartService';
+import { createCartsService } from '@/services/cart/createCartsService';
+import { decreaseCartService } from '@/services/cart/decreaseCart';
+import { deleteCartservice } from '@/services/cart/deleteCartItemService';
+import { getUserCartByIdService } from '@/services/cart/getCartsByUserIdService';
+import { increaseCartService } from '@/services/cart/incrementCartService';
 import { NextFunction, Request, Response } from 'express';
 
 export class CartController {
