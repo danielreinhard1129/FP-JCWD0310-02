@@ -18,7 +18,11 @@ const OrderPage = () => {
   const router = useRouter();
   const { id } = useAppSelector((state) => state.user);
   const { data, isSuccess } = useGetCarts(id);
-  const { postOrder, postOrderAsync } = usePostOrder();
+  const {
+    postOrder,
+    postOrderAsync,
+    data: dataPost,
+  } = usePostOrder(router.push);
   const { openNotification } = useNotification();
   const formatPrice = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
@@ -39,11 +43,7 @@ const OrderPage = () => {
 
   const handlePost = () => {
     if (data) {
-      openNotification.async(postOrderAsync(), () => {
-        setTimeout(() => {
-          router.push('/transactions');
-        }, 5000);
-      });
+      openNotification.async(postOrderAsync());
     } else openNotification.error({ message: 'Something is error!' });
   };
 
@@ -55,6 +55,7 @@ const OrderPage = () => {
             <CardTitle className="font-rubik">Order Summary</CardTitle>
           </CardHeader>
           <CardContent>
+            {JSON.stringify(dataPost?.data)}
             <div className="flex flex-col mb-8 gap-2 font-rubik">
               {isSuccess &&
                 data &&

@@ -35,6 +35,20 @@ export const postOrderService = async (userId: number) => {
         if (!cart || !cart.length)
           throw new Error('Sorry no cart available on your account');
 
+        const lastTransaction = await tx.payments.findMany({
+          take: 1,
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
+
+        const newTransaction = await tx.payments.create({
+          data: {
+            paymentMethod: 'MANUAL',
+            invoiceNumber: `KKK-${userId}-${lastTransaction.length ? lastTransaction[0].id + 1 : 1}`,
+          },
+        });
+
         const newOrder = await tx.order.create({
           data: {
             warehouseId: 1,
@@ -42,8 +56,9 @@ export const postOrderService = async (userId: number) => {
             discount: 0,
             payment_method: 'MANUAL',
             shippingCost: 0,
+            paymentsId: newTransaction.id,
             shippingDetail: 0,
-            status: 'CONFIRMATION_PAYMENT',
+            status: 'WAIT_USER',
             total: cart.reduce((a, b) => a + b.quantity * b.product.price, 0),
           },
         });
@@ -63,7 +78,7 @@ export const postOrderService = async (userId: number) => {
           where: { userId },
         });
 
-        return newOrder;
+        return newTransaction;
       } catch (error) {
         throw error;
       }
