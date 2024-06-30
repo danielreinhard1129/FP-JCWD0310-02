@@ -27,14 +27,7 @@ export class OrderController {
   async postOrder(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = res.locals.user.id;
-      const body: IPayloadPostOrder = {
-        discount: 0,
-        payment_method: 'MANUAL',
-        shippingCost: 1,
-        shippingDetail: 1,
-        total: 0,
-      };
-      const response = await postOrderService(userId, body);
+      const response = await postOrderService(userId);
       return res.status(200).send(response);
     } catch (error) {
       next();

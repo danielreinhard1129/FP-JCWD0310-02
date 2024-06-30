@@ -15,7 +15,7 @@ export class OrderRouter {
   private initializeRoutes(): void {
     this.router.get('/:id', this.orderController.getOrder);
     this.router.get('/', this.orderController.getOrders);
-    this.router.post('/', this.orderController.postOrder);
+    this.router.post('/', verifyToken, this.orderController.postOrder);
   }
 
   getRouter(): Router {

@@ -10,12 +10,11 @@ import { useEffect } from 'react';
 import { useAppSelector } from '@/redux/hooks';
 import { Separator } from '@/components/ui/separator';
 import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { useRouter } from 'next/navigation';
 export default function CartPage() {
-  const user = useAppSelector((state) => state.user);
-  const { mutate } = useGetCarts();
-  useEffect(() => {
-    mutate.mutate(user.id);
-  }, []);
+  const { id } = useAppSelector((state) => state.user);
+  const { data } = useGetCarts(id);
+  const router = useRouter();
 
   const formatPrice = new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -26,8 +25,8 @@ export default function CartPage() {
     <div className="flex md:flex-row flex-col gap-10">
       <div className="bg-white rounded-lg md:w-[60%] border-transparent max-h-[70vh] overflow-y-scroll no-scrollbar py-6 px-4 border-[10px] flex flex-col gap-4 drop-shadow-sm">
         <Label className="text-2xl font-semibold font-rubik">Your Bag</Label>
-        {mutate.data &&
-          mutate.data.data.map((val, indx) => {
+        {data &&
+          data.data.map((val, indx) => {
             return (
               <div key={indx} className="flex gap-4">
                 <div className="w-[30%] h-fit border-4 border-slate-300 overflow-hidden rounded-2xl">
@@ -74,8 +73,8 @@ export default function CartPage() {
             Order Summary
           </Label>
           <div className="flex flex-col gap-4">
-            {mutate.data &&
-              mutate.data.data.map((val, indx) => {
+            {data &&
+              data.data.map((val, indx) => {
                 return (
                   <div
                     key={indx}
@@ -94,9 +93,9 @@ export default function CartPage() {
           <div className="flex font-bold justify-between mt-8">
             <p>Total</p>
             <p>
-              {mutate.data &&
+              {data &&
                 formatPrice.format(
-                  mutate.data.data.reduce(
+                  data.data.reduce(
                     (a, b) => a + b.product.price * b.quantity,
                     0,
                   ),
@@ -104,7 +103,12 @@ export default function CartPage() {
             </p>
           </div>
         </div>
-        <Button className="mt-8 font-rubik font-bold">CHECKOUT</Button>
+        <Button
+          onClick={() => router.push('/orders')}
+          className="mt-8 font-rubik font-bold"
+        >
+          CHECKOUT
+        </Button>
       </div>
     </div>
   );
