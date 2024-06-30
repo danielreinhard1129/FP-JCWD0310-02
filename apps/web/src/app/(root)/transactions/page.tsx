@@ -22,7 +22,7 @@ import {
 import { useGetTransaction } from '@/hooks/transactions/useGetTransaction';
 import { usePostPaymentProof } from '@/hooks/transactions/usePostPaymentProof';
 import { useNotification } from '@/hooks/useNotification';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { Separator } from '@radix-ui/react-separator';
 import { Trash, X } from 'lucide-react';
 import Image from 'next/image';
@@ -161,7 +161,7 @@ const TransactionsPage = () => {
               {data.data.transaction.paymentProof ? (
                 <Image
                   alt="paymentProof"
-                  src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${data.data.transaction.paymentProof}`}
+                  src={`${BASE_API_URL}/assets/${data.data.transaction.paymentProof}`}
                   width={400}
                   height={400}
                   className="rounded-xl"

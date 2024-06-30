@@ -2,14 +2,11 @@
 
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
-import productImages from '../../../../public/sepatu.jpg';
-import { Heart, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGetCarts } from '@/hooks/carts/useGetCarts';
-import { useEffect } from 'react';
 import { useAppSelector } from '@/redux/hooks';
-import { Separator } from '@/components/ui/separator';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { useRouter } from 'next/navigation';
 export default function CartPage() {
   const { id } = useAppSelector((state) => state.user);
@@ -31,7 +28,7 @@ export default function CartPage() {
               <div key={indx} className="flex gap-4">
                 <div className="w-[30%] h-fit border-4 border-slate-300 overflow-hidden rounded-2xl">
                   <Image
-                    src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${val.product.productImages[0].url}`}
+                    src={`${BASE_API_URL}/assets/${val.product.productImages[0].url}`}
                     width={200}
                     height={200}
                     alt="product"

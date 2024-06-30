@@ -9,7 +9,7 @@ import { usePostOrder } from '@/hooks/orders/usePostOrder';
 import { useNotification } from '@/hooks/useNotification';
 import { useGetCarts } from '@/hooks/carts/useGetCarts';
 import { useAppSelector } from '@/redux/hooks';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import OrderDialogConfirmation from './components/OrderDialogConfirmation';
 import { Address } from '@/types/address.types';
 import { useRouter } from 'next/navigation';
@@ -161,7 +161,7 @@ const OrderPage = () => {
                           alt="sepatu"
                           width={200}
                           height={200}
-                          src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${val.product.productImages[0].url}`}
+                          src={`${BASE_API_URL}/assets/${val.product.productImages[0].url}`}
                           className="object-contain"
                         />
                       </div>

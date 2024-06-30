@@ -6,7 +6,7 @@ import { useGetProduct } from '@/hooks/products/useGetProduct';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
 import Image from 'next/image';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import Link from 'next/link';
 import {
   Carousel,
@@ -57,7 +57,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                             <Card>
                               <CardContent className="flex aspect-square items-center justify-center p-6 relative">
                                 <Image
-                                  src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${val.url}`}
+                                  src={`${BASE_API_URL}/assets/${val.url}`}
                                   alt="image"
                                   width={200}
                                   height={200}

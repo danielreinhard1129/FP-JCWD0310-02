@@ -1,6 +1,6 @@
 'use client';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ export default function NewProducts() {
     <>
       <div className="flex flex-wrap justify-center lg:justify-between gap-6">
         {data &&
-          data.data.map((product, index) => {
+          data?.data?.map((product, index) => {
             return (
               <Link
                 href={'/products' + product.id}
@@ -24,7 +24,7 @@ export default function NewProducts() {
                   <Image
                     width={400}
                     height={400}
-                    src={`${NEXT_PUBLIC_BASE_API_URL}assets/${product.productImages[0].url}`}
+                    src={`${BASE_API_URL}assets/${product.productImages[0].url}`}
                     alt=""
                     className="w-full h-full object-cover object-center rounded-3xl"
                   />

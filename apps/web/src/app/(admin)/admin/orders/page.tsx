@@ -1,3 +1,4 @@
+'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 import DataTablesOrders from './components/DataTablesOrders';
@@ -13,7 +14,7 @@ const AdminOrderPage = () => {
           <DataTablesOrders
             data={undefined}
             loading={false}
-            refetch={console.log('')}
+            refetch={() => console.log('Test')}
           />
         </CardContent>
       </Card>
