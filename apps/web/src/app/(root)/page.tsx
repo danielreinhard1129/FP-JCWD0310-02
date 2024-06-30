@@ -7,8 +7,8 @@ import ProductsPage from './components/Products';
 const page = () => (
   <section>
     <div className="flex flex-col font-rubik text-lg text-black border-2 border-black rounded-lg">
-      <h1>{BASE_WEB}</h1>
-      <h1>{BASE_API_URL}</h1>
+      <h1>{BASE_WEB ?? 'ga ada'}</h1>
+      <h1>{BASE_API_URL ?? 'ga ada'}</h1>
       <h1></h1>
     </div>
     <div className="flex flex-col gap-y-8 w-[90vw] mx-auto max-md:p-5">
