@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_BASE_API_URL, NEXT_PUBLIC_BASE_WEB } from '@/utils/config';
+import { BASE_API_URL, BASE_WEB } from '@/utils/config';
 import Categories from './components/Categories';
 import HeroPage from './components/Hero';
 import NewProducts from './components/NewProducts';
@@ -6,8 +6,11 @@ import ProductsPage from './components/Products';
 
 const page = () => (
   <section>
-    <h1>{NEXT_PUBLIC_BASE_WEB}</h1>
-    <h1>{NEXT_PUBLIC_BASE_API_URL}</h1>
+    <div className="flex flex-col font-rubik text-lg text-black border-2 border-black rounded-lg">
+      <h1>{BASE_WEB}</h1>
+      <h1>{BASE_API_URL}</h1>
+      <h1></h1>
+    </div>
     <div className="flex flex-col gap-y-8 w-[90vw] mx-auto max-md:p-5">
       <div className="text-neutral-800 uppercase font-bold  lg:text-[220px] w-full flex justify-between text-center max-md:text-5xl ">
         <span>DO</span>

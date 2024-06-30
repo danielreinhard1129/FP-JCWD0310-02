@@ -4,7 +4,7 @@ import { Space, Table, Tag } from 'antd';
 import { TableColumnsType } from 'antd';
 import { Product, ProductCategory, Variant } from '@/types/product.type';
 import Image from 'next/image';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { useDeleteProduct } from '@/hooks/products/useDeleteProduct';
@@ -73,7 +73,7 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
               height={100}
               loading="lazy"
               className="w-[100px] h-[100px] object-cover rounded-md border border-input"
-              src={`${NEXT_PUBLIC_BASE_API_URL}/assets/${val}`}
+              src={`${BASE_API_URL}/assets/${val}`}
               onError={(
                 event: React.SyntheticEvent<HTMLImageElement, Event>,
               ) => {

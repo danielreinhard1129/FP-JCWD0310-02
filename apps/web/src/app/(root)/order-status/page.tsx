@@ -1,9 +1,9 @@
 'use client';
-import { NEXT_PUBLIC_BASE_API_URL } from '@/utils/config';
+import { BASE_API_URL } from '@/utils/config';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = NEXT_PUBLIC_BASE_API_URL + '/trx';
+const API_URL = BASE_API_URL + '/trx';
 
 const OrderStatus = () => {
   const router = useRouter();
