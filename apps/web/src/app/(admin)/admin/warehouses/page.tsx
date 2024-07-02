@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import useGetWarehouse from '@/hooks/warehouses/useGetWarehouse';
+import { Trash2, FilePenLine } from 'lucide-react';
+import useDeleteWarehouse from '@/hooks/warehouses/useDeleteWarehouse';
+import { useRouter } from 'next/navigation';
 interface Warehouse {
   id: number;
   name: string;
@@ -15,6 +18,8 @@ interface Warehouse {
 }
 // peanggungjawan: string;}
 const ListWarehouse = () => {
+  const router = useRouter();
+  const { deleteWarehouse } = useDeleteWarehouse();
   const { getWarehouse } = useGetWarehouse();
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
 
@@ -26,7 +31,7 @@ const ListWarehouse = () => {
       } catch (error) {}
     };
     fetchWarehouses();
-  }, [getWarehouse]);
+  }, []);
 
   return (
     <div className="px-4 py-4">
@@ -34,7 +39,7 @@ const ListWarehouse = () => {
         <CardHeader>
           <div className="flex justify-between">
             <CardTitle>List Warehouse</CardTitle>
-            <Link href="/admin/warehouse/create">
+            <Link href="/admin/warehouses/create">
               <Button>Create Warehouse</Button>
             </Link>
           </div>
@@ -51,7 +56,7 @@ const ListWarehouse = () => {
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Alamat</th>
                   <th className="px-4 py-2 max-md:hidden">Penanggung Jawab</th>
-                  <th className="px-4 py-2">Edit</th>
+                  <th className="px-4 py-2">Action</th>
                 </tr>
               </thead>
               <tbody className="overscroll-contain font-medium text-center">
@@ -62,8 +67,20 @@ const ListWarehouse = () => {
                     <td className="px-4 py-2">{`${warehouse.street}, ${warehouse.subdistrict} ,${warehouse.city}, ${warehouse.province} `}</td>
                     {/* <td className="px-4 py-2">{warehouse.alamat}</td> */}
                     <td className="px-4 py-2 max-md:hidden">ds</td>
-                    <td className="px-4 py-2">
-                      <Button>Edit</Button>
+                    <td className="px-4 py-2 flex justify-center gap-4">
+                      {/* <Button>Edit</Button> */}
+                      <Trash2
+                        className="cursor-pointer"
+                        onClick={() => deleteWarehouse(warehouse.id)}
+                      />
+                      <FilePenLine
+                        className="cursor-pointer"
+                        onClick={() => {
+                          router.replace(
+                            `/admin/warehouses/edit/${warehouse.id}`,
+                          );
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}

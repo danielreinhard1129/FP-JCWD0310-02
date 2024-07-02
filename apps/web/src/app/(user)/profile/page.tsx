@@ -8,7 +8,6 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { ProfileAddress } from './components/ProfileAddress';
 interface userArgs extends User {
-  password: string;
   email: string;
   profileImageUrl: string;
 }
@@ -17,7 +16,7 @@ const ProfilePage = () => {
   const { updateUser } = useUpdateUser();
   const { getUser } = useGetUser();
   const [user, setUser] = useState<userArgs>({} as userArgs);
-
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -26,12 +25,11 @@ const ProfilePage = () => {
           email: '',
           firstName: '',
           isVerify: '',
-          password: '',
           profileImageUrl: '',
           role: '',
         };
         const response = await getUser(received);
-        setUser(response);
+        formik.setValues(response);
         console.log(response);
       } catch (error) {}
     };
@@ -39,15 +37,25 @@ const ProfilePage = () => {
   }, []);
   const formik = useFormik({
     initialValues: {
-      password: user.password,
-      email: user.email,
-      firstName: user.firstName,
-      profileImageUrl: user.profileImageUrl,
+      password: '',
+      email: '',
+      firstName: '',
+      profileImageUrl: '',
     },
     onSubmit: (values) => {
       updateUser(values);
     },
   });
+  console.log(formik.values);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      // setImagePreviewUrl(url);
+      formik.setFieldValue('profileImageUrl', url);
+    }
+  };
 
   return (
     <div className=" md:h-full flex flex-col ">
@@ -60,12 +68,18 @@ const ProfilePage = () => {
         >
           <div className="w-80 border-4 border-gray-300 rounded-lg shadow-lg max-h-72 flex flex-col justify-center items-center p-4">
             <img
-              src={user.profileImageUrl}
+              // src={imagePreviewUrl}
+              src={formik.values.profileImageUrl}
               className="w-40 h-40 rounded-sm shadow-md"
-              alt="Profile Image"
             />
             <div className="text-center mt-4 text-gray-600 bg-gray-50 p-2">
-              <input type="file" id="fileInput" className="hidden" />
+              <input
+                type="file"
+                id="fileInput"
+                className="hidden"
+                onChange={handleFileChange}
+                // value={formik.values.profileImageUrl}
+              />
               <label htmlFor="fileInput" className="cursor-pointer">
                 <p className="text-sm">
                   Upload a new avatar, larger image will be resized
@@ -83,7 +97,7 @@ const ProfilePage = () => {
               <Input
                 name="firstName"
                 type="text"
-                defaultValue={user.firstName}
+                defaultValue={formik.values.firstName}
                 onChange={formik.handleChange}
                 //   value={formik.values.firstName}
               ></Input>
@@ -93,7 +107,7 @@ const ProfilePage = () => {
               <Input
                 name="email"
                 type="email"
-                defaultValue={user.email}
+                defaultValue={formik.values.email}
                 onChange={formik.handleChange}
                 //   value={formik.values.email}
               ></Input>
@@ -103,7 +117,7 @@ const ProfilePage = () => {
               <Input
                 name="password"
                 type="password"
-                defaultValue={user.password}
+                value={formik.values.password}
                 onChange={formik.handleChange}
                 //   value={formik.values.password}
               ></Input>

@@ -1,16 +1,15 @@
 import prisma from '@/prisma';
-interface UserArgs {
-  id: number;
-  email: string;
-  role: string;
-  firstName: string;
-  password: string;
-}
+
 export const getUsersService = async () => {
   try {
     const response = await prisma.users.findMany({
       where: { isDelete: false },
-      include: {
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        firstName: true,
+        lastName: true,
         employee: true,
       },
     });

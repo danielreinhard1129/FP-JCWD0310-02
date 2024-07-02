@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { FilePenLine, Trash2 } from 'lucide-react';
 import useDeleteWarehouseAdmin from '@/hooks/warehouses/useDeleteWarehouseAdmin';
-import UpdateWarehouseAdminPage from './edit/page';
+import UpdateWarehouseAdminPage from './edit/[id]/page';
 import { useRouter } from 'next/navigation';
 
 interface UserArgs {
@@ -85,8 +85,9 @@ const ManageDataUserPage = () => {
                         <FilePenLine
                           className="cursor-pointer"
                           onClick={() => {
-                            UpdateWarehouseAdminPage(user.id);
-                            router.push('/admin/manage-data/edit');
+                            router.replace(
+                              `/admin/manage-data/edit/${user.id}`,
+                            );
                           }}
                         />
                       </td>

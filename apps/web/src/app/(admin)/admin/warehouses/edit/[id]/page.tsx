@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import useGetProvince from '@/hooks/api/user/useGetProvince';
-import useCreateWarehouse from '@/hooks/warehouses/useCreateWarehouse';
+import useGetWarehouse from '@/hooks/warehouses/useGetWarehouse';
+import useUpdateWarehouse from '@/hooks/warehouses/useUpdateWarehouse';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -16,28 +17,46 @@ interface Province {
     subdistricts: { subdistrictName: string }[];
   }[];
 }
+interface Warehouse {
+  id: number;
+  name: string;
+  street: string;
+  city: string;
+  province: string;
+  subdistrict: string;
+}
 
-const CreateWarehousePage = () => {
-  const { createWarehouse } = useCreateWarehouse();
+const UpdateWarehouse = () => {
+  const { updateWarehouse } = useUpdateWarehouse();
   const { getProvince } = useGetProvince();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [cities, setCities] = useState<Province['cities']>([]);
   const [subdistricts, setSubdistricts] = useState<
     { subdistrictName: string }[]
   >([]);
-  const [selectedCity, setSelectedCity] = useState<string>('');
+  const { getWarehouse } = useGetWarehouse();
+  const [warehouses, setWarehouses] = useState<Warehouse>();
+  const path = location.pathname;
+  const id = path.split('/').pop();
+  console.log(id);
+  // const router = useRouter();
   useEffect(() => {
-    const fetchProvinces = async () => {
+    const fetchWarehouses = async () => {
       try {
-        const response = await getProvince();
-        setProvinces(response);
-        console.log(response);
+        const data = await getWarehouse();
+        const findWarehouse = data.find(
+          (warehouse: Warehouse) => warehouse.id == Number(id),
+        );
+        // setWarehouses(findWarehouse);
+        formik.setValues(findWarehouse);
+        console.log(data);
       } catch (error) {}
     };
-    fetchProvinces();
+    fetchWarehouses();
   }, []);
   const formik = useFormik({
     initialValues: {
+      id: 0,
       name: '',
       street: '',
       city: '',
@@ -45,44 +64,53 @@ const CreateWarehousePage = () => {
       subdistrict: '',
     },
     onSubmit: (values) => {
-      createWarehouse(values);
+      updateWarehouse(values, formik.values.id);
     },
   });
-
   const handleProvinceChange = (selectedProvince: string) => {
-    formik.setFieldValue('province', selectedProvince);
     const selectedProvinceData = provinces.find(
       (province) => province.provinceName === selectedProvince,
     );
-
     if (selectedProvinceData) {
       setCities(selectedProvinceData.cities);
-      formik.setFieldValue('city', '');
+      formik.setFieldValue('province', selectedProvince);
+      // formik.setFieldValue('city', '');
+      // formik.setFieldValue('subdistrict', '');
       setSubdistricts([]);
     }
   };
 
   const handleCityChange = (selectedCity: string) => {
     formik.setFieldValue('city', selectedCity);
-    setSelectedCity(selectedCity);
-
     const selectedCityData = cities.find(
       (city) => city.cityName === selectedCity,
     );
-
     if (selectedCityData) {
       setSubdistricts(selectedCityData.subdistricts);
-      formik.setFieldValue('subdistrict', '');
+      // formik.setFieldValue('subdistrict', '');
     }
   };
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await getProvince();
+        setProvinces(response);
+      } catch (error) {
+        console.error('Error fetching provinces:', error);
+      }
+    };
+    fetchProvinces();
+  }, []);
+  console.log(formik.values);
 
   return (
     <div className="px-4 py-4">
       <Card>
         <CardHeader>
           <div className="flex justify-between">
-            <CardTitle>Create Warehouse</CardTitle>
-            <Link href="/admin/warehouse">
+            <CardTitle>Update Warehouse</CardTitle>
+            <Link href="/admin/warehouses">
               <Button>Back</Button>
             </Link>
           </div>
@@ -113,8 +141,8 @@ const CreateWarehousePage = () => {
                   <Input
                     name="street"
                     type="text"
+                    defaultValue={formik.values.street}
                     onChange={formik.handleChange}
-                    value={formik.values.street}
                   />
                 </div>
 
@@ -182,7 +210,7 @@ const CreateWarehousePage = () => {
                   className="mt-4 bg-black text-white font-medium p-2 rounded-md"
                   type="submit"
                 >
-                  Add to Warehouse
+                  Update to Warehouse
                 </button>
               </div>
             </form>
@@ -192,4 +220,4 @@ const CreateWarehousePage = () => {
     </div>
   );
 };
-export default CreateWarehousePage;
+export default UpdateWarehouse;

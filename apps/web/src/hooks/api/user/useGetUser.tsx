@@ -8,7 +8,6 @@ interface User {
   email: string;
   role: string;
   firstName: string;
-  password: string;
 }
 
 const useGetUser = () => {

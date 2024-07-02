@@ -9,7 +9,11 @@ interface User {
   //   isVerify: boolean;
 }
 
-export const updateUserService = async (body: User, id: number) => {
+export const updateUserService = async (
+  body: User,
+  id: number,
+  file: Express.Multer.File,
+) => {
   try {
     const { password } = body;
     const existingUser = await prisma.users.findFirst({
@@ -20,10 +24,14 @@ export const updateUserService = async (body: User, id: number) => {
     if (!existingUser) {
       throw new Error('User not found');
     }
-    const hashPassword = await hashedPassword(password);
+    // const hashPassword = await hashedPassword(password);
     await prisma.users.update({
       where: { id },
-      data: { ...body, password: hashPassword },
+      data: {
+        email: body.email,
+        firstName: body.firstName,
+        profileImageUrl: `/images/${file.filename}`,
+      },
     });
     return {
       message: 'User updated successfully',

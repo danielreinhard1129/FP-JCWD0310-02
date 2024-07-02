@@ -1,5 +1,6 @@
 import { UserController } from '@/controllers/user.controller';
 import { verifyToken } from '@/lib/jwt';
+import { uploader } from '@/lib/uploader';
 import { Router } from 'express';
 
 export class UserRouter {
@@ -20,7 +21,7 @@ export class UserRouter {
     this.router.get('/:id', this.userController.getUser);
     this.router.post(
       '/update/:id',
-      verifyToken,
+      uploader('IMG', '/images').array('images'),
       this.userController.updateUser,
     );
     this.router.post('/createAddress/:id', this.userController.createAddress);

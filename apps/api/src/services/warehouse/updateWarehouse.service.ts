@@ -1,14 +1,8 @@
 import prisma from '@/prisma';
+import { Warehouse } from '@prisma/client';
 import axios from 'axios';
-interface Warehouse {
-  name: string;
-  street: string;
-  city: string;
-  province: string;
-  subdistrict: string;
-}
 const OPEN_CAGE_API_KEY = '30d89911e50c41329178651b1a706345';
-export const createWarehouseService = async (body: Warehouse) => {
+export const updateWarehouseService = async (body: Warehouse, id: number) => {
   const { name, city, province, subdistrict } = body;
   try {
     let lat = '';
@@ -18,11 +12,11 @@ export const createWarehouseService = async (body: Warehouse) => {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(address)}&key=${OPEN_CAGE_API_KEY}`;
     const existingWarehouse = await prisma.warehouse.findFirst({
       where: {
-        name,
+        id,
       },
     });
-    if (existingWarehouse) {
-      throw new Error('Warehouse already exists');
+    if (!existingWarehouse) {
+      throw new Error('Warehouse not found');
     }
     console.log(url);
     const response = await axios.get(url);
@@ -36,10 +30,12 @@ export const createWarehouseService = async (body: Warehouse) => {
       lon = response.data.results[0]?.geometry?.lng;
     }
 
-    return await prisma.warehouse.create({
+    return await prisma.warehouse.update({
+      where: {
+        id,
+      },
       data: {
         ...body,
-        state: 'Indonesia',
         lat: Number(lat),
         lon: Number(lon),
       },

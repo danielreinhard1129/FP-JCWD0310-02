@@ -20,7 +20,16 @@ export class UserController {
   }
   async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const response = await updateUserService(req.body, Number(req.params.id));
+      const files = req.files as Express.Multer.File[];
+
+      if (!files || files.length === 0) {
+        throw new Error('No file uploaded');
+      }
+      const response = await updateUserService(
+        req.body,
+        Number(req.params.id),
+        files[0],
+      );
       return res.status(200).send(response);
     } catch (error) {
       next(error);

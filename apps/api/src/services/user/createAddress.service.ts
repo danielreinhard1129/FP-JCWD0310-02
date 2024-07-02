@@ -13,6 +13,8 @@ const OPEN_CAGE_API_KEY = '30d89911e50c41329178651b1a706345';
 
 export const createAddressService = async (body: Address, id: number) => {
   try {
+    let lat;
+    let lon;
     const { city, province, subdistrict } = body;
 
     const address = `${subdistrict}, ${city}, ${province}, Indonesia`;
@@ -26,14 +28,21 @@ export const createAddressService = async (body: Address, id: number) => {
       throw new Error('User not found');
     }
     const response = await axios.get(url);
+    if (response.data.results[1]?.geometry?.lat === undefined) {
+      lat = response.data.results[0]?.geometry?.lat;
+      lon = response.data.results[0]?.geometry?.lng;
+    } else {
+      lat = response.data.results[1]?.geometry?.lat;
+      lon = response.data.results[1]?.geometry?.lng;
+    }
 
     return await prisma.address.create({
       data: {
         ...body,
         userId: id,
 
-        lat: response.data.results[1].geometry.lat,
-        lon: response.data.results[1].geometry.lng,
+        lat: lat,
+        lon: lon,
       },
     });
   } catch (error) {

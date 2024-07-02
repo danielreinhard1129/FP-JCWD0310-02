@@ -1,4 +1,5 @@
 import { createTrxService } from '@/services/transactions/createTrxService';
+import { getRajaOngkirService } from '@/services/transactions/getRajaOngkirService';
 import { getTrxByIdService } from '@/services/transactions/getTrxById';
 import { NextFunction, Request, Response } from 'express';
 
@@ -29,6 +30,14 @@ export class TrxController {
         message: 'OK',
         result,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getRajaOngkir(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await getRajaOngkirService(req.body);
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

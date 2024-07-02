@@ -26,6 +26,18 @@ export class WarehouseRouter {
       '/delete-warehouse-admin/:id',
       this.warehouseController.deletedWarehouseAdmin,
     );
+    this.router.delete(
+      '/delete-warehouse/:id',
+      this.warehouseController.deleteWarehouse,
+    );
+    this.router.post(
+      '/update-warehouse/:id',
+      this.warehouseController.updateWarehouse,
+    );
+    this.router.post(
+      '/update-warehouse-admin/:id',
+      this.warehouseController.updateWarehouseAdmin,
+    );
   }
 
   getRouter(): Router {

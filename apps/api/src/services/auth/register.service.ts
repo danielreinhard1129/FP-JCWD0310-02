@@ -2,7 +2,7 @@ import prisma from '@/prisma';
 import { User } from '@/types/user.type';
 import { sign } from 'jsonwebtoken';
 import { transporter } from '@/lib/nodemailer';
-import { jwtSecretKey, NEXT_PUBLIC_BASE_WEB } from '@/config';
+import { jwtSecretKey, BASE_WEB } from '@/config';
 import { hashedPassword } from '@/lib/bcrypt';
 export const registerService = async (body: User) => {
   const { email, password } = body;
@@ -35,7 +35,7 @@ export const registerService = async (body: User) => {
     subject: 'Register success ',
     text:
       'klick link di bawah ini untuk verivikasi akun anda ' +
-      `${NEXT_PUBLIC_BASE_WEB}/verify?token=${generateToken}`,
+      `${BASE_WEB}/verify?token=${generateToken}`,
   });
   await prisma.users.update({
     where: {

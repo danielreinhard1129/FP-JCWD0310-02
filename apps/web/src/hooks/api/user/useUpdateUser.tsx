@@ -22,8 +22,13 @@ const useUpdateUser = () => {
   const router = useRouter();
   const updateUser = async (payload: UpdateArgs) => {
     try {
+      const updateUser = new FormData();
+      updateUser.append('email', payload.email);
+      updateUser.append('firstName', payload.firstName);
+      updateUser.append('password', payload.password);
+      updateUser.append('profileImageUrl', payload.profileImageUrl);
       const { data } = await axiosInstance.post(`/user/update/${id}`, {
-        ...payload,
+        updateUser,
       });
       console.log(data);
     } catch (error) {
