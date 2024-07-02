@@ -13,7 +13,7 @@ export default function NewProducts() {
     <>
       <div className="flex flex-wrap justify-center lg:justify-between gap-6">
         {data &&
-          data.data.map((product, index) => {
+          data?.data?.map((product, index) => {
             return (
               <Link
                 href={'/products' + product.id}

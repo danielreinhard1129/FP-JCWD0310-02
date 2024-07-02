@@ -1,6 +1,6 @@
-import { GetStockService } from '@/services/stocks/getStockService';
-import { GetStocksService } from '@/services/stocks/getStocksService';
-import { PostStockService } from '@/services/stocks/postStockService';
+import { GetStockService } from '@/services/stock/getStockService';
+import { GetStocksService } from '@/services/stock/getStocksService';
+import { PostStockService } from '@/services/stock/postStockService';
 import { NextFunction, Request, Response } from 'express';
 export class StockController {
   async getStock(req: Request, res: Response, next: NextFunction) {

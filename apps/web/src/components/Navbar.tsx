@@ -43,7 +43,7 @@ export const Navbar = () => {
     <>
       {/* Mobile */}
       <div>
-        <div className="w-full p-4 px-6 bg-neutral-50 rounded-xl flex justify-between items-start mt-8 md:hidden">
+        <div className="w-full p-4 bg-neutral-50 rounded-xl flex justify-between items-start mt-4 md:hidden">
           <div className="flex items-start">
             <AlignJustify className="w-5 h-5" />
           </div>
@@ -60,7 +60,7 @@ export const Navbar = () => {
         </div>
       </div>
       {/* Dektop */}
-      <div className="w-full h-24 p-8 bg-white rounded-3xl flex justify-between items-center my-8 text-lg max-md:hidden">
+      <div className="w-full h-24 p-8 bg-white rounded-3xl flex justify-between items-center mt-4 text-lg max-md:hidden">
         <Link href={'/products'} className="flex items-start gap-10">
           <div className="text-neutral-800 font-semibold font-rubik">
             New Drops 🔥

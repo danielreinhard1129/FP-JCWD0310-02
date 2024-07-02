@@ -113,23 +113,22 @@ enum OrderStatus {
 }
 
 model Order {
-  id                String      @id @db.VarChar(110)
+  id                Int                @id @default(autoincrement())
   status            OrderStatus
   total             Int
   shippingCost      Int
   shippingDetail    Int
   discount          Int
-  payment_method    String
-  snap_token        String?     @db.VarChar(255)
-  snap_redirect_url String?     @db.VarChar(255)
-  createdAt         DateTime    @default(now())
-  updateAt          DateTime    @updatedAt
+  payment_method    PaymentsMethodType
+  snap_token        String?            @db.VarChar(255)
+  snap_redirect_url String?            @db.VarChar(255)
+  createdAt         DateTime           @default(now())
+  updateAt          DateTime           @updatedAt
 
   userId      Int
   warehouseId Int
 
   orderItems OrderItems[]
-  // payments   Payments?    @relation(fields: [paymentsId], references: [id])
 
   user       Users     @relation(fields: [userId], references: [id])
   warehouse  Warehouse @relation(fields: [warehouseId], references: [id])
@@ -139,8 +138,9 @@ model Order {
 }
 
 model OrderItems {
-  id        Int    @id @default(autoincrement())
-  orderId   String
+  id        Int @id @default(autoincrement())
+  quantity  Int
+  orderId   Int
   productId Int
   variantId Int
 

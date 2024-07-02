@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { getProductService } from '@/services/products/getProductService';
-import { getProductsService } from '@/services/products/getProductsService';
-import { postProductService } from '@/services/products/postProductService';
-import { patchProductService } from '@/services/products/patchProductService';
-import { deleteProductService } from '@/services/products/deleteProductService';
+import { getProductService } from '@/services/product/getProductService';
+import { getProductsService } from '@/services/product/getProductsService';
+import { postProductService } from '@/services/product/postProductService';
+import { patchProductService } from '@/services/product/patchProductService';
+import { deleteProductService } from '@/services/product/deleteProductService';
 import { Product } from '@prisma/client';
 import { CreateProductParams, ProductPostBody } from '@/types/product.type';
 
