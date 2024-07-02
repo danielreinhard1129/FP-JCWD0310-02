@@ -52,7 +52,6 @@ const ProfilePage = () => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      // setImagePreviewUrl(url);
       formik.setFieldValue('profileImageUrl', url);
     }
   };
@@ -68,7 +67,6 @@ const ProfilePage = () => {
         >
           <div className="w-80 border-4 border-gray-300 rounded-lg shadow-lg max-h-72 flex flex-col justify-center items-center p-4">
             <img
-              // src={imagePreviewUrl}
               src={formik.values.profileImageUrl}
               className="w-40 h-40 rounded-sm shadow-md"
             />

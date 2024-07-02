@@ -9,7 +9,7 @@ interface UpdateArgs extends Omit<User, 'role' | 'lastName' | 'id'> {
   email: string;
   firstName: string;
   password: string;
-  profileImageUrl: string;
+  profileImageUrl: File[];
 }
 interface RootState {
   user: {
@@ -26,7 +26,7 @@ const useUpdateUser = () => {
       updateUser.append('email', payload.email);
       updateUser.append('firstName', payload.firstName);
       updateUser.append('password', payload.password);
-      updateUser.append('profileImageUrl', payload.profileImageUrl);
+      updateUser.append('profileImageUrl', payload.profileImageUrl[0]);
       const { data } = await axiosInstance.post(`/user/update/${id}`, {
         updateUser,
       });
