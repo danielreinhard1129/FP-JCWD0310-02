@@ -2,10 +2,12 @@
 import InputForms from '@/components/InputForms';
 import { useCreateProduct } from '@/hooks/products/useCreateProduct';
 import { useNotification } from '@/hooks/useNotification';
-import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 const CreateProductAdminPage = () => {
-  const { createProduct, messages } = useCreateProduct();
+  const router = useRouter();
+  const { createProduct } = useCreateProduct();
   const { openNotification } = useNotification();
   return (
     <>
@@ -13,7 +15,11 @@ const CreateProductAdminPage = () => {
         <div className="rounded-lg bg-white p-4">
           <h1 className="mb-4 font-bold text-xl">Create Product</h1>
           <InputForms
-            handleSubmit={(e) => openNotification.async(createProduct(e))}
+            handleSubmit={(e) =>
+              openNotification.async(createProduct(e), () => {
+                setTimeout(() => router.push('/admin/products'), 500);
+              })
+            }
           />
         </div>
       </div>

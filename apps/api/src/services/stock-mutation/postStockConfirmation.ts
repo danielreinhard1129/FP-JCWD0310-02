@@ -42,9 +42,6 @@ export const postStockMutationsConfirmationService = async (
 
     if (!stockVariant) throw new Error('Cannot found stock variant!');
 
-    if (stockVariant.quantity < quantity)
-      throw new Error('Quantity is not enough!');
-
     if (stockMutation.status == 'DONE')
       throw new Error('This stock mutations is already done!');
 

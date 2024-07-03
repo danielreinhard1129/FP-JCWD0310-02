@@ -26,6 +26,7 @@ export const getStockMutationsService = async (
     if (!user.employee) throw new Error('Sorry you are not an admin!');
 
     const stockMutations = await prisma.stockMutation.findMany({
+      orderBy: { createdAt: 'desc' },
       take: query.take,
       skip: (query.page - 1) * query.take,
       where: {
