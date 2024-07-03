@@ -34,7 +34,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
   async postStockMutationsConfirmation(
@@ -53,7 +53,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
   async getWarehouses(req: Request, res: Response, next: NextFunction) {
@@ -63,7 +63,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
 }

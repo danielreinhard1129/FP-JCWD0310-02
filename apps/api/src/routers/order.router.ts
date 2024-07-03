@@ -13,8 +13,13 @@ export class OrderRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/:id', this.orderController.getOrder);
-    this.router.get('/', this.orderController.getOrders);
+    this.router.get('/:id', verifyToken, this.orderController.getOrder);
+    this.router.get('/', verifyToken, this.orderController.getOrders);
+    this.router.post(
+      '/:id',
+      verifyToken,
+      this.orderController.postOrderTransaction,
+    );
     this.router.post('/', verifyToken, this.orderController.postOrder);
   }
 
