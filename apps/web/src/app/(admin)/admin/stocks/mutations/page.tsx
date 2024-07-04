@@ -8,6 +8,8 @@ import { useGetStockMutations } from '@/hooks/stocks/useGetStockMutations';
 import { Popover } from 'antd';
 import { RotateCcw } from 'lucide-react';
 import React from 'react';
+import { useGetWarehouses } from '@/hooks/warehouses/useGetWarehouses';
+import { useAppSelector } from '@/redux/hooks';
 
 const StockJournalsPage = () => {
   const statusFilter = [
@@ -17,6 +19,9 @@ const StockJournalsPage = () => {
     { value: 'REJECT', label: 'REJECT' },
   ];
   const { data, loading, refetch, setQuery, query } = useGetStockMutations();
+  const { getWarehouses } = useGetWarehouses(undefined);
+  const user = useAppSelector((state) => state.user);
+
   return (
     <div className="px-4 py-4">
       <Card>
@@ -45,6 +50,19 @@ const StockJournalsPage = () => {
                 loading={loading}
                 options={statusFilter}
               />
+              {user.role == 'SUPER_ADMIN' ? (
+                <Select
+                  className="w-42"
+                  placeholder="Warehouse"
+                  onChange={(e) => setQuery({ ...query, warehouseId: e })}
+                  loading={loading}
+                  options={getWarehouses.data?.data.data.map((val) => {
+                    return { label: val.name, value: val.id };
+                  })}
+                />
+              ) : (
+                <></>
+              )}
             </div>
             <DataTablesStockMutations
               data={data}

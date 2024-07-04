@@ -17,7 +17,7 @@ interface GetProductsQuery extends PaginationQueryParams {
       | undefined;
     color:
       | {
-          color: { equals: string };
+          color: { contains: string };
         }[]
       | undefined;
   };
@@ -36,16 +36,7 @@ export const getProductsService = async (query: GetProductsQuery) => {
       },
       variant: (filter.color || filter.size || filter.filter) && {
         some: {
-          AND: [
-            { OR: filter.size },
-            {
-              NOT: {
-                color: {
-                  notIn: filter.color?.map((val) => val.color.equals),
-                },
-              },
-            },
-          ],
+          OR: filter.size,
         },
       },
     };

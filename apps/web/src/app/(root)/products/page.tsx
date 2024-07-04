@@ -75,6 +75,8 @@ const ProductsPage = () => {
             handleCategories={(e) => setCategories(e)}
             handleSize={(e) => setSize(e)}
             handleColor={(e) => setColor(e)}
+            colorValue={['Purple']}
+            sizeValue={['37', '38', '39', '40', '41', '42', '43']}
           />
         </div>
 
