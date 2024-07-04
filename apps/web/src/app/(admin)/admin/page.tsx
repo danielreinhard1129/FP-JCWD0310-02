@@ -1,8 +1,6 @@
 'use client';
 import LoadingPage from '@/components/LoadingPage';
-import { Button } from '@/components/ui/button';
-import useModal from '@/hooks/useModal';
-import React, { useState } from 'react';
+import React from 'react';
 
 const page = () => {
   return (
