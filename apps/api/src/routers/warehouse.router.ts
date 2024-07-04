@@ -19,7 +19,8 @@ export class WarehouseRouter {
     );
     this.router.get('/getWarehouses', this.warehouseController.getWarehouses);
     this.router.post(
-      '/createWarehouseAdmin',
+      '/create-warehouse-admin',
+      verifyToken,
       this.warehouseController.createWarehouseAdmin,
     );
     this.router.delete(

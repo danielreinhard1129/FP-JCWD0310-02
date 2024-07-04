@@ -35,25 +35,26 @@ const UpdateWarehouse = () => {
     { subdistrictName: string }[]
   >([]);
   const { getWarehouse } = useGetWarehouse();
-  const [warehouses, setWarehouses] = useState<Warehouse>();
+  const [warehouse, setWarehouse] = useState<Warehouse | null>(null);
   const path = location.pathname;
   const id = path.split('/').pop();
-  console.log(id);
-  // const router = useRouter();
+
   useEffect(() => {
     const fetchWarehouses = async () => {
       try {
         const data = await getWarehouse();
         const findWarehouse = data.find(
-          (warehouse: Warehouse) => warehouse.id == Number(id),
+          (warehouse: Warehouse) => warehouse.id === Number(id),
         );
-        // setWarehouses(findWarehouse);
-        formik.setValues(findWarehouse);
-        console.log(data);
-      } catch (error) {}
+        setWarehouse(findWarehouse);
+        formik.setValues(findWarehouse || formik.initialValues);
+      } catch (error) {
+        console.error('Error fetching warehouse:', error);
+      }
     };
     fetchWarehouses();
-  }, []);
+  }, [id]);
+
   const formik = useFormik({
     initialValues: {
       id: 0,
@@ -64,9 +65,10 @@ const UpdateWarehouse = () => {
       subdistrict: '',
     },
     onSubmit: (values) => {
-      updateWarehouse(values, formik.values.id);
+      updateWarehouse(values, values.id);
     },
   });
+
   const handleProvinceChange = (selectedProvince: string) => {
     const selectedProvinceData = provinces.find(
       (province) => province.provinceName === selectedProvince,
@@ -74,8 +76,8 @@ const UpdateWarehouse = () => {
     if (selectedProvinceData) {
       setCities(selectedProvinceData.cities);
       formik.setFieldValue('province', selectedProvince);
-      // formik.setFieldValue('city', '');
-      // formik.setFieldValue('subdistrict', '');
+      formik.setFieldValue('city', '');
+      formik.setFieldValue('subdistrict', '');
       setSubdistricts([]);
     }
   };
@@ -87,7 +89,7 @@ const UpdateWarehouse = () => {
     );
     if (selectedCityData) {
       setSubdistricts(selectedCityData.subdistricts);
-      // formik.setFieldValue('subdistrict', '');
+      formik.setFieldValue('subdistrict', '');
     }
   };
 
@@ -102,7 +104,22 @@ const UpdateWarehouse = () => {
     };
     fetchProvinces();
   }, []);
-  console.log(formik.values);
+  useEffect(() => {
+    if (warehouse) {
+      const selectedProvince = provinces.find(
+        (province) => province.provinceName === warehouse.province,
+      );
+      if (selectedProvince) {
+        setCities(selectedProvince.cities);
+        const selectedCity = selectedProvince.cities.find(
+          (city) => city.cityName === warehouse.city,
+        );
+        if (selectedCity) {
+          setSubdistricts(selectedCity.subdistricts);
+        }
+      }
+    }
+  }, [warehouse, provinces]);
 
   return (
     <div className="px-4 py-4">
@@ -141,8 +158,8 @@ const UpdateWarehouse = () => {
                   <Input
                     name="street"
                     type="text"
-                    defaultValue={formik.values.street}
                     onChange={formik.handleChange}
+                    value={formik.values.street}
                   />
                 </div>
 

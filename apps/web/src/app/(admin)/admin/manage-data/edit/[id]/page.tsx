@@ -66,6 +66,7 @@ const UpdateWarehouseAdminPage = () => {
     onSubmit: (values) => {
       updateWarehouseAdmin(values, Number(id));
     },
+    enableReinitialize: true,
     //belum ada edit
   });
 

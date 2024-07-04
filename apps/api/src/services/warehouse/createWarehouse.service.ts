@@ -26,14 +26,19 @@ export const createWarehouseService = async (body: Warehouse) => {
     }
     console.log(url);
     const response = await axios.get(url);
-    // console.log(response.data.results[1].geometry);
+    const results = response.data.results;
+    if (results.length > 0) {
+      const lastResult = results[results.length - 1];
+      lat = lastResult?.geometry?.lat;
+      lon = lastResult?.geometry?.lng;
 
-    if (response.data.results[1]?.geometry !== undefined) {
-      lat = response.data.results[1]?.geometry?.lat;
-      lon = response.data.results[1]?.geometry?.lng;
+      if (lat === undefined || lon === undefined) {
+        throw new Error(
+          'Latitude or Longitude is undefined in the response data.',
+        );
+      }
     } else {
-      lat = response.data.results[0]?.geometry?.lat;
-      lon = response.data.results[0]?.geometry?.lng;
+      throw new Error('No results found.');
     }
 
     return await prisma.warehouse.create({

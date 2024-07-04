@@ -14,7 +14,7 @@ const useCreateAdmin = () => {
   const createAdmin = async (payload: CreateAdminArgs) => {
     try {
       const { data } = await axiosInstance.post(
-        '/warehouse/createWarehouseAdmin',
+        '/warehouse/create-warehouse-admin',
         payload,
       );
       console.log(data);

@@ -77,7 +77,7 @@ export default class App {
     this.app.use('/api/products', productRouter.getRouter());
     this.app.use('/api/carts', cartRouter.getRouter());
     this.app.use('/api/stocks', stockRouter.getRouter());
-    this.app.use(`/api/user`, userRouter.getRouter());
+    this.app.use('/api/user', userRouter.getRouter());
     this.app.use('/api/categories', categoryRouter.getRouter());
     this.app.use('/api/stock-mutations', stockMutationRouter.getRouter());
     this.app.use('/api/warehouse', warehouseRouter.getRouter());

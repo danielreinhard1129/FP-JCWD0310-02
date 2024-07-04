@@ -10,7 +10,7 @@ export const deleteWarehouseService = async (id: number) => {
     if (!existingWarehouse) {
       throw new Error('Warehouse not found');
     }
-    const deletedWarehouse = await prisma.warehouse.delete({
+    const deletedWarehouse = await prisma.warehouse.deleteMany({
       where: {
         id: Number(id),
       },

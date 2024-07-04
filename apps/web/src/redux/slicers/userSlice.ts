@@ -3,10 +3,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/redux/store';
 import { User } from '@/app/types/user.type';
 
-const initialState: Pick<User, 'id' | 'email' | 'role'> = {
+const initialState: Pick<User, 'id' | 'email' | 'role' | 'isVerify'> = {
   id: 0,
   email: '',
   role: '',
+  isVerify: false,
 };
 
 export const userSlice = createSlice({
@@ -17,6 +18,7 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.email = action.payload.email;
       state.role = action.payload.role;
+      state.isVerify = action.payload.isVerify;
     },
     logoutAction: (state) => {
       state.id = 0;

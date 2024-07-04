@@ -10,7 +10,6 @@ const useDeleteWarehouse = () => {
       );
       alert('Warehouse deleted successfully');
       console.log(response.data);
-      window.location.reload();
 
       return response.data;
     } catch (error) {}

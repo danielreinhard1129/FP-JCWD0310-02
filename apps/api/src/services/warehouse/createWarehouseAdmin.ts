@@ -13,6 +13,7 @@ export const createWarehouseAdminService = async (body: UserArgs) => {
     const existingUser = await prisma.users.findFirst({
       where: { email },
     });
+    console.log(existingUser);
     if (existingUser) {
       throw new Error('User already exists');
     }

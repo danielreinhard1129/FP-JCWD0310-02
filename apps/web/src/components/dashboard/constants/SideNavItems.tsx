@@ -23,7 +23,6 @@ export interface NavItem {
   color?: string;
   isChidren?: boolean;
   children?: NavItem[];
-  // role?: string;
 }
 const hiddenButton = 'hidden';
 export const NavItems: NavItem[] = [
@@ -95,7 +94,7 @@ export const NavItems: NavItem[] = [
     icon: Warehouse,
     href: '/admin/warehouses',
     color: '',
-    // isChidren: true,
+    isChidren: false,
     children: [
       {
         title: 'Create Warehouse',
@@ -116,7 +115,6 @@ export const NavItems: NavItem[] = [
     icon: User,
     href: '/admin/manage-data',
     color: '',
-    // role: 'SUPER_ADMIN',
     isChidren: true,
 
     children: [

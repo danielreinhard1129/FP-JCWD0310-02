@@ -6,12 +6,14 @@ import { NavItems } from '@/components/dashboard/constants/SideNavItems';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '@/hooks/useSidebar';
 import { BsArrowLeftShort } from 'react-icons/bs';
+import { useAppSelector } from '@/redux/hooks';
 
 interface SidebarProps {
   className?: string;
 }
 
 export default function SidebarDashboard({ className }: SidebarProps) {
+  const user = useAppSelector((state) => state.user);
   const { isOpen, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
 
@@ -42,7 +44,15 @@ export default function SidebarDashboard({ className }: SidebarProps) {
           <div className="pt-16">
             <SideNav
               className="text-background opacity-0 transition-all duration-300 group-hover:z-50 group-hover:ml-4 group-hover:rounded group-hover:bg-foreground group-hover:p-2 "
-              items={NavItems}
+              items={
+                user.role == 'SUPER_ADMIN'
+                  ? NavItems
+                  : NavItems.filter(
+                      (val) =>
+                        val.title != 'Warehouse' &&
+                        val.href != '/admin/manage-data',
+                    )
+              }
             />
           </div>
         </div>

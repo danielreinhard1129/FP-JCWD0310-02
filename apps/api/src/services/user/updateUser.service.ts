@@ -24,13 +24,23 @@ export const updateUserService = async (
     if (!existingUser) {
       throw new Error('User not found');
     }
-    // const hashPassword = await hashedPassword(password);
+    if (file) {
+      await prisma.users.update({
+        where: { id },
+        data: {
+          email: body.email,
+          firstName: body.firstName,
+          profileImageUrl: `/images/${file.filename}`,
+        },
+      });
+    }
     await prisma.users.update({
       where: { id },
       data: {
         email: body.email,
         firstName: body.firstName,
-        profileImageUrl: `/images/${file.filename}`,
+        // profileImageUrl: `/images/${file.filename}`,
+        // profileImageUrl: String(profileImageUrls),
       },
     });
     return {

@@ -45,10 +45,6 @@ const Sidebar = () => {
               <Theater />
               Profile
             </NavigationBar>
-            <NavigationBar href={'/dashboard/order'}>
-              <Ticket />
-              Order
-            </NavigationBar>
 
             <NavigationBar href={'/dashboard/setting'}>
               <Settings />
@@ -58,7 +54,7 @@ const Sidebar = () => {
         </div>
         <div
           onClick={() => {
-            route.push('/auth/login');
+            route.push('/login');
             localStorage.clear();
           }}
           className="m-4 flex cursor-pointer items-center p-4 transition duration-300 hover:text-gray-600"

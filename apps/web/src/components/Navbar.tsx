@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../public/logo-dark.png';
+import { useAppSelector } from '@/redux/hooks';
+import useVerifyEmail from '@/hooks/api/auth/useVerifyEmail';
 
 interface User {
   id: number;
@@ -24,7 +26,9 @@ interface User {
   role: string;
 }
 export const Navbar = () => {
-  const [email, setEmail] = useState('');
+  const { isVerify, email } = useAppSelector((state) => state.user);
+  const [emails, setEmail] = useState('');
+  const { verifyEmail } = useVerifyEmail();
   const router = useRouter();
   useEffect(() => {
     const storeUser = localStorage.getItem('persist:shoes');
@@ -76,11 +80,11 @@ export const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <User className="md:w-6 md:h-6" />
               </DropdownMenuTrigger>
-              {!email ? (
+              {!emails ? (
                 <DropdownMenuContent className="  mt-2 px-1">
                   <DropdownMenuLabel
-                    className="text-center  font-bold text-base"
-                    onClick={() => router.push('/login')}
+                    className="text-center  font-bold text-base pointer-events-none"
+                    // onClick={() => router.replace('/login')}
                   >
                     Login
                   </DropdownMenuLabel>
@@ -91,15 +95,26 @@ export const Navbar = () => {
                     My Account
                   </DropdownMenuLabel>
                   <DropdownMenuItem disabled className="pt-0 ">
-                    {email}
+                    {emails}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => router.push('/profile')}>
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    {isVerify === false ? (
+                      <DropdownMenuItem onClick={() => verifyEmail({ email })}>
+                        Verify
+                      </DropdownMenuItem>
+                    ) : (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => router.push('/profile')}
+                        >
+                          Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Settings</DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuGroup>
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => handleLogout()}>
                     Log out
@@ -108,11 +123,12 @@ export const Navbar = () => {
               )}
             </DropdownMenu>
           </div>
-
-          <ShoppingBag
+          <button
+            disabled={isVerify === false}
             onClick={() => router.push('/carts')}
-            className="w-6 h-6"
-          />
+          >
+            <ShoppingBag className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </>

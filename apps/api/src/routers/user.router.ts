@@ -17,15 +17,17 @@ export class UserRouter {
     this.router.get('/geolocation', this.userController.createAddress);
     // this.router.get('/admin', this.userController.getAdmin);
     this.router.get('/getUsers', this.userController.getUsers);
+    this.router.get('/get-employes', this.userController.getEmployes);
+    this.router.put('/update-employe/:id', this.userController.updateEmploye);
     this.router.get('/provinces', this.userController.getAddress);
     this.router.get('/:id', this.userController.getUser);
-    this.router.post(
+    this.router.put(
       '/update/:id',
       uploader('IMG', '/images').array('images'),
       this.userController.updateUser,
     );
-    this.router.post('/createAddress/:id', this.userController.createAddress);
-    this.router.delete('/deleteAddress/:id', this.userController.deleteAddress);
+    this.router.post(`/createAddress/:id`, this.userController.createAddress);
+    this.router.delete(`/deleteAddress/:id`, this.userController.deleteAddress);
     this.router.post('/updateAddress/:id', this.userController.updateAddress);
   }
 
