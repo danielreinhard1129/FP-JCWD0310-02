@@ -6,6 +6,7 @@ export const getStockMutationsService = async (
     page: number;
     take: number;
     status: 'WAIT_CONFIRMATION' | 'ON_PROGRESS' | 'DONE' | 'REJECT' | undefined;
+    warehouseId: number;
   },
 ) => {
   try {
@@ -32,8 +33,22 @@ export const getStockMutationsService = async (
       where: {
         status: { equals: query.status },
         OR: [
-          { fromWarehouseId: user.employee.warehouseId },
-          { toWarehouseId: user.employee.warehouseId },
+          {
+            fromWarehouseId:
+              user.role == 'SUPER_ADMIN'
+                ? query.warehouseId
+                  ? query.warehouseId
+                  : user.employee.warehouseId
+                : user.employee.warehouseId,
+          },
+          {
+            toWarehouseId:
+              user.role == 'SUPER_ADMIN'
+                ? query.warehouseId
+                  ? query.warehouseId
+                  : user.employee.warehouseId
+                : user.employee.warehouseId,
+          },
         ],
       },
       include: {

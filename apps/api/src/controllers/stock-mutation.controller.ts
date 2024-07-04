@@ -27,6 +27,7 @@ export class StockMutationController {
         page: Number(req.query.page),
         take: Number(req.query.take),
         status: status,
+        warehouseId: Number(req.query.warehouseId),
       };
       const response = await getStockMutationsService(
         res.locals.user.id,

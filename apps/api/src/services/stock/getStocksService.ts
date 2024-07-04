@@ -54,6 +54,9 @@ export const GetStocksService = async (
 
     const product = await prisma.product.findMany({
       where: {
+        name: {
+          contains: query.search,
+        },
         isDelete: false,
       },
       include: {
