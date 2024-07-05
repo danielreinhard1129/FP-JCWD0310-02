@@ -39,8 +39,7 @@ const useUpdateUser = () => {
       console.log(data);
       alert(data.message);
     } catch (error) {
-      alert(error.response.data.message);
-      // console.log(error);
+      throw error;
     }
   };
 
