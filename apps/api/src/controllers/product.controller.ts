@@ -48,8 +48,8 @@ export class ProductController {
               : undefined,
         },
       };
-      const response = await getProductsService(query);
-      return res.status(200).send(response);
+      // const response = await getProductsService(query);
+      // return res.status(200).send(response);
     } catch (error) {
       next(error);
     }

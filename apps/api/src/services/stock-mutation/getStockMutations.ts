@@ -6,6 +6,7 @@ export const getStockMutationsService = async (
     page: number;
     take: number;
     status: 'WAIT_CONFIRMATION' | 'ON_PROGRESS' | 'DONE' | 'REJECT' | undefined;
+    warehouseId: number;
   },
 ) => {
   try {
@@ -32,8 +33,22 @@ export const getStockMutationsService = async (
       where: {
         status: { equals: query.status },
         OR: [
-          { fromWarehouseId: user.employee.warehouseId },
-          // { toWarehouseId: user.employee.warehouseId },
+          {
+            fromWarehouseId:
+              user.role == 'SUPER_ADMIN'
+                ? query.warehouseId
+                  ? query.warehouseId
+                  : user.employee.warehouseId
+                : user.employee.warehouseId,
+          },
+          // {
+          //   toWarehouseId:
+          //     user.role == 'SUPER_ADMIN'
+          //       ? query.warehouseId
+          //         ? query.warehouseId
+          //         : user.employee.warehouseId
+          //       : user.employee.warehouseId,
+          // },
         ],
       },
       include: {
@@ -45,13 +60,13 @@ export const getStockMutationsService = async (
     });
 
     const data = stockMutations.reduce((a: any, b) => {
-      return [
-        ...a,
-        {
-          ...b,
-          sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
-        },
-      ];
+      // return [
+      //   ...a,
+      //   {
+      //     ...b,
+      //     sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
+      //   },
+      // ];
     }, []);
 
     return {

@@ -38,7 +38,7 @@ interface InputFormsProps {
   handleSubmit: (value: CreateProductPayload) => void;
 }
 
-const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
+const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
   const router = useRouter();
   const { getImagesBlob } = useGetImagesBlob();
   const [tempCategory, setTempCategory] = useState('');
@@ -292,7 +292,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       </div>
       <div className="flex md:justify-end mt-8 justify-between gap-4">
         <Button onClick={() => handleSubmitFormik()} className="w-32">
-          Create
+          Update
         </Button>
         <Button
           onClick={() => router.push('/admin/products')}
@@ -306,4 +306,4 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
   );
 };
 
-export default InputForms;
+export default InputFormsUpdate;
