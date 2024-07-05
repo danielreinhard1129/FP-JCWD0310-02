@@ -51,7 +51,7 @@ export const postOrderService = async (userId: number) => {
 
         const newOrder = await tx.order.create({
           data: {
-            warehouseId: 5,
+            warehouseId: 1,
             userId: user.id,
             discount: 0,
             payment_method: 'MANUAL',

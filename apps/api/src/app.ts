@@ -20,6 +20,7 @@ import { StockMutationRouter } from './routers/stock-mutation.router';
 import { WarehouseRouter } from './routers/warehouse.router';
 import { OrderRouter } from './routers/order.router';
 import { TransactionRouter } from './routers/transaction.router';
+import { ReportRouter } from './routers/report.router';
 
 export default class App {
   private app: Express;
@@ -72,6 +73,7 @@ export default class App {
     const warehouseRouter = new WarehouseRouter();
     const orderRouter = new OrderRouter();
     const transactionRouter = new TransactionRouter();
+    const reportRouter = new ReportRouter();
 
     this.app.use('/api/auth', authRouter.getRouter());
     this.app.use('/api/products', productRouter.getRouter());
@@ -83,6 +85,7 @@ export default class App {
     this.app.use('/api/warehouse', warehouseRouter.getRouter());
     this.app.use('/api/orders', orderRouter.getRouter());
     this.app.use('/api/transactions', transactionRouter.getRouter());
+    this.app.use('/api/reports', reportRouter.getRouter());
   }
 
   public start(): void {
