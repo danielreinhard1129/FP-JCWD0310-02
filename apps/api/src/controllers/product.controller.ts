@@ -28,22 +28,12 @@ export class ProductController {
         sortOrder: (req.query.sortOrder as string) || 'desc',
         search: (req.query.search as string) || '',
         filter: {
-          size:
-            sizeString.length > 2
-              ? sizeString.split(',').map((val) => {
-                  return { size: { equals: val } };
-                })
-              : undefined,
-          color:
-            colorString.length > 2
-              ? colorString.split(',').map((val) => {
-                  return { color: { equals: val } };
-                })
-              : undefined,
+          size: sizeString.length >= 2 ? sizeString.split(',') : undefined,
+          color: colorString.length > 2 ? colorString.split(',') : undefined,
           filter:
             filterString.length > 2
               ? filterString.split(',').map((val) => {
-                  return { name: { equals: val } };
+                  return { name: val };
                 })
               : undefined,
         },
