@@ -37,17 +37,21 @@ export const GetStocksService = async (
       throw new Error("Can't find your account");
     }
 
-    if (!user.employee || user.role == 'CUSTOMER') {
+    if (
+      !user.employee ||
+      !user.employee.warehouseId ||
+      user.role == 'CUSTOMER'
+    ) {
       throw new Error('You are not an Admin!!!');
     }
 
     const warehouse = await prisma.warehouse.findFirst({
-      // where: {
-      //   id:
-      //     user.role == 'WAREHOUSE_ADMIN'
-      //       ? user.employee.warehouseId
-      //       : warehouseId || undefined,
-      // },
+      where: {
+        id:
+          user.role == 'WAREHOUSE_ADMIN'
+            ? user.employee.warehouseId
+            : warehouseId || undefined,
+      },
     });
 
     if (!warehouse) throw new Error('Cannot find the warehouse');
