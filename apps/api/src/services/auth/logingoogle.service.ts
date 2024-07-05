@@ -40,7 +40,10 @@ export const loginGoogleService = async (code: string) => {
         lastName: data.family_name,
       },
     });
-    const token = sign({ id: existingUser?.id }, jwtSecretKey, {
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+    const token = sign({ id: existingUser.id }, jwtSecretKey, {
       expiresIn: '2h',
     });
 

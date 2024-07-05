@@ -15,6 +15,7 @@ export class TransactionRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.post('/rajaongkir', this.transactionController.getRajaOngkir);
     this.router.get('/:id', this.transactionController.getTransaction);
     this.router.get('/', this.transactionController.getTransactions);
     this.router.post(

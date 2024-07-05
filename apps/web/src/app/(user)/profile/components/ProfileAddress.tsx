@@ -27,37 +27,47 @@ export const ProfileAddress = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     null,
   );
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const received = {
-          Addresses: [
-            {
-              id: 0,
-              name: '',
-              lat: 0,
-              lon: 0,
-              street: '',
-              city: '',
-              province: '',
-              postalCode: '',
-              isPrimary: false,
-            },
-          ],
-        };
-        const response = await getAddress(received);
-        setAddresses(response);
-        console.log(response);
-      } catch (error) {
-        console.error('Error fetching addresses:', error);
-      }
-    };
 
-    if (addresses.length === 0) {
+  const fetchAddresses = async () => {
+    try {
+      const received = {
+        Addresses: [
+          {
+            id: 0,
+            name: '',
+            lat: 0,
+            lon: 0,
+            street: '',
+            city: '',
+            province: '',
+            postalCode: '',
+            isPrimary: false,
+          },
+        ],
+      };
+      const response = await getAddress(received);
+      setAddresses(response);
+      console.log(response);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+  useEffect(() => {
+    if (!showCreateAddress && !showEditAddress) {
       fetchAddresses();
     }
-  }, [getAddress]);
-
+  }, [showCreateAddress, showEditAddress]);
+  const handleDeleteAddress = async (id: number) => {
+    try {
+      await deleteAddress(id);
+      fetchAddresses();
+    } catch (error) {
+      console.error('Error deleting address:', error);
+    }
+  };
   const handleAddress = () => {
     setshowCreateAddress(true);
   };
@@ -101,7 +111,7 @@ export const ProfileAddress = () => {
                   <div className="flex items-center gap-4">
                     <button
                       className="text-sm text-red-500 hover:text-red-700 focus:outline-none"
-                      onClick={() => deleteAddress(address.id)}
+                      onClick={() => handleDeleteAddress(address.id)}
                     >
                       Hapus
                     </button>

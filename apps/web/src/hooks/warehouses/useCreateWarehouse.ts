@@ -2,6 +2,7 @@
 
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
+import { useRouter } from 'next/navigation';
 
 interface Warehouse {
   name: string;
@@ -12,6 +13,7 @@ interface Warehouse {
 }
 
 const useCreateWarehouse = () => {
+  const router = useRouter();
   const createWarehouse = async (payload: Warehouse) => {
     console.log(payload);
     try {
@@ -20,7 +22,7 @@ const useCreateWarehouse = () => {
       });
       console.log(data);
       alert('Warehouse created successfully');
-      window.location.reload();
+      router.back();
     } catch (error) {
       console.log(error);
     }

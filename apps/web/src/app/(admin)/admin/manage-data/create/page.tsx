@@ -2,17 +2,27 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import useCreateAdmin from '@/hooks/warehouses/useCreateAdmin';
+import { useFormik } from 'formik';
 import Link from 'next/link';
 
-interface UserArgs {
-  id: number;
-  email: string;
-
-  firstName: string;
-  password: string;
-}
-
 const CreateWarehouseAdminPage = () => {
+  const { createAdmin } = useCreateAdmin();
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      ktp: '',
+      npwp: '',
+      salary: 0,
+    },
+    onSubmit: (values) => {
+      createAdmin(values);
+    },
+  });
+  console.log(formik.values);
   return (
     <div className="px-4 py-4">
       <Card>
@@ -26,47 +36,89 @@ const CreateWarehouseAdminPage = () => {
         </CardHeader>
         <CardContent>
           <div
-            className="relative overflow-y-auto text-sm md:mt-8 md:h-[350px]"
+            className="relative overflow-y-auto text-sm md:mt-8 md:h-[380px]"
             style={{ scrollbarWidth: 'none' }}
           >
-            <form
-              //   onSubmit={formik.handleSubmit}
-              className="mt-5 gap-4 flex max-md:flex-col w-full"
-            >
-              <div className="flex flex-col gap-y-5 md:w-1/3">
-                <div>
-                  <span className="ml-1 text-sm font-semibold">Nama</span>
-                  <Input
-                    name="name"
-                    type="text"
-                    // onChange={formik.handleChange}
-                    // value={formik.values.name}
-                  />
+            <form onSubmit={formik.handleSubmit} className="mt-5 w-full">
+              <div className="w-full flex max-md:flex-col  gap-4  ">
+                {' '}
+                <div className="flex flex-col gap-y-5 md:w-1/3">
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">
+                      First Name
+                    </span>
+                    <Input
+                      name="firstName"
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.firstName}
+                    />
+                  </div>
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">
+                      Last Name
+                    </span>
+                    <Input
+                      name="lastName"
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.lastName}
+                    />
+                  </div>
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">Email</span>
+                    <Input
+                      name="email"
+                      type="email"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
+                    />
+                  </div>
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">Password</span>
+                    <Input
+                      name="password"
+                      type="password"
+                      onChange={formik.handleChange}
+                      value={formik.values.password}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <span className="ml-1 text-sm font-semibold">Email</span>
-                  <Input
-                    name="street"
-                    type="text"
-                    // onChange={formik.handleChange}
-                    // value={formik.values.street}
-                  />
+                <div className="flex flex-col gap-y-5 md:w-1/3">
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">No Ktp</span>
+                    <Input
+                      name="ktp"
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.ktp}
+                    />
+                  </div>
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">NPWP</span>
+                    <Input
+                      name="npwp"
+                      type="text"
+                      onChange={formik.handleChange}
+                      value={formik.values.npwp}
+                    />
+                  </div>
+                  <div>
+                    <span className="ml-1 text-sm font-semibold">Salary</span>
+                    <Input
+                      name="salary"
+                      type="number"
+                      onChange={formik.handleChange}
+                      value={formik.values.salary}
+                    />
+                  </div>
+                  <button
+                    className="mt-4 bg-black text-white font-medium p-2 rounded-md"
+                    type="submit"
+                  >
+                    Create to Admin
+                  </button>
                 </div>
-                <div>
-                  <span className="ml-1 text-sm font-semibold">Password</span>
-                  <Input
-                    name="street"
-                    type="password"
-                    // onChange={formik.handleChange}
-                    // value={formik.values.street}
-                  />
-                </div>
-                <button
-                  className="mt-4 bg-black text-white font-medium p-2 rounded-md"
-                  type="submit"
-                >
-                  Create to Admin
-                </button>
               </div>
             </form>
           </div>

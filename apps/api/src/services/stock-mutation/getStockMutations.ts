@@ -41,14 +41,14 @@ export const getStockMutationsService = async (
                   : user.employee.warehouseId
                 : user.employee.warehouseId,
           },
-          {
-            toWarehouseId:
-              user.role == 'SUPER_ADMIN'
-                ? query.warehouseId
-                  ? query.warehouseId
-                  : user.employee.warehouseId
-                : user.employee.warehouseId,
-          },
+          // {
+          //   toWarehouseId:
+          //     user.role == 'SUPER_ADMIN'
+          //       ? query.warehouseId
+          //         ? query.warehouseId
+          //         : user.employee.warehouseId
+          //       : user.employee.warehouseId,
+          // },
         ],
       },
       include: {
@@ -60,13 +60,13 @@ export const getStockMutationsService = async (
     });
 
     const data = stockMutations.reduce((a: any, b) => {
-      return [
-        ...a,
-        {
-          ...b,
-          sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
-        },
-      ];
+      // return [
+      //   ...a,
+      //   {
+      //     ...b,
+      //     sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
+      //   },
+      // ];
     }, []);
 
     return {

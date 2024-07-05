@@ -21,8 +21,8 @@ export const getOrdersService = async (userId: number) => {
     const orders = await prisma.order.findMany({
       where: {
         userId: user.role == 'CUSTOMER' ? user.id : undefined,
-        warehouseId:
-          user.role == 'SUPER_ADMIN' ? undefined : user.employee.warehouseId,
+        // warehouseId:
+        //   user.role == 'SUPER_ADMIN' ? undefined : user.employee.warehouseId,
       },
       include: {
         orderItems: {

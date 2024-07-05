@@ -28,6 +28,7 @@ const useLogin = () => {
         '/auth/login',
         payload,
       );
+      console.log(data);
       if (data.data) {
         if (data.data.role == 'CUSTOMER') {
           dispatch(loginAction(data.data));
@@ -46,6 +47,7 @@ const useLogin = () => {
         alert('login failed');
       }
     } catch (error) {
+      console.log(error);
       alert(error);
     }
   };

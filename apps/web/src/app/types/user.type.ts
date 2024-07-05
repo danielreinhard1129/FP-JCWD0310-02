@@ -4,6 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   role: string;
+  isVerify?: boolean;
   employee?: {
     warehouseId: number;
     warehouse: string;
