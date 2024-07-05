@@ -13,6 +13,11 @@ export const getStockMutationsService = async (
     const user = await prisma.users.findFirst({
       where: {
         id: userId,
+        employee: {
+          warehouseId: {
+            not: null,
+          },
+        },
       },
       include: {
         employee: {
@@ -25,6 +30,10 @@ export const getStockMutationsService = async (
 
     if (!user) throw new Error('Cannot find your user data');
     if (!user.employee) throw new Error('Sorry you are not an admin!');
+    if (!user.employee.warehouseId)
+      throw new Error('Sorry you are not an admin!');
+    if (!user.employee.warehouse)
+      throw new Error('Sorry you are not an admin!');
 
     const stockMutations = await prisma.stockMutation.findMany({
       orderBy: { createdAt: 'desc' },
@@ -41,14 +50,14 @@ export const getStockMutationsService = async (
                   : user.employee.warehouseId
                 : user.employee.warehouseId,
           },
-          // {
-          //   toWarehouseId:
-          //     user.role == 'SUPER_ADMIN'
-          //       ? query.warehouseId
-          //         ? query.warehouseId
-          //         : user.employee.warehouseId
-          //       : user.employee.warehouseId,
-          // },
+          {
+            toWarehouseId:
+              user.role == 'SUPER_ADMIN'
+                ? query.warehouseId
+                  ? query.warehouseId
+                  : user.employee.warehouseId
+                : user.employee.warehouseId,
+          },
         ],
       },
       include: {
@@ -60,13 +69,13 @@ export const getStockMutationsService = async (
     });
 
     const data = stockMutations.reduce((a: any, b) => {
-      // return [
-      //   ...a,
-      //   {
-      //     ...b,
-      //     sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
-      //   },
-      // ];
+      return [
+        ...a,
+        {
+          ...b,
+          sku: `${b.product.name.replace(' ', '-')}-${b.variant.color}-${b.variant.size}-${new Date(b.product.createdAt).toISOString().slice(2, 10).replace('-', '').replace('-', '')}`.toUpperCase(),
+        },
+      ];
     }, []);
 
     return {
