@@ -17,18 +17,21 @@ const OverviewSales: FC<IOverviewSalesProps> = ({ dataSales }) => {
         <OverviewCard
           Icon={ShoppingBag}
           title="Revenue"
+          type="currency"
           value={dataSales?.data.revenue}
           total={0}
         />
         <OverviewCard
           Icon={ShoppingBag}
           title="Active Orders"
+          type="currency"
           value={dataSales?.data.activeOrders.total || 0}
           total={dataSales?.data.activeOrders.count || 0}
         />
         <OverviewCard
           Icon={ShoppingBag}
           title="Cancelled Orders"
+          type="currency"
           value={dataSales?.data.cancelledOrders.total || 0}
           total={dataSales?.data.cancelledOrders.count || 0}
         />
