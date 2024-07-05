@@ -224,10 +224,6 @@ const DataTablesOrders: FC<DataTablesProps> = ({
           <Table
             columns={columnsProducts}
             loading={loading}
-            pagination={{
-              disabled: true,
-              style: { opacity: 0, display: 'none' },
-            }}
             dataSource={dataTable}
           />
         </div>

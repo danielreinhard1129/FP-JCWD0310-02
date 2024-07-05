@@ -7,36 +7,33 @@ interface GetProductsQuery extends PaginationQueryParams {
   filter: {
     filter:
       | {
-          name: { equals: string };
+          name: string;
         }[]
       | undefined;
-    size:
-      | {
-          size: { equals: string };
-        }[]
-      | undefined;
-    color:
-      | {
-          color: { contains: string };
-        }[]
-      | undefined;
+    size: string[] | undefined;
+    color: string[] | undefined;
   };
 }
 
 export const getProductsService = async (query: GetProductsQuery) => {
   try {
     const { page, take, search, sortBy, sortOrder, filter } = query;
-
+    const filterVariant = [filter.color, filter.size];
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
       productCategory: {
         some: filter.filter && {
-          category: { OR: filter.filter },
+          category: {
+            OR: filter.filter,
+          },
         },
       },
-      variant: (filter.color || filter.size || filter.filter) && {
+      variant: {
         some: {
-          OR: filter.size,
+          AND: {
+            color: { in: filter.color },
+            size: { in: filter.size },
+          },
         },
       },
     };
