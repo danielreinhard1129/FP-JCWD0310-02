@@ -1,24 +1,24 @@
-import { TrxController } from '@/controllers/trx.controller';
-import { Router } from 'express';
+// import { TrxController } from '@/controllers/trx.controller';
+// import { Router } from 'express';
 
-export class TrxRouter {
-  private router: Router;
-  private trxController: TrxController;
+// export class TrxRouter {
+//   private router: Router;
+//   private trxController: TrxController;
 
-  constructor() {
-    this.trxController = new TrxController();
-    this.router = Router();
-    this.initializeRoutes();
-  }
+//   constructor() {
+//     this.trxController = new TrxController();
+//     this.router = Router();
+//     this.initializeRoutes();
+//   }
 
-  private initializeRoutes(): void {
-    this.router.post('/', this.trxController.createTrxController);
-    this.router.post('/notification', this.trxController.createTrxNotification);
-    this.router.get('/rajaongkir', this.trxController.getRajaOngkir);
-    this.router.get('/:transaction_id', this.trxController.getTrxById);
-  }
+//   private initializeRoutes(): void {
+//     this.router.post('/', this.trxController.createTrxController);
+//     this.router.post('/notification', this.trxController.createTrxNotification);
 
-  getRouter(): Router {
-    return this.router;
-  }
-}
+//     this.router.get('/:transaction_id', this.trxController.getTrxById);
+//   }
+
+//   getRouter(): Router {
+//     return this.router;
+//   }
+// }

@@ -16,7 +16,7 @@ interface userArgs extends User {
 const ProfilePage = () => {
   const { updateUser } = useUpdateUser();
   const { getUser } = useGetUser();
-  const [user, setUser] = useState<userArgs>({} as userArgs);
+
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string[]>([]);
 
   useEffect(() => {
@@ -31,8 +31,9 @@ const ProfilePage = () => {
           role: '',
         };
         const response = await getUser(received);
+
         formik.setValues(response);
-        console.log(response);
+        console.log(response.profileImageUrl);
       } catch (error) {}
     };
     fetchUser();
@@ -50,6 +51,7 @@ const ProfilePage = () => {
     },
   });
   console.log(formik.values);
+  console.log(typeof formik.values.profileImageUrl);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -60,6 +62,7 @@ const ProfilePage = () => {
       formik.setFieldValue('profileImageUrl', fileArray);
     }
   };
+  const googleImage = formik.values.profileImageUrl.toString();
 
   return (
     <div className="md:h-full flex flex-col">
@@ -72,9 +75,11 @@ const ProfilePage = () => {
           <div className="w-80 border-4 border-gray-300 rounded-lg shadow-lg max-h-72 flex flex-col justify-center items-center p-4">
             <img
               src={
-                imagePreviewUrl[0]
+                imagePreviewUrl.length > 0
                   ? imagePreviewUrl[0]
-                  : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
+                  : googleImage.includes('google')
+                    ? googleImage
+                    : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
               }
               className="w-40 h-40 rounded-sm shadow-md"
             />
@@ -134,7 +139,17 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
+{
+  /* <img
+              src={
+                imagePreviewUrl.length > 0
+                  ? imagePreviewUrl[0]
+                  : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
+              }
+              className="w-40 h-40 rounded-sm shadow-md"
+              alt="Profile Image"
+            /> */
+}
 {
   /* {imagePreviewUrl.map((url, index) => (
               <img

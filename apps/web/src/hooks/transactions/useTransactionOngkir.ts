@@ -3,29 +3,33 @@ import { axiosInstance } from '@/lib/axios';
 interface RajaOngkirBody {
   origin: string;
   destination: string;
-  weight: number;
+  qty: number;
   courier: string;
 }
-// const data = {
-//   origin: originCityId,
-//   destination: destinationCityId,
-//   weight: 1700,
-//   courier: 'tiki',
-// };
 
 const useTransacrionOngkir = () => {
-  const TransactionOngkir = async (payload: RajaOngkirBody) => {
+  const transactionOngkir = async (payload: RajaOngkirBody) => {
     try {
-      const response = await axiosInstance.get('/trx/rajaongkir', {
-        params: { ...payload },
+      console.log(payload);
+      const response = await axiosInstance.post('/transactions/rajaongkir', {
+        origin: payload.origin,
+        destination: payload.destination,
+        qty: payload.qty,
+        courier: payload.courier,
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };
 
-  return { TransactionOngkir };
+  return { transactionOngkir };
 };
 
 export default useTransacrionOngkir;
+// origin: payload.origin,
+// destination: payload.destination,
+// qty: payload.qty,
+// courier: payload.courier,

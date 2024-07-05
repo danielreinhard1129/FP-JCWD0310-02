@@ -36,7 +36,7 @@ const ListWarehouse = () => {
   const [adminList, setAdminList] = useState<Admin[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
+  // const ararry = ['budi', 'supri', 'basuri', ' bude', 'supre', 'basurif'];
   const fetchWarehouses = async (page: number) => {
     try {
       const data = await getWarehouse();
@@ -49,7 +49,7 @@ const ListWarehouse = () => {
   useEffect(() => {
     fetchWarehouses(currentPage);
   }, [currentPage]);
-
+  console.log(warehouses);
   const handleDelete = async (warehouseId: number) => {
     try {
       await deleteWarehouse(warehouseId);
@@ -62,28 +62,28 @@ const ListWarehouse = () => {
     setCurrentPage(page);
   };
   //ini hapus
-  useEffect(() => {
-    const fetchAdmins = async () => {
-      try {
-        const admins = await getEmployes();
-        setAdminList(admins);
-      } catch (error) {
-        console.error('Error fetching admins:', error);
-      }
-    };
-    fetchAdmins();
-  }, []);
-  const formik = useFormik({
-    initialValues: {
-      id: 0,
-      warehousesId: 0,
-    },
-    onSubmit: (values) => {
-      // updateEmploye(values);
-    },
-  });
+  // useEffect(() => {
+  //   const fetchAdmins = async () => {
+  //     try {
+  //       const admins = await getEmployes();
+  //       setAdminList(admins);
+  //     } catch (error) {
+  //       console.error('Error fetching admins:', error);
+  //     }
+  //   };
+  //   fetchAdmins();
+  // }, []);
+  // const formik = useFormik({
+  //   initialValues: {
+  //     id: 0,
+  //     warehousesId: 0,
+  //   },
+  //   onSubmit: (values) => {
+  //     // updateEmploye(values);
+  //   },
+  // });
 
-  console.log(formik.values);
+  console.log(adminList);
   return (
     <div className="px-4 py-4">
       <Card>
@@ -113,19 +113,22 @@ const ListWarehouse = () => {
               <tbody className="overscroll-contain font-medium text-center">
                 {warehouses.map((warehouse, index) => (
                   <tr key={warehouse.id}>
-                    <td className="px-4 py-2">{index + 1}</td>
+                    {/* //<td className="px-4 py-2">{index + 1}</td>*/}
+                    <td className="px-4 py-2">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </td>
                     <td className="px-4 py-2">{warehouse.name}</td>
                     <td className="px-4 py-2">{`${warehouse.street}, ${warehouse.subdistrict} ,${warehouse.city}, ${warehouse.province} `}</td>
                     {/* <td className="px-4 py-2">{warehouse.alamat}</td> */}
                     <td className="px-4 py-2 max-md:hidden">
-                      {' '}
-                      <select
+                      Belum memilih Admin
+                      {/* <select
                         className="appearance-auto  rounded py-2 px-3 focus:outline-none"
-                        onChange={(e) => {
-                          formik.handleChange(e);
-                          formik.setFieldValue('id', e.target.value);
-                          formik.setFieldValue('warehousesId', warehouse.id);
-                        }}
+                        // onChange={(e) => {
+                        //   formik.handleChange(e);
+                        //   formik.setFieldValue('id', e.target.value);
+                        //   formik.setFieldValue('warehousesId', warehouse.id);
+                        // }}
                         value={formik.values.id}
                       >
                         <option value="">Select Admin</option>
@@ -134,7 +137,7 @@ const ListWarehouse = () => {
                             {admin.user.firstName}{' '}
                           </option>
                         ))}
-                      </select>
+                      </select> */}
                     </td>
                     <td className="px-4 py-2 flex justify-center gap-4">
                       <Trash2

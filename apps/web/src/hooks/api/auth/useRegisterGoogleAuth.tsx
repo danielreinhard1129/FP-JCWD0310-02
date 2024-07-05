@@ -17,8 +17,11 @@ const useRegisterGoogleAuth = () => {
         const { data } = response;
 
         console.log('Register successful, server response:', data);
+        alert('Register Google successful');
         router.replace('/login');
-      } catch (error) {}
+      } catch (error) {
+        console.error('Error during Google login:', error);
+      }
     },
     flow: 'auth-code',
   });

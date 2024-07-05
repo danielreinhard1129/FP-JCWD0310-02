@@ -20,12 +20,14 @@ interface RajaOngkirResponse {
 interface RajaOngkirBody {
   origin: string;
   destination: string;
-  weight: number;
+  qty: number;
+
   courier: string;
 }
 
 export const getRajaOngkirService = async (body: RajaOngkirBody) => {
   try {
+    console.log(body);
     const apiKey = '7cf938ca0cd950bf59bac9148dbc2b2e';
 
     async function buildCitySearchUrl(cityName: string) {
@@ -49,30 +51,23 @@ export const getRajaOngkirService = async (body: RajaOngkirBody) => {
     }
     const originCityId = await buildCitySearchUrl(`${body.origin}`);
     const destinationCityId = await buildCitySearchUrl(`${body.destination}`);
-
+    const totalWeight = body.qty * 500;
     const data = {
       origin: originCityId,
       destination: destinationCityId,
-      weight: body.weight,
+      weight: totalWeight,
       courier: body.courier,
     };
-
-    // const originCityId = await buildCitySearchUrl('Jakarta');
-    // const destinationCityId = await buildCitySearchUrl('Kebumen');
-
-    // const data = {
-    //   origin: originCityId,
-    //   destination: destinationCityId,
-    //   weight: 1700,
-    //   courier: 'tiki',
-    // };
 
     const urlCost = 'https://api.rajaongkir.com/starter/cost';
     const headers = {
       key: apiKey,
     };
 
-    const response = await axios.post(urlCost, data, { headers });
+    const response = await axios.post(urlCost, data, {
+      headers,
+      timeout: 100000,
+    });
 
     const result: RajaOngkirResponse = response.data;
     const costs = result.rajaongkir.results[0]?.costs;
@@ -88,10 +83,20 @@ export const getRajaOngkirService = async (body: RajaOngkirBody) => {
         value: detail.value,
       })),
     }));
-
+    console.log(formattedCosts);
     return formattedCosts;
   } catch (error) {
     console.error('Error fetching RajaOngkir service:', error);
     throw error;
   }
 };
+
+// const originCityId = await buildCitySearchUrl('Jakarta');
+// const destinationCityId = await buildCitySearchUrl('Kebumen');
+
+// const data = {
+//   origin: originCityId,
+//   destination: destinationCityId,
+//   weight: 1700,
+//   courier: 'tiki',
+// };

@@ -12,11 +12,15 @@ export class UserRouter {
     this.router = Router();
     this.initializeRoutes();
   }
-
+  // getUserAddress
   private initializeRoutes(): void {
     this.router.get('/geolocation', this.userController.createAddress);
     // this.router.get('/admin', this.userController.getAdmin);
     this.router.get('/getUsers', this.userController.getUsers);
+    this.router.get(
+      '/get-users-address/:id',
+      this.userController.getUserAddress,
+    );
     this.router.get('/get-employes', this.userController.getEmployes);
     this.router.put('/update-employe/:id', this.userController.updateEmploye);
     this.router.get('/provinces', this.userController.getAddress);

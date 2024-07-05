@@ -1,3 +1,4 @@
+import { getRajaOngkirService } from '@/services/transaction/getRajaOngkirService';
 import { getTransactionService } from '@/services/transaction/getTransactionService';
 import { postTransactionPaymentProof } from '@/services/transaction/postTransactionPaymentProof';
 import { NextFunction, Request, Response } from 'express';
@@ -36,6 +37,14 @@ export class TransactionController {
         req.body.invoiceNumber,
       );
       return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getRajaOngkir(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await getRajaOngkirService(req.body);
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

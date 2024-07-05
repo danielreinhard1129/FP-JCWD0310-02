@@ -11,7 +11,7 @@ const useRegister = () => {
   const register = async (payload: RegisterArgs) => {
     try {
       const { data } = await axiosInstance.post('/auth/register', payload);
-
+      console.log(data);
       router.replace('/login');
     } catch (error) {
       alert(error);
