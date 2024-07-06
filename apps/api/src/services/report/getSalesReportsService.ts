@@ -1,7 +1,10 @@
 import prisma from '@/prisma';
 import dayjs from 'dayjs';
 
-export const getSalesReportsSerivce = async () => {
+export const getSalesReportsSerivce = async (
+  warehouseId: number,
+  userId: number,
+) => {
   try {
     // const user = await prisma.users.findFirst({
     //   where: { id: 1 },
