@@ -16,10 +16,6 @@ const useDeleteAddress = () => {
       params: { userId },
     });
     alert('Address deleted successfully');
-
-    window.location.reload();
-
-    // return response.data;
   };
   return { deleteAddress };
 };

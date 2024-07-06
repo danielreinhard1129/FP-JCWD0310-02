@@ -16,6 +16,7 @@ export const useGetStockMutations = () => {
     page: 1,
     take: 5,
     status: '',
+    warehouseId: undefined,
   });
 
   const getStockMutations = async () => {
@@ -38,7 +39,7 @@ export const useGetStockMutations = () => {
 
   useEffect(() => {
     getStockMutations();
-  }, [query.page, query.take, query.status]);
+  }, [query.page, query.take, query.status, query.warehouseId]);
 
   return { refetch: getStockMutations, data, loading, setQuery, query };
 };

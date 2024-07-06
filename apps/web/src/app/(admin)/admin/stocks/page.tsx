@@ -8,6 +8,9 @@ import { Popover, Select } from 'antd';
 import { useGetWarehouses } from '@/hooks/warehouses/useGetWarehouses';
 import { Label } from '@/components/ui/label';
 import { RotateCcw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { useDebounce } from 'use-debounce';
+import SearchBarDebounce from '@/components/SearchBarDebounce';
 
 const AdminDashboardStocksPage = () => {
   const user = useAppSelector((state) => state.user);
@@ -16,6 +19,7 @@ const AdminDashboardStocksPage = () => {
   const { mutation, setQuery, query } = useGetStocks({
     warehouseId: Number(warehouse.warehouseId),
   });
+
   return (
     <>
       <div className="px-4 py-4">
@@ -36,9 +40,14 @@ const AdminDashboardStocksPage = () => {
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
-                <Label>Warehouse : </Label>
+                {/* <Label>Warehouse : </Label> */}
+                <div className="w-52 font-rubik">
+                  <SearchBarDebounce
+                    onValueChange={(e) => setQuery({ ...query, product: e })}
+                  />
+                </div>
                 <Select
-                  className="w-52"
+                  className="w-52 h-10 border-2 font-rubik border-black rounded-lg text-black"
                   defaultValue={{
                     value: warehouse.warehouseId,
                     label: warehouse.warehouse,

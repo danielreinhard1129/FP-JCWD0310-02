@@ -4,11 +4,7 @@ export const getStockWarehouses = async (
   filterWarehouseId: number | undefined,
 ) => {
   try {
-    const warehouse = await prisma.warehouse.findMany({
-      where: {
-        id: { not: filterWarehouseId },
-      },
-    });
+    const warehouse = await prisma.warehouse.findMany({});
     return {
       data: warehouse,
     };

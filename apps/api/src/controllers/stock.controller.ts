@@ -21,7 +21,7 @@ export class StockController {
       const query = {
         take: Number(req.query.take as string) || 5,
         page: Number(req.query.page as string) || 1,
-        search: (req.query.search as string) || '',
+        search: (req.query.product as string) || '',
         warehouseId: req.query.warehouseId as string,
       };
       const response = await GetStocksService(res.locals.user, query);

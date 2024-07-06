@@ -13,13 +13,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector((state) => state.user);
   const token = localStorage.getItem('token');
 
-  if (user.role == 'CUSTOMER') {
-    router.push('/');
-  }
+  // if (user.role == 'CUSTOMER') {
+  //   router.push('/');
+  // }
 
-  if (!token) {
-    router.push('/');
-  }
+  // if (!token) {
+  //   router.push('/');
+  // }
 
   return (
     <QueryClientProvider client={queryClient}>

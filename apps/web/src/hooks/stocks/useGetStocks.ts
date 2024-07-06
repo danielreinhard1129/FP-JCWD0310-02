@@ -16,6 +16,7 @@ interface GetStocksResponse {
 }
 
 const useGetStocks = (queryArgs: {
+  product?: string;
   take?: number;
   page?: number;
   warehouseId: number;
@@ -26,6 +27,7 @@ const useGetStocks = (queryArgs: {
     page: queryArgs.page || 1,
     take: queryArgs.take || 10,
     warehouseId: queryArgs.warehouseId,
+    product: queryArgs.product || undefined,
   });
 
   const getStocks = async () => {
@@ -46,7 +48,7 @@ const useGetStocks = (queryArgs: {
 
   useEffect(() => {
     mutation.mutate();
-  }, [query.page, query.take, query.warehouseId]);
+  }, [query.page, query.take, query.warehouseId, query.product]);
 
   return { data, setQuery, mutation, query };
 };

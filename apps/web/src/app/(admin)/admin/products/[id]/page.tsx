@@ -1,5 +1,5 @@
 'use client';
-import InputForms from '@/components/InputForms';
+import InputFormsUpdate from '@/components/InputFormsUpdate';
 import { Button } from '@/components/ui/button';
 import { useGetProduct } from '@/hooks/products/useGetProduct';
 import { useUpdateProduct } from '@/hooks/products/useUpdateProduct';
@@ -50,9 +50,11 @@ const AdminProductDetails = ({ params }: { params: { id: number } }) => {
             </Button>
           </div>
         </div>
-        <InputForms
+        <InputFormsUpdate
           data={data?.data}
-          handleSubmit={(e) => updateProduct(params.id, e)}
+          handleSubmit={(e) =>
+            openNotification.async(updateProduct(params.id, e))
+          }
         />
       </div>
     </div>

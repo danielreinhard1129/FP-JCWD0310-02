@@ -25,7 +25,7 @@ const page = () => (
           </div>
         </div>
       </div>
-      <NewProducts />
+      {/* <NewProducts /> */}
     </div>
     <div className="bg-black w-[1440px] my-8">
       <Categories />
@@ -41,7 +41,7 @@ const page = () => (
           </div>
         </div>
       </div>
-      <ProductsPage />
+      {/* <ProductsPage /> */}
     </div>
   </section>
 );

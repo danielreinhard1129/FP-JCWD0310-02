@@ -13,6 +13,7 @@ import { useGetImagesBlob } from '@/hooks/products/useGetImagesBlob';
 import { NumericFormat } from 'react-number-format';
 import { CreateProductPayload } from '@/hooks/products/useCreateProduct';
 import { Trash, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface VariantFormProps {
   id: string;
@@ -38,6 +39,7 @@ interface InputFormsProps {
 }
 
 const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
+  const router = useRouter();
   const { getImagesBlob } = useGetImagesBlob();
   const [tempCategory, setTempCategory] = useState('');
   const [fileImages, setFileImages] = useState<FileWithPath[]>([]);
@@ -290,13 +292,14 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       </div>
       <div className="flex md:justify-end mt-8 justify-between gap-4">
         <Button onClick={() => handleSubmitFormik()} className="w-32">
-          Update
+          Create
         </Button>
-        <Button className="w-32" variant="destructive">
-          Delete
-        </Button>
-        <Button className="w-32" variant="outline">
-          Cancel
+        <Button
+          onClick={() => router.push('/admin/products')}
+          className="w-32"
+          variant="outline"
+        >
+          Back
         </Button>
       </div>
     </section>

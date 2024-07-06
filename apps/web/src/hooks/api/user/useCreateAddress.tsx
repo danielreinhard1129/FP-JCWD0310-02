@@ -2,10 +2,12 @@
 
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
+import { useRouter } from 'next/router';
 
 interface Address {
   name: string;
   street: string;
+  subdistrict: string;
   city: string;
   province: string;
   postalCode: string;
@@ -29,7 +31,6 @@ const useCreateAddress = () => {
       });
       console.log(data);
       alert('Address created successfully');
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }

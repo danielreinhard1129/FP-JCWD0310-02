@@ -1,12 +1,11 @@
 'use client';
 
+import { axiosInstance } from '@/lib/axios';
 import { useAppDispatch } from '@/redux/hooks';
 import { loginAction } from '@/redux/slicers/userSlice';
 import { useGoogleLogin } from '@react-oauth/google';
-import { OAuth2Client } from 'google-auth-library';
-import { useRouter } from 'next/navigation';
 
-import { axiosInstance } from '@/lib/axios';
+import { useRouter } from 'next/navigation';
 
 const useLoginGoogleAuth = () => {
   const router = useRouter();
@@ -14,7 +13,7 @@ const useLoginGoogleAuth = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ code }) => {
       try {
-        const response = await axiosInstance.post('auth/login/google', {
+        const response = await axiosInstance.post('/auth/login/google', {
           code,
         });
         console.log('ini code google', code);
@@ -34,3 +33,5 @@ const useLoginGoogleAuth = () => {
 };
 
 export default useLoginGoogleAuth;
+
+// import { OAuth2Client } from 'google-auth-library';

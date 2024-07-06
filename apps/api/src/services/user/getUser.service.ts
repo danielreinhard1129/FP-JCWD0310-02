@@ -5,15 +5,24 @@ interface User {
   role: string;
   firstName: string;
   isVerify: boolean;
-  password: string;
+  profileImageUrl: string;
 }
 
 export const userService = async (body: User, id: number) => {
   try {
     console.log(id);
     const existingUser = await prisma.users.findFirst({
-      where: { id },
-      include: { Addresses: true },
+      where: { id, isDelete: false },
+      // include: { Addresses: true },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        firstName: true,
+        isVerify: true,
+        profileImageUrl: true,
+        Addresses: true,
+      },
     });
     console.log(existingUser);
     return existingUser;

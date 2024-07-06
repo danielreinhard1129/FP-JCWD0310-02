@@ -19,8 +19,25 @@ export class WarehouseRouter {
     );
     this.router.get('/getWarehouses', this.warehouseController.getWarehouses);
     this.router.post(
-      '/createWarehouse',
+      '/create-warehouse-admin',
+      verifyToken,
       this.warehouseController.createWarehouseAdmin,
+    );
+    this.router.delete(
+      '/delete-warehouse-admin/:id',
+      this.warehouseController.deletedWarehouseAdmin,
+    );
+    this.router.delete(
+      '/delete-warehouse/:id',
+      this.warehouseController.deleteWarehouse,
+    );
+    this.router.post(
+      '/update-warehouse/:id',
+      this.warehouseController.updateWarehouse,
+    );
+    this.router.post(
+      '/update-warehouse-admin/:id',
+      this.warehouseController.updateWarehouseAdmin,
     );
   }
 

@@ -25,7 +25,7 @@ export class AuthRouter {
     this.router.post('/register', this.authController.registerController);
     this.router.post(
       '/login/google',
-      verifyToken,
+
       this.authController.loginGoogleController,
     );
     this.router.post(

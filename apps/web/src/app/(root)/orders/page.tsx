@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import sepatu from '../../../../public/sepatu.jpg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -13,10 +13,30 @@ import { BASE_API_URL } from '@/utils/config';
 import OrderDialogConfirmation from './components/OrderDialogConfirmation';
 import { Address } from '@/types/address.types';
 import { useRouter } from 'next/navigation';
+import useGetUserAddress from '@/hooks/api/user/useGetUserAddress';
+import useGetAddress from '@/hooks/api/user/useGetAddress';
+import useTransacrionOngkir from '@/hooks/transactions/useTransactionOngkir';
 
+interface TransactionOngkir {
+  service: string;
+  description: string;
+  cost: [
+    {
+      value: number;
+    },
+  ];
+}
 const OrderPage = () => {
+  const { transactionOngkir } = useTransacrionOngkir();
   const router = useRouter();
+  const { getAddress } = useGetAddress();
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const { id } = useAppSelector((state) => state.user);
+  const [selectedAddress, setSelectedAddress] = useState<string>('');
+  const [selectedCourier, setSelectedCourier] = useState<string>('');
+  const [transactionsOngkir, setTransactionsOngkir] = useState<
+    TransactionOngkir[]
+  >([]);
   const { data, isSuccess } = useGetCarts(id);
   const {
     postOrder,
@@ -46,7 +66,54 @@ const OrderPage = () => {
       openNotification.async(postOrderAsync());
     } else openNotification.error({ message: 'Something is error!' });
   };
-
+  const fetchAddresses = async () => {
+    try {
+      const received = {
+        Addresses: [
+          {
+            id: 0,
+            name: '',
+            lat: 0,
+            lon: 0,
+            street: '',
+            city: '',
+            province: '',
+            postalCode: '',
+            isPrimary: false,
+          },
+        ],
+      };
+      const response = await getAddress(received);
+      setAddresses(response);
+      console.log(response);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+  console.log(selectedAddress, selectedCourier);
+  const fetchOngkir = async () => {
+    try {
+      const received = {
+        origin: 'Jakarta',
+        destination: selectedAddress,
+        qty: 2,
+        courier: selectedCourier,
+      };
+      const response = await transactionOngkir(received);
+      setTransactionsOngkir(response);
+      console.log(response);
+    } catch (error) {
+      console.error('Error fetching ongkir:', error);
+    }
+  };
+  useEffect(() => {
+    if (selectedAddress === '' || selectedCourier === '') return;
+    fetchOngkir();
+  }, [selectedAddress, selectedCourier]);
+  console.log(transactionsOngkir);
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-row-reverse justify-end w-full gap-4">
@@ -101,16 +168,28 @@ const OrderPage = () => {
                   <h1 className="font-rubik font-bold text-xl">
                     Select your address
                   </h1>
-                  <select className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg">
-                    <option value="1">Pakualaman</option>
-                    <option value="1">Kaliurang</option>
+
+                  <select
+                    className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg"
+                    onChange={(e) => setSelectedAddress(e.target.value)}
+                  >
+                    <option value="">Select address</option>
+                    {addresses.map((address, index) => (
+                      <option
+                        key={index}
+                        value={address.city}
+                      >{`${address.subdistrict} ${address.city} ${address.province}`}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="flex flex-col max-w-96 gap-2">
                   <h1 className="font-rubik font-bold text-xl">
                     Select your payment
                   </h1>
-                  <select className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg">
+                  <select
+                    className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg"
+                    onChange={fetchOngkir}
+                  >
                     <option value="1">Manual</option>
                     <option disabled value="1">
                       Midtrans
@@ -121,12 +200,30 @@ const OrderPage = () => {
                   <h1 className="font-rubik font-bold text-xl">
                     Select delivery options
                   </h1>
-                  <select className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg">
-                    <option value="1">Manual</option>
-                    <option disabled value="1">
-                      Midtrans
-                    </option>
+                  <select
+                    className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg"
+                    onChange={(e) => setSelectedCourier(e.target.value)}
+                  >
+                    <option value="">Select delivery options</option>
+                    <option value="tiki">TIKI</option>
+                    <option value="pos">POS</option>
+                    <option value="jne">JNE</option>
                   </select>
+                  {transactionsOngkir?.length > 0 ? (
+                    <select className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg">
+                      <option value="" disabled>
+                        Select courier
+                      </option>
+                      {transactionsOngkir?.map((courier, index) => (
+                        <option
+                          key={index}
+                          value={courier.cost[0].value}
+                        >{`${courier.description} - ${courier.cost[0].value}`}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
               <OrderDialogConfirmation
@@ -191,3 +288,39 @@ const OrderPage = () => {
 };
 
 export default OrderPage;
+
+// {addresses.map((address, index) => (
+//   <div
+//     key={index}
+//     className="bg-white rounded-lg shadow-md overflow-hidden mt-1  "
+//   >
+//     <div className="px-6 py-4">
+//       <div className="text-lg mb-2 ">
+//         {`Alamat: ${address.street},${address.city}, ${address.province}, ${address.postalCode}`}
+//       </div>
+//       <div className=" text-sm mb-4 text-gray-600 ">
+//         {'Detail Alamat: ' + address.name}
+//       </div>
+//       <div className="flex items-center gap-4">
+//         <button
+//           className="text-sm text-red-500 hover:text-red-700 focus:outline-none"
+//           onClick={() => handleDeleteAddress(address.id)}
+//         >
+//           Hapus
+//         </button>
+//         <button
+//           className="text-sm text-red-500 hover:text-red-700 focus:outline-none"
+//           onClick={() => {
+//             setshowEditAddress(true);
+//             setSelectedAddressId(address.id);
+//           }}
+//         >
+//           Edit
+//         </button>
+//         <div className="text-sm text-gray-700 border p-1 rounded-sm">
+//           {address.isPrimary ? 'Utama' : ''}
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// ))}

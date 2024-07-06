@@ -24,7 +24,7 @@ export interface NavItem {
   isChidren?: boolean;
   children?: NavItem[];
 }
-
+const hiddenButton = 'hidden';
 export const NavItems: NavItem[] = [
   {
     title: 'Dashboard',
@@ -94,11 +94,42 @@ export const NavItems: NavItem[] = [
     icon: Warehouse,
     href: '/admin/warehouses',
     color: '',
+    isChidren: false,
+    children: [
+      {
+        title: 'Create Warehouse',
+        icon: SquarePlus,
+        color: '',
+        href: '/admin/warehouses/create',
+      },
+      {
+        title: 'Manage Product',
+        icon: Bolt,
+        color: '',
+        href: '/admin/products',
+      },
+    ],
   },
   {
     title: 'User & Admin',
     icon: User,
-    href: '/admin/users',
+    href: '/admin/manage-data',
     color: '',
+    isChidren: true,
+
+    children: [
+      {
+        title: 'Manage Admin',
+        icon: SquarePlus,
+        color: '',
+        href: '/admin/manage-data',
+      },
+      {
+        title: 'Manage User',
+        icon: Bolt,
+        color: '',
+        href: 'admin/manage-data/edit',
+      },
+    ],
   },
 ];

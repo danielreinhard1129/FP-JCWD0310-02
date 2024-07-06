@@ -27,6 +27,7 @@ export class StockMutationController {
         page: Number(req.query.page),
         take: Number(req.query.take),
         status: status,
+        warehouseId: Number(req.query.warehouseId),
       };
       const response = await getStockMutationsService(
         res.locals.user.id,
@@ -34,7 +35,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
   async postStockMutationsConfirmation(
@@ -53,7 +54,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
   async getWarehouses(req: Request, res: Response, next: NextFunction) {
@@ -63,7 +64,7 @@ export class StockMutationController {
       );
       res.status(200).send(response);
     } catch (error) {
-      next();
+      next(error);
     }
   }
 }

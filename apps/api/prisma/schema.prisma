@@ -182,8 +182,8 @@ model Employee {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  userId      Int @unique
-  warehouseId Int
+  userId      Int  @unique
+  warehouseId Int?
 
   user      Users?     @relation(fields: [userId], references: [id])
   warehouse Warehouse? @relation(fields: [warehouseId], references: [id])

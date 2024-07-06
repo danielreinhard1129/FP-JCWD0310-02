@@ -12,7 +12,7 @@ export const loginService = async (body: User) => {
   try {
     const { email, password } = body;
     const existingUser = await prisma.users.findFirst({
-      where: { email },
+      where: { email, isDelete: false },
       include: {
         employee: {
           include: {

@@ -22,8 +22,7 @@ export default function BaseLayout({
           <StoreProvider>
             <ThemeProvider
               attribute="class"
-              defaultTheme="system"
-              enableSystem
+              defaultTheme="light"
               disableTransitionOnChange
             >
               <NotificationProvider>{children}</NotificationProvider>
