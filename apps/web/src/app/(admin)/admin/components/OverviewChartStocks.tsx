@@ -16,14 +16,14 @@ const OverviewChartStocks: FC<IDataChartProps> = ({ data }) => {
   const [xData, setXData] = useState<Date[]>([]);
   const [yData, setYData] = useState<number[]>([]);
 
-  useEffect(() => {
-    if (data) {
-      setXData(Object.keys(data).map((val) => new Date(val)));
-      Object.entries(data).map(([key, val]) => {
-        return val.reduce((a: number, b: Order) => a + b.total, 0);
-      });
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setXData(Object.keys(data).map((val) => new Date(val)));
+  //     Object.entries(data).map(([key, val]) => {
+  //       return val.reduce((a: number, b: Order) => a + b.total, 0);
+  //     });
+  //   }
+  // }, [data]);
 
   const xAxisData = [
     new Date('2023-12-04'),
@@ -41,7 +41,7 @@ const OverviewChartStocks: FC<IDataChartProps> = ({ data }) => {
   return (
     <div className="px-4 py-6 bg-white col-span-2 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center min-h-8">
-        <Label>Sale Graph</Label>
+        <Label>Stock</Label>
         <div className="flex gap-2">
           <Button className="border border-black h-8" variant="outline">
             WEEKLY
@@ -82,8 +82,14 @@ const OverviewChartStocks: FC<IDataChartProps> = ({ data }) => {
           {
             data: seriesData[0],
             curve: 'natural',
+            label: 'import',
           },
-          { data: seriesData[1], curve: 'natural' },
+          {
+            data: seriesData[1],
+            curve: 'natural',
+            label: 'export',
+            color: 'red',
+          },
         ]}
         colors={['#1B59F8']}
         axisHighlight={{

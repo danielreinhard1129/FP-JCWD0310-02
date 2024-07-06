@@ -35,16 +35,20 @@ export interface IGetSalesReportsResponse {
   totalSales: IMapTotalStock;
 }
 
-export const useGetSalesReports = () => {
+export const useGetSalesReports = (warehouseId: number | undefined) => {
   const { axiosInstance } = useAxios();
 
-  const { data, refetch } = useQuery({
-    queryKey: ['salesReports'],
-    queryFn: () => axiosInstance.get<IGetSalesReportsResponse>('/reports'),
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['salesReports', warehouseId],
+    queryFn: () =>
+      axiosInstance.get<IGetSalesReportsResponse>(
+        '/reports/sales/' + warehouseId,
+      ),
   });
 
   return {
     data,
     refetch,
+    isLoading,
   };
 };

@@ -47,7 +47,7 @@ const FilterProducts = ({
   const [filter, setFilter] = useState<any>([]);
   const [color, setColor] = useState(
     colorValue
-      ? new Map(colorValue.map((val, indx) => [val, indx == 0]))
+      ? new Map(colorValue.map((val, indx) => [val, false]))
       : new Map([
           ['Red', false],
           ['Blue', false],
@@ -59,7 +59,7 @@ const FilterProducts = ({
 
   const [size, setSize] = useState(
     sizeValue
-      ? new Map(sizeValue.map((val, indx) => [val, indx == 0]))
+      ? new Map(sizeValue.map((val, indx) => [val, false]))
       : new Map([
           ['S', false],
           ['M', false],
@@ -203,24 +203,6 @@ const FilterProducts = ({
               </div>
             );
           })}
-        </div>
-      </div>
-      <div id="filter-price" className="mb-4">
-        <h3 id="filter-price-title" className="font-semibold font-rubik mb-2">
-          PRICE
-        </h3>
-        <div id="filter-price-select">
-          <input
-            onChange={(e) => console.log(e.currentTarget.value)}
-            type="range"
-            min="0"
-            max="1000"
-            className="w-full h-1 mb-6 rounded-full bg-black appearance-none cursor-pointer [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-thumb]:rounded-full "
-          />
-          <div className="flex justify-between font-openSans text-sm">
-            <span>$0</span>
-            <span>$1000</span>
-          </div>
         </div>
       </div>
     </div>
