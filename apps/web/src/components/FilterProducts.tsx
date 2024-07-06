@@ -47,7 +47,7 @@ const FilterProducts = ({
   const [filter, setFilter] = useState<any>([]);
   const [color, setColor] = useState(
     colorValue
-      ? new Map(colorValue.map((val, indx) => [val, indx == 0]))
+      ? new Map(colorValue.map((val, indx) => [val, false]))
       : new Map([
           ['Red', false],
           ['Blue', false],
@@ -59,7 +59,7 @@ const FilterProducts = ({
 
   const [size, setSize] = useState(
     sizeValue
-      ? new Map(sizeValue.map((val, indx) => [val, indx == 0]))
+      ? new Map(sizeValue.map((val, indx) => [val, false]))
       : new Map([
           ['S', false],
           ['M', false],

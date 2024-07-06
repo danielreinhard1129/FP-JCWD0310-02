@@ -34,7 +34,7 @@ const ProductsPage = () => {
   const [color, setColor] = useState<string[]>([]);
   const { data, isLoading, query, setQuery } = useGetProducts({
     page: 1,
-    take: 3,
+    take: 10,
   });
   const debounceCategory = useDebouncedCallback(() => {
     setQuery({
@@ -76,7 +76,7 @@ const ProductsPage = () => {
             handleSize={(e) => setSize(e)}
             handleColor={(e) => setColor(e)}
             colorValue={['Purple']}
-            sizeValue={['37', '38', '39', '40', '41', '42', '43']}
+            sizeValue={['37', '38', '39', '40', '41', '42', '43', '44']}
           />
         </div>
 

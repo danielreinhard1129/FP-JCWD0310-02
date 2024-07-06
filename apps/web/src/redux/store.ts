@@ -1,5 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistReducer, persistStore } from 'redux-persist';
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import userReducer from '@/redux//slicers/userSlice';
 import cartReducer from '@/redux/slicers/cartSlice';
@@ -32,7 +41,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
-  cart: cartReducer,
+  // cart: cartReducer,
   admin: adminReducer,
 });
 
@@ -51,7 +60,9 @@ export const makeStore = () => {
       reducer: persistedReducer,
       middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-          serializableCheck: false,
+          serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          },
         }),
     });
     (store as any).__persistor = persistStore(store);

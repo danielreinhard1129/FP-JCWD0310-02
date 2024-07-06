@@ -1,4 +1,5 @@
 import { ReportController } from '@/controllers/report.controller';
+import { verifyToken } from '@/lib/jwt';
 import { Router } from 'express';
 
 export class ReportRouter {
@@ -12,8 +13,16 @@ export class ReportRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', this.reportController.getSalesReport);
-    this.router.get('/stocks', this.reportController.getStocksReport);
+    this.router.get(
+      '/sales/:id',
+      verifyToken,
+      this.reportController.getSalesReport,
+    );
+    this.router.get(
+      '/stocks/:id',
+      verifyToken,
+      this.reportController.getStocksReport,
+    );
   }
 
   getRouter(): Router {

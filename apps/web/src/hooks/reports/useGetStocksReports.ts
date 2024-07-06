@@ -21,19 +21,21 @@ interface IOverallStocks extends Product {
 }
 
 export interface IGetStocksReportsResponse {
-  import: IMapsStockType;
-  export: IMapsStockType;
+  import: any;
+  export: any;
   totalStock: any;
   overallStocks: IOverallStocks[];
 }
 
-export const useGetStocksReports = () => {
+export const useGetStocksReports = (warehouseId: number | undefined) => {
   const { axiosInstance } = useAxios();
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['stocksReports'],
+    queryKey: ['stocksReports', warehouseId],
     queryFn: () =>
-      axiosInstance.get<IGetStocksReportsResponse>('/reports/stocks'),
+      axiosInstance.get<IGetStocksReportsResponse>(
+        '/reports/stocks/' + warehouseId,
+      ),
   });
 
   return {

@@ -24,7 +24,6 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
           Icon={Box}
           title="Total Stocks"
           type="number"
-          //   value={dataStocks?.data.revenue}
           value={
             dataStocks
               ? Object.entries(dataStocks.totalStock).reduce(
@@ -39,12 +38,10 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
           Icon={Box}
           title="Imported Stocks"
           type="number"
-          //   value={dataStocks?.data.activeOrders.total || 0}
-          //   total={dataStocks?.data.activeOrders.count || 0}
           value={
             dataStocks
               ? Object.entries(dataStocks.import).reduce(
-                  (a, [k, v]) => a + v.count,
+                  (a, [k, v]: any) => a + v.count,
                   0,
                 )
               : 0
@@ -55,12 +52,10 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
           Icon={Box}
           title="Exported Stocks"
           type="number"
-          //   value={dataStocks?.data.cancelledOrders.total || 0}
-          //   total={dataStocks?.data.cancelledOrders.count || 0}
           value={
             dataStocks
               ? Object.entries(dataStocks.export).reduce(
-                  (a, [k, v]) => a + v.count,
+                  (a, [k, v]: any) => a + v.count,
                   0,
                 )
               : 0
@@ -72,39 +67,29 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">No</TableHead>
-              <TableHead className="text-center">Product</TableHead>
-              <TableHead className="text-center">Stocks</TableHead>
-              <TableHead className="text-center">Imported</TableHead>
-              <TableHead className="text-center">Exported</TableHead>
+              <TableHead className="text-center font-bold">No</TableHead>
+              <TableHead className="text-center font-bold">Product</TableHead>
+              <TableHead className="text-center font-bold">Stocks</TableHead>
+              <TableHead className="text-center font-bold">Imported</TableHead>
+              <TableHead className="text-center font-bold">Exported</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {dataStocks?.overallStocks.map((val, indx) => {
               return (
-                <TableRow key={indx}>
+                <TableRow key={indx} className="font-bold">
                   <TableCell className="text-center w-4">{indx + 1}.</TableCell>
                   <TableCell className="text-center">{val.name}</TableCell>
-                  <TableCell className="text-center">
+                  <TableCell
+                    className={`text-center flex gap-2 justify-center items-center ${Number(dataStocks.totalStock[val.name]) < 50 && 'text-yellow-500'} ${Number(dataStocks.totalStock[val.name]) == 0 && 'text-red-500'}`}
+                  >
                     {Number(dataStocks.totalStock[val.name]) || 0}
                   </TableCell>
                   <TableCell className="text-center">
-                    {val.stockMutations.reduce(
-                      (a, b) =>
-                        b.status == 'DONE' && b.toWarehouseId == 1
-                          ? a + b.quantity
-                          : a,
-                      0,
-                    )}
+                    {dataStocks.import[val.name]?.count || 0}
                   </TableCell>
                   <TableCell className="text-center">
-                    {val.stockMutations.reduce(
-                      (a, b) =>
-                        b.status == 'DONE' && b.fromWarehouseId == 1
-                          ? a + b.quantity
-                          : a,
-                      0,
-                    )}
+                    {dataStocks.export[val.name]?.count || 0}
                   </TableCell>
                 </TableRow>
               );
