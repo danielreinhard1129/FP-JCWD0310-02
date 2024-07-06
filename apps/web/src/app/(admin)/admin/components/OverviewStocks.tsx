@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import OverviewChartStocks from './OverviewChartStocks';
 
 interface IOverviewStocksProps {
   dataStocks: IGetStocksReportsResponse | undefined;
@@ -62,6 +63,9 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
           }
           total={0}
         />
+      </div>
+      <div className="p-4 rounded-lg bg-white flex flex-col">
+        <OverviewChartStocks data={dataStocks} />
       </div>
       <div className="p-4 rounded-lg bg-white flex flex-col">
         <Table>

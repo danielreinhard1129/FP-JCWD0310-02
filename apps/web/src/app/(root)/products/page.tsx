@@ -3,7 +3,9 @@ import FilterProducts from '@/components/FilterProducts';
 import PaginationPage from '@/components/PaginationPage';
 import ProductCard from '@/components/ProductCard';
 import SearchBarDebounce from '@/components/SearchBarDebounce';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -54,11 +56,27 @@ const ProductsPage = () => {
         <div id="top" className="flex flex-col">
           <div
             id="title-summary"
-            className="flex flex-row justify-between items-center gap-8"
+            className="flex flex-row justify-between items-center gap-2"
           >
-            <Label className="md:text-3xl min-w-fit h-full text-xl font-rubik">
+            <Label className="md:text-3xl md:flex hidden min-w-fit h-full text-xl font-rubik">
               Life Style Shoes
             </Label>
+            <div id="sidebar-mobile" className=" md:hidden flex-col gap-2">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button className="md:hidden w-full h-8">Filter</Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <FilterProducts
+                    handleCategories={(e) => setCategories(e)}
+                    handleSize={(e) => setSize(e)}
+                    handleColor={(e) => setColor(e)}
+                    colorValue={['Purple']}
+                    sizeValue={['37', '38', '39', '40', '41', '42', '43', '44']}
+                  />
+                </SheetContent>
+              </Sheet>
+            </div>
             <div className="min-w-48 w-80">
               <SearchBarDebounce
                 onValueChange={(e) =>
