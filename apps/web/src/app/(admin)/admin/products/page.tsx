@@ -19,8 +19,8 @@ const AdminDashboardProductPage = () => {
 
   return (
     <>
-      <div className="px-4 py-4">
-        <Card>
+      <div className="p-8">
+        <Card className="border border-black">
           <CardHeader>
             <div className="flex justify-between">
               <CardTitle>List Product</CardTitle>

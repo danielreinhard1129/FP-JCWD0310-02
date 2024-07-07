@@ -1,4 +1,5 @@
 import prisma from '@/prisma';
+import { haversineUtils } from '@/utils/haversineUtils';
 import { Prisma } from '@prisma/client';
 
 export interface IPayloadPostOrder {
@@ -9,8 +10,15 @@ export interface IPayloadPostOrder {
   total: number;
 }
 
-export const postOrderService = async (userId: number) => {
+export const postOrderService = async (
+  userId: number,
+  payload: IPayloadPostOrder,
+) => {
   try {
+    console.log('order services', payload);
+    console.log('order services', userId);
+
+    if (!payload.shippingDetail) throw new Error('Please input yours address');
     const user = await prisma.users.findFirst({
       where: { id: userId },
     });
@@ -19,6 +27,12 @@ export const postOrderService = async (userId: number) => {
 
     if (user.role !== 'CUSTOMER')
       throw new Error('Sorry you cannot create order');
+
+    const address = await prisma.address.findFirst({
+      where: { id: payload.shippingDetail, userId: user.id },
+    });
+
+    if (!address) throw new Error('Something is error');
 
     const order = await prisma.$transaction(async (tx) => {
       try {
@@ -49,15 +63,34 @@ export const postOrderService = async (userId: number) => {
           },
         });
 
+        const warehouse = await tx.warehouse.findMany({});
+
+        if (!warehouse)
+          throw new Error('No warehouse available.maybe something is error');
+
+        const closestWarehouse = haversineUtils<{ id: number }>(
+          {
+            lat: address.lat,
+            lon: address.lon,
+          },
+          warehouse.map((val) => {
+            return {
+              lat: val.lat,
+              lon: val.lon,
+              data: val,
+            };
+          }),
+        );
+
         const newOrder = await tx.order.create({
           data: {
-            warehouseId: 1,
+            warehouseId: closestWarehouse.data.id,
             userId: user.id,
             discount: 0,
             payment_method: 'MANUAL',
-            shippingCost: 0,
+            shippingCost: payload.shippingCost,
             paymentsId: newTransaction.id,
-            shippingDetail: 0,
+            shippingAddress: payload.shippingDetail,
             status: 'WAIT_USER',
             total: cart.reduce((a, b) => a + b.quantity * b.product.price, 0),
           },

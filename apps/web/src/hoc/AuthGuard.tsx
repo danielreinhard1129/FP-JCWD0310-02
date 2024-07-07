@@ -5,12 +5,13 @@ import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 export default function AuthGuard(Component: any) {
   return function IsAuth(props: any) {
+    const admin = useAppSelector((state) => state.admin);
     const { id, role } = useAppSelector((state) => state.user);
     console.log(role, id);
     useEffect(() => {
       if (!id) {
         redirect(`/login`);
-      } else if (role === 'CUSTOMER') {
+      } else if (role === 'CUSTOMER' && admin.warehouse) {
         redirect('/unauthorized');
       }
     }, [id, role]);
@@ -18,13 +19,3 @@ export default function AuthGuard(Component: any) {
     return <Component {...props} />;
   };
 }
-
-//   const role = useAppSelector((state) => state.user.role);
-//   console.log(role);
-
-//   if (role === 'CUSTOMER') {
-//     redirect('/profiel' || '/');
-//   } else {
-//     redirect('/login' || '/');
-//   }
-//   return;

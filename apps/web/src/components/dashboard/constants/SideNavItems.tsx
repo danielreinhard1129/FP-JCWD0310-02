@@ -33,12 +33,6 @@ export const NavItems: NavItem[] = [
     color: '',
   },
   {
-    title: 'Notification',
-    icon: Bell,
-    href: '/admin/notifications',
-    color: '',
-  },
-  {
     title: 'Orders',
     icon: FileText,
     href: '/admin/orders',
@@ -54,16 +48,11 @@ export const NavItems: NavItem[] = [
       {
         title: 'Stock management',
         href: '/admin/stocks',
-        icon: ArrowLeftRight,
+        icon: Bolt,
       },
       {
         title: 'Stock mutations',
         href: '/admin/stocks/mutations',
-        icon: ArrowLeftRight,
-      },
-      {
-        title: 'Stock journal',
-        href: '/admin/stocks/journal',
         icon: ArrowLeftRight,
       },
     ],
@@ -76,16 +65,16 @@ export const NavItems: NavItem[] = [
     isChidren: true,
     children: [
       {
-        title: 'Create Product',
-        icon: SquarePlus,
-        color: '',
-        href: '/admin/products/create',
-      },
-      {
         title: 'Manage Product',
         icon: Bolt,
         color: '',
         href: '/admin/products',
+      },
+      {
+        title: 'Create Product',
+        icon: SquarePlus,
+        color: '',
+        href: '/admin/products/create',
       },
     ],
   },

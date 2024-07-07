@@ -40,20 +40,26 @@ const OverviewSales: FC<IOverviewSalesProps> = ({ dataSales }) => {
         <TopOverviewCard
           title="Best By Product Seller"
           buttonLabel="REPORT"
-          data={dataSales?.data.salesByProduct.map((val: any) => {
-            return {
-              productName: val.name,
-              productPrice: val.price,
-              productRevenue: val.total,
-              productSales: val.count,
-              productImageUrl: val.productImages[0].url,
-            };
-          })}
+          data={dataSales?.data.salesByProduct
+            .sort(
+              (a: any, b: any) => b.count._sum.quantity - a.count._sum.quantity,
+            )
+            .map((val: any) => {
+              return {
+                productName: val.name,
+                productPrice: val.price,
+                productRevenue: val.price * val.count._sum.quantity,
+                productSales: val.count._sum.quantity,
+                productImageUrl: val.productImages[0].url,
+              };
+            })}
         />
         <TopOverviewCardCategory
           title="Best By Category Seller"
           buttonLabel="REPORT"
-          data={dataSales?.data.salesByCategory}
+          data={dataSales?.data.salesByCategory.sort(
+            (a: any, b: any) => b.count._sum.quantity - a.count._sum.quantity,
+          )}
         />
       </div>
       <OverviewChart data={dataSales?.data} />

@@ -3,6 +3,10 @@ import prisma from '@/prisma';
 export const getStocksReportsService = async (
   warehouseId: number,
   userId: number,
+  date: {
+    startDate: Date | string;
+    endDate: Date | string;
+  },
 ) => {
   try {
     const user = await prisma.users.findFirst({
@@ -23,7 +27,6 @@ export const getStocksReportsService = async (
     });
 
     if (!warehouse) throw new Error('');
-
     const currentWarehouseId =
       user.role == 'SUPER_ADMIN'
         ? warehouseId
@@ -37,6 +40,10 @@ export const getStocksReportsService = async (
           { fromWarehouseId: currentWarehouseId },
           { toWarehouseId: currentWarehouseId },
         ],
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
       },
       include: {
         product: true,
@@ -115,6 +122,10 @@ export const getStocksReportsService = async (
               { fromWarehouseId: currentWarehouseId },
               { toWarehouseId: currentWarehouseId },
             ],
+            createdAt: {
+              gte: date.startDate,
+              lte: date.endDate,
+            },
           },
         },
         variant: {

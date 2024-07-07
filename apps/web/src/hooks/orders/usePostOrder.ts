@@ -9,7 +9,11 @@ export const usePostOrder = (redirectFunc: (value: string) => void) => {
   const { axiosInstance } = useAxios();
 
   const postOrder = useMutation({
-    mutationFn: async () => axiosInstance.post<IPostOrderResponse>('/orders'),
+    mutationKey: ['postOrder'],
+    mutationFn: async (payload: {
+      shippingCost: number;
+      shippingDetail: number;
+    }) => axiosInstance.post<IPostOrderResponse>('/orders', payload),
     onSuccess: (order) => {
       redirectFunc('/transactions?payment=' + order.data.invoiceNumber);
     },

@@ -1,15 +1,6 @@
 import prisma from '@/prisma';
-
-interface ILocationData {
-  id: number;
-  warehouse: {
-    lat: number;
-    lon: number;
-  };
-  warehouseId: number;
-  quantity: number;
-  variantId: number;
-}
+import { haversineUtils } from '@/utils/haversineUtils';
+import { Prisma } from '@prisma/client';
 
 export const automateStockMutations = (
   variantId: number,
@@ -22,6 +13,7 @@ export const automateStockMutations = (
       const currentWarehouseVariantStocks = await tx.variantStock.findFirst({
         where: {
           warehouseId,
+          variantId,
         },
         include: {
           warehouse: true,
@@ -70,9 +62,33 @@ export const automateStockMutations = (
       if (!otherWarehouseVariantStocks)
         throw new Error('Cannot find any variant stock data');
 
-      const closestWarehouseVariantStock = getClosestLocation(
-        currentWarehouseVariantStocks,
-        otherWarehouseVariantStocks,
+      const closestWarehouseVariantStock = haversineUtils<{
+        id: number;
+        quantity: number;
+        warehouseId: number;
+        warehouse: {
+          id: number;
+          name: string;
+          street: string;
+          city: string;
+          province: string;
+          state: string;
+          lat: number;
+          lon: number;
+          subdistrict: string | null;
+        };
+      }>(
+        {
+          lat: currentWarehouseVariantStocks.warehouse.lat,
+          lon: currentWarehouseVariantStocks.warehouse.lon,
+        },
+        otherWarehouseVariantStocks.map((val) => {
+          return {
+            lat: val.warehouse.lat,
+            lon: val.warehouse.lon,
+            data: val,
+          };
+        }),
       );
 
       const updateCurrentWarehouseVariantStock = await tx.variantStock.update({
@@ -86,11 +102,11 @@ export const automateStockMutations = (
 
       const updateClosestVariantStock = await tx.variantStock.update({
         where: {
-          id: closestWarehouseVariantStock.id,
+          id: closestWarehouseVariantStock.data.id,
         },
         data: {
           quantity:
-            closestWarehouseVariantStock.quantity -
+            closestWarehouseVariantStock.data.quantity -
             quantity +
             currentWarehouseVariantStocks.quantity,
         },
@@ -101,7 +117,7 @@ export const automateStockMutations = (
           quantity: quantity - currentWarehouseVariantStocks.quantity,
           status: 'DONE',
           type: 'AUTOMATION',
-          fromWarehouseId: closestWarehouseVariantStock.warehouseId,
+          fromWarehouseId: closestWarehouseVariantStock.data.warehouseId,
           toWarehouseId: currentWarehouseVariantStocks.warehouseId,
           productId: currentWarehouseVariantStocks.variant.productId,
           variantId: currentWarehouseVariantStocks.variantId,
@@ -121,28 +137,5 @@ export const automateStockMutations = (
     } catch (error) {
       throw error;
     }
-  });
-};
-
-const getClosestLocation = (
-  targetLocation: ILocationData,
-  locationData: ILocationData[],
-) => {
-  const vectorDistance = (dx: number, dy: number) =>
-    Math.sqrt(dx * dx + dy * dy);
-
-  const locationDistance = (
-    location1: ILocationData,
-    location2: ILocationData,
-  ) => {
-    const dx = location1.warehouse.lat - location2.warehouse.lat;
-    const dy = location1.warehouse.lon - location2.warehouse.lon;
-    return vectorDistance(dx, dy);
-  };
-
-  return locationData.reduce((a, b) => {
-    const prevDistance = locationDistance(targetLocation, a);
-    const currDistance = locationDistance(targetLocation, b);
-    return prevDistance < currDistance ? a : b;
   });
 };

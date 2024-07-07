@@ -23,7 +23,7 @@ import { Carts } from '@/types/cart.types';
 import React from 'react';
 
 interface IAddressDetailOrderProps {
-  address: Address;
+  address: Address | undefined;
   options: string;
   estimations: string;
   fee: number;
@@ -57,10 +57,10 @@ const OrderDialogConfirmation = ({
           <h1 className="text-lg font-rubik font-semibold">Order Shipments</h1>
           <div className="flex flex-col gap-2 mt-4 mb-6 font-rubik">
             <Label>
-              Shipment Address : {addressDetail.address.street},
-              {addressDetail.address.subdistrict},{addressDetail.address.city}{' '}
-              {addressDetail.address.postalCode},
-              {addressDetail.address.province}
+              Shipment Address : {addressDetail.address?.street},
+              {addressDetail.address?.subdistrict},{addressDetail.address?.city}{' '}
+              {addressDetail.address?.postalCode},
+              {addressDetail.address?.province}
             </Label>
             <Label>Shipment Options : {addressDetail.options}</Label>
             <Label>Shipment Estimation : {addressDetail.estimations}</Label>

@@ -4,21 +4,43 @@ import dayjs from 'dayjs';
 export const getSalesReportsSerivce = async (
   warehouseId: number,
   userId: number,
+  date: {
+    startDate: Date | string;
+    endDate: Date | string;
+  },
 ) => {
   try {
-    // const user = await prisma.users.findFirst({
-    //   where: { id: 1 },
-    //   include: { employee: { include: { warehouse: true } } },
-    // });
+    const user = await prisma.users.findFirst({
+      where: { id: userId },
+      include: { employee: { include: { warehouse: true } } },
+    });
 
-    // if (!user) throw new Error('Cannot find your user data');
-    // if (!user.employee)
-    //   throw new Error(
-    //     'Sorry you are not authorized for accesing this features',
-    //   );
+    if (!user) throw new Error('Cannot find your user data');
+    if (!user.employee)
+      throw new Error(
+        'Sorry you are not authorized for accesing this features',
+      );
+    if (!user.employee.warehouseId)
+      throw new Error(
+        'Sorry you are not authorized for accesing this features',
+      );
+
+    const currentWarehouse =
+      user.role == 'SUPER_ADMIN'
+        ? warehouseId
+          ? warehouseId
+          : user.employee.warehouseId
+        : user.employee.warehouseId;
 
     const revenue = await prisma.order.aggregate({
-      where: { status: 'DONE' },
+      where: {
+        status: 'DONE',
+        warehouseId: currentWarehouse,
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
+      },
       _sum: {
         total: true,
       },
@@ -27,6 +49,11 @@ export const getSalesReportsSerivce = async (
     const activeOrders = await prisma.order.aggregate({
       where: {
         OR: [{ status: 'ON_PROGRESS' }, { status: 'ON_SHIPPING' }],
+        warehouseId: currentWarehouse,
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
       },
       _count: {
         id: true,
@@ -39,6 +66,11 @@ export const getSalesReportsSerivce = async (
     const cancelledOrders = await prisma.order.aggregate({
       where: {
         status: 'CANCEL',
+        warehouseId: currentWarehouse,
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
       },
       _count: {
         id: true,
@@ -63,21 +95,34 @@ export const getSalesReportsSerivce = async (
       allProduct.map(async (val) => {
         return {
           ...val,
-          count: await prisma.order.count({
+          count: await prisma.orderItems.aggregate({
             where: {
-              orderItems: {
-                every: {
-                  productId: val.id,
+              productId: val.id,
+              order: {
+                status: 'DONE',
+                warehouseId: currentWarehouse,
+                createdAt: {
+                  gte: date.startDate,
+                  lte: date.endDate,
                 },
               },
+            },
+            _sum: {
+              quantity: true,
             },
           }),
           total: await prisma.order.aggregate({
             where: {
+              status: 'DONE',
+              warehouseId: currentWarehouse,
               orderItems: {
-                every: {
+                some: {
                   productId: val.id,
                 },
+              },
+              createdAt: {
+                gte: date.startDate,
+                lte: date.endDate,
               },
             },
             _sum: { total: true },
@@ -92,25 +137,26 @@ export const getSalesReportsSerivce = async (
       allCategory.map(async (val) => {
         return {
           ...val,
-          count: await prisma.order.count({
+          count: await prisma.orderItems.aggregate({
             where: {
-              orderItems: {
-                some: {
-                  product: { productCategory: { some: { category: val } } },
+              product: {
+                productCategory: {
+                  some: {
+                    CategoryId: val.id,
+                  },
                 },
               },
-            },
-          }),
-          total: await prisma.order.aggregate({
-            where: {
-              orderItems: {
-                some: {
-                  product: { productCategory: { some: { category: val } } },
+              order: {
+                status: 'DONE',
+                warehouseId: currentWarehouse,
+                createdAt: {
+                  gte: date.startDate,
+                  lte: date.endDate,
                 },
               },
             },
             _sum: {
-              total: true,
+              quantity: true,
             },
           }),
         };
@@ -118,7 +164,14 @@ export const getSalesReportsSerivce = async (
     );
 
     const recentOrder = await prisma.order.findMany({
-      take: 5,
+      take: 10,
+      where: {
+        warehouseId: currentWarehouse,
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -134,55 +187,38 @@ export const getSalesReportsSerivce = async (
 
     const sales = await prisma.order.findMany({
       where: {
-        warehouseId: 1,
+        warehouseId: currentWarehouse,
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
       },
     });
 
     const totalSales = sales.reduce((a: any, b) => {
       return {
         ...a,
-        [dayjs(b.createdAt).format('YYYY-DD-MM')]: a[
-          dayjs(b.createdAt).format('YYYY-DD-MM')
-        ]
-          ? [...a[dayjs(b.createdAt).format('YYYY-DD-MM')], b]
+        [b.createdAt.toISOString()]: a[b.createdAt.toISOString()]
+          ? [...a[b.createdAt.toISOString()], b]
           : [b],
       };
     }, {});
 
-    const sortedTotalSales = Object.entries(totalSales)
-      .sort(([ak, av], [bk, bv]) => {
-        const x = new Date(new Date(ak));
-        const y = new Date(new Date(bk));
-
-        if (x < y) return -1;
-        if (x > y) return 1;
-        return 0;
-      })
-      .reduce((a, b) => {
-        return {
-          ...a,
-          [b[0]]: b[1],
-        };
-      }, {});
+    const sortedTotalSales = totalSales;
 
     return {
       totalSales: sortedTotalSales,
-      salesByCategory: salesByCategory
-        .map((val) => {
-          return {
-            ...val,
-            total: val.total._sum.total,
-          };
-        })
-        .sort((a, b) => a.count + b.count),
-      salesByProduct: salesByProduct
-        .map((val) => {
-          return {
-            ...val,
-            total: val.total._sum.total,
-          };
-        })
-        .sort((a, b) => a.count + b.count),
+      salesByCategory: salesByCategory.map((val) => {
+        return {
+          ...val,
+        };
+      }),
+      salesByProduct: salesByProduct.map((val) => {
+        return {
+          ...val,
+          total: val.total._sum.total,
+        };
+      }),
       revenue: revenue._sum.total,
       activeOrders: {
         count: activeOrders._count.id,

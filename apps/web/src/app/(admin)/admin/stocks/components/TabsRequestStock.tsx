@@ -20,6 +20,7 @@ import { useGetWarehouses } from '@/hooks/warehouses/useGetWarehouses';
 import { useAppSelector } from '@/redux/hooks';
 import { usePostRequestStocks } from '@/hooks/stocks/usePostRequestStocks';
 import { useNotification } from '@/hooks/useNotification';
+import { useDebouncedCallback } from 'use-debounce';
 
 interface ITabsRequestStockProps {
   data: DataTablesStock;
@@ -28,6 +29,7 @@ interface ITabsRequestStockProps {
 
 const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
   const { getWarehouses } = useGetWarehouses(data.warehouseId);
+  const debounce = useDebouncedCallback((func) => func(), 500);
   const user = useAppSelector((state) => state.user);
   const { postRequestStocks } = usePostRequestStocks();
   const { openNotification } = useNotification();
@@ -142,7 +144,7 @@ const TabsRequestStock: FC<ITabsRequestStockProps> = ({ data, refetch }) => {
         </Label>
       </div>
       <div className="mt-4 flex justify-end">
-        <Button type="submit" onClick={() => handleSubmit()}>
+        <Button type="submit" onClick={() => debounce(handleSubmit)}>
           Request
         </Button>
       </div>
