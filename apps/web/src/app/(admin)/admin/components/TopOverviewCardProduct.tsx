@@ -20,17 +20,13 @@ interface ITopOverviewCardProps {
     | undefined;
 }
 
-const TopOverviewCard: FC<ITopOverviewCardProps> = ({
-  buttonLabel,
-  data,
-  title,
-}) => {
+const TopOverviewCard: FC<ITopOverviewCardProps> = ({ data, title }) => {
   const formatPrice = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
     style: 'currency',
   });
   return (
-    <div className="px-4 py-6 bg-white col-span-1 rounded-lg flex flex-col gap-4">
+    <div className="px-4 py-6 bg-white border-black border col-span-1 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center min-h-8">
         <Label className="font-bold text-lg">{title}</Label>
         <Ellipsis className="rotate-90 w-6" />

@@ -54,12 +54,12 @@ export const Navbar = () => {
           <div className="w-20 h-5 flex justify-center items-center font-bold font-rubik">
             <Image src={logo} alt="logo" width={400} height={400} />
           </div>
-          <div className="flex items-center gap-4">
+          <div
+            onClick={() => router.push('/carts')}
+            className="flex items-center cursor-pointer gap-4"
+          >
             <User className="w-5 h-5" />
-            <ShoppingBag
-              className="w-5 h-5 cursor-pointer "
-              onClick={() => router.push('/carts')}
-            />
+            <ShoppingBag className="w-5 h-5 cursor-pointer " />
           </div>
         </div>
       </div>
@@ -130,8 +130,8 @@ export const Navbar = () => {
             </DropdownMenu>
           </div>
           <button
-            disabled={isVerify === false}
             onClick={() => router.push('/carts')}
+            className="cursor-pointer"
           >
             <ShoppingBag className="w-6 h-6" />
           </button>

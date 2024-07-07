@@ -1,7 +1,10 @@
 import { ProductController } from '@/controllers/product.controller';
 import { verifyToken } from '@/lib/jwt';
 import { uploader } from '@/lib/uploader';
-import { Router } from 'express';
+import { productValidation } from '@/utils/validators/productValidator';
+import { NextFunction, Request, Response, Router } from 'express';
+import { body, validationResult } from 'express-validator';
+import { content } from 'googleapis/build/src/apis/content';
 
 export class ProductRouter {
   private router: Router;

@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import useAxios from '../useAxios';
 import { Order } from '@/types/order.types';
+import { useDebounce } from 'use-debounce';
 
 type IMapTotalStock = Map<string, Omit<Order, 'orderItems' | 'user'>>;
 
@@ -35,14 +36,25 @@ export interface IGetSalesReportsResponse {
   totalSales: IMapTotalStock;
 }
 
-export const useGetSalesReports = (warehouseId: number | undefined) => {
-  const { axiosInstance } = useAxios();
+interface IPayloadGetSalesReports {
+  warehouseId: number | undefined;
+  date: {
+    startDate: string | undefined;
+    endDate: string | undefined;
+  };
+}
 
+export const useGetSalesReports = (payload: IPayloadGetSalesReports) => {
+  const { axiosInstance } = useAxios();
+  const [params] = useDebounce([payload.date, payload.warehouseId], 500);
   const { data, refetch, isLoading } = useQuery({
-    queryKey: ['salesReports', warehouseId],
+    queryKey: ['salesReports', ...params],
     queryFn: () =>
       axiosInstance.get<IGetSalesReportsResponse>(
-        '/reports/sales/' + warehouseId,
+        '/reports/sales/' + payload.warehouseId,
+        {
+          params: payload.date,
+        },
       ),
   });
 

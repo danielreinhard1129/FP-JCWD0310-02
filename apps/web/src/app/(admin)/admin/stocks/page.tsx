@@ -22,8 +22,8 @@ const AdminDashboardStocksPage = () => {
 
   return (
     <>
-      <div className="px-4 py-4">
-        <Card>
+      <div className="p-8">
+        <Card className="border border-black">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>Stock Management</CardTitle>
@@ -40,14 +40,13 @@ const AdminDashboardStocksPage = () => {
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
-                {/* <Label>Warehouse : </Label> */}
                 <div className="w-52 font-rubik">
                   <SearchBarDebounce
                     onValueChange={(e) => setQuery({ ...query, product: e })}
                   />
                 </div>
                 <Select
-                  className="w-52 h-10 border-2 font-rubik border-black rounded-lg text-black"
+                  className="w-52 h-10 border font-rubik border-black rounded-lg text-black"
                   defaultValue={{
                     value: warehouse.warehouseId,
                     label: warehouse.warehouse,

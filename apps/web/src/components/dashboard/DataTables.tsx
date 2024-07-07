@@ -65,14 +65,14 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
         render.images.length ? (
           <div
             key={indx}
-            className="w-[100px] h-[100px] flex justify-center items-center"
+            className="w-[100px] h-[100px] flex justify-center items-center "
           >
             <img
               alt="image-product"
               width={100}
               height={100}
               loading="lazy"
-              className="w-[100px] h-[100px] object-cover rounded-md border border-input"
+              className="w-[100px] h-[100px] object-cover rounded-md border border-black"
               src={`${BASE_API_URL}/assets/${val}`}
               onError={(
                 event: React.SyntheticEvent<HTMLImageElement, Event>,

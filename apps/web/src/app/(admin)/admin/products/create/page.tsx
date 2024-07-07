@@ -11,8 +11,8 @@ const CreateProductAdminPage = () => {
   const { openNotification } = useNotification();
   return (
     <>
-      <div className="px-6 py-8">
-        <div className="rounded-lg bg-white p-4">
+      <div className="p-8 ">
+        <div className="rounded-lg bg-white p-4 border border-black">
           <h1 className="mb-4 font-bold text-xl">Create Product</h1>
           <InputForms
             handleSubmit={(e) =>

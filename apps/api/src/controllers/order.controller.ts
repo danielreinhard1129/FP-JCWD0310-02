@@ -5,6 +5,7 @@ import {
   postOrderService,
 } from '@/services/order/postOrderService';
 import { postOrderTransactionService } from '@/services/order/postOrderTransactionService';
+import { Prisma } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
 export class OrderController {
@@ -20,7 +21,9 @@ export class OrderController {
   async getOrders(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = res.locals.user.id;
-      const response = await getOrdersService(userId);
+      const warehouseId = Number(req.query.warehouseId as string);
+      const status = req.query.status as Prisma.EnumOrderStatusFilter<'Order'>;
+      const response = await getOrdersService(userId, warehouseId, status);
       return res.status(200).send(response);
     } catch (error) {
       next(error);
@@ -29,7 +32,7 @@ export class OrderController {
   async postOrder(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = res.locals.user.id;
-      const response = await postOrderService(userId);
+      const response = await postOrderService(userId, req.body);
       return res.status(200).send(response);
     } catch (error) {
       next(error);

@@ -92,7 +92,7 @@ export const postOrderTransactionService = async (
           return shippingOrder;
         }
 
-        return currentOrder.orderItems.map(async (val) => {
+        const automateOrder = currentOrder.orderItems.map(async (val) => {
           await automateStockMutations(
             val.variantId,
             currentOrder.warehouseId,
@@ -100,6 +100,8 @@ export const postOrderTransactionService = async (
             currentOrder.id,
           );
         });
+
+        return automateOrder;
       } catch (error) {
         throw error;
       }
