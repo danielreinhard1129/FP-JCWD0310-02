@@ -106,10 +106,6 @@ const DataTablesStocks: FC<DataTablesProps> = ({ data, loading, refetch }) => {
           <Table
             columns={columnsProducts}
             loading={loading}
-            pagination={{
-              disabled: true,
-              style: { opacity: 0, display: 'none' },
-            }}
             dataSource={dataTable}
           />
         </div>

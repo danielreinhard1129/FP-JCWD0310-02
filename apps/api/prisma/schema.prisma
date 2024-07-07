@@ -51,7 +51,8 @@ model Address {
 
   userId Int
 
-  user Users @relation(fields: [userId], references: [id])
+  user  Users   @relation(fields: [userId], references: [id])
+  order Order[]
 
   @@map("addresses")
 }
@@ -117,22 +118,23 @@ model Order {
   status            OrderStatus
   total             Int
   shippingCost      Int
-  shippingDetail    Int
   discount          Int
   payment_method    PaymentsMethodType
   snap_token        String?            @db.VarChar(255)
   snap_redirect_url String?            @db.VarChar(255)
   createdAt         DateTime           @default(now())
   updateAt          DateTime           @updatedAt
+  paymentsId        Int?
 
   userId      Int
   warehouseId Int
 
-  orderItems OrderItems[]
+  shippingAddress Int
+  orderItems      OrderItems[]
 
-  user       Users     @relation(fields: [userId], references: [id])
-  warehouse  Warehouse @relation(fields: [warehouseId], references: [id])
-  paymentsId Int?
+  user        Users     @relation(fields: [userId], references: [id])
+  userAddress Address   @relation(fields: [shippingAddress], references: [id])
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
 
   @@map("orders")
 }

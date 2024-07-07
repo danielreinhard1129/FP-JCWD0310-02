@@ -17,7 +17,7 @@ const AdminProductDetails = ({ params }: { params: { id: number } }) => {
   }, [loading]);
 
   return (
-    <div className="px-6 py-8">
+    <div className="p-8">
       <ModalAsync
         description={
           data?.data.isDelete
@@ -31,7 +31,7 @@ const AdminProductDetails = ({ params }: { params: { id: number } }) => {
         }
         loading={loading}
       />
-      <div className="rounded-lg bg-white p-4">
+      <div className="rounded-lg bg-white p-4 border border-black">
         <div className="flex justify-between">
           <h1 className="mb-4 font-bold text-xl">Product details</h1>
           <div className="flex gap-4">

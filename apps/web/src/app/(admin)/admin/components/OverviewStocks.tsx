@@ -1,7 +1,7 @@
 'use client';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import OverviewCard from './OverviewCard';
-import { Box } from 'lucide-react';
+import { Box, Warehouse } from 'lucide-react';
 import { IGetStocksReportsResponse } from '@/hooks/reports/useGetStocksReports';
 import {
   Table,
@@ -15,9 +15,53 @@ import OverviewChartStocks from './OverviewChartStocks';
 
 interface IOverviewStocksProps {
   dataStocks: IGetStocksReportsResponse | undefined;
+  warehouseId: number | undefined;
 }
 
-const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
+const OverviewStocks: FC<IOverviewStocksProps> = ({
+  dataStocks,
+  warehouseId,
+}) => {
+  const [chartData, setChartData] = useState();
+  useEffect(() => {
+    if (dataStocks && warehouseId) {
+      const tempObj = dataStocks.overallStocks.reduce((a: any, b) => {
+        return {
+          ...a,
+          ...b.stockMutations.reduce((c, d) => {
+            const arr = [];
+            if (c[d.createdAt] && c[d.createdAt].length) {
+              arr.push(...c[d.createdAt]);
+            } else {
+              arr.push(...[[], []]);
+            }
+
+            if (d.toWarehouseId == warehouseId) {
+              arr[0].push(d.quantity);
+            }
+            if (d.fromWarehouseId == warehouseId) {
+              arr[1].push(d.quantity);
+            }
+
+            return {
+              ...c,
+              [d.createdAt]: arr,
+            };
+          }, a),
+        };
+      }, {});
+      setChartData(
+        Object.entries(tempObj)
+          .sort(
+            ([ka, kv]: any, [kb, vb]: any) =>
+              new Date(ka).valueOf() - new Date(kb).valueOf(),
+          )
+          .reduce((a: any, b) => {
+            return { ...a, [b[0]]: b[1] };
+          }, {}),
+      );
+    }
+  }, [dataStocks]);
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-3 gap-4 rounded-lg">
@@ -64,10 +108,10 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({ dataStocks }) => {
           total={0}
         />
       </div>
-      <div className="p-4 rounded-lg bg-white flex flex-col">
-        <OverviewChartStocks data={dataStocks} />
+      <div className="p-4 rounded-lg bg-white border border-black flex flex-col">
+        <OverviewChartStocks data={chartData} />
       </div>
-      <div className="p-4 rounded-lg bg-white flex flex-col">
+      <div className="p-4 rounded-lg bg-white border border-black flex flex-col">
         <Table>
           <TableHeader>
             <TableRow>

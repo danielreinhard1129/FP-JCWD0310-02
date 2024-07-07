@@ -1,6 +1,11 @@
 import prisma from '@/prisma';
+import { Prisma } from '@prisma/client';
 
-export const getOrdersService = async (userId: number) => {
+export const getOrdersService = async (
+  userId: number,
+  warehouseId: number | undefined,
+  status: Prisma.EnumOrderStatusFilter<'Order'>,
+) => {
   try {
     const user = await prisma.users.findFirst({
       where: {
@@ -22,9 +27,10 @@ export const getOrdersService = async (userId: number) => {
 
     const orders = await prisma.order.findMany({
       where: {
+        status,
         userId: user.role == 'CUSTOMER' ? user.id : undefined,
         warehouseId:
-          user.role == 'SUPER_ADMIN' ? undefined : user.employee.warehouseId,
+          user.role == 'SUPER_ADMIN' ? warehouseId : user.employee.warehouseId,
       },
       include: {
         orderItems: {

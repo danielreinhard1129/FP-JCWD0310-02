@@ -16,6 +16,7 @@ import React, { FC } from 'react';
 import { AddStocksValidations } from './validations/StockManagementValidations';
 import { usePostAddStocks } from '@/hooks/stocks/usePostAddStocks';
 import { useNotification } from '@/hooks/useNotification';
+import { useDebouncedCallback } from 'use-debounce';
 
 interface ITabsAddRequestStockProps {
   data: DataTablesStock;
@@ -28,6 +29,7 @@ const TabsAddRequestStock: FC<ITabsAddRequestStockProps> = ({
 }) => {
   const { postAddStocks } = usePostAddStocks();
   const { openNotification } = useNotification();
+  const debounce = useDebouncedCallback((func) => func(), 500);
   const { errors, values, handleSubmit, touched, setFieldValue } = useFormik({
     initialValues: {
       toWarehouse: data.warehouseId,
@@ -95,7 +97,7 @@ const TabsAddRequestStock: FC<ITabsAddRequestStockProps> = ({
         </Label>
       </div>
       <div className="mt-4 flex justify-end">
-        <Button type="submit" onClick={() => handleSubmit()}>
+        <Button type="submit" onClick={() => debounce(handleSubmit)}>
           Request
         </Button>
       </div>
