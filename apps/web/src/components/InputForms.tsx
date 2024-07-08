@@ -16,6 +16,7 @@ import { Trash, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useGetCategories } from '@/hooks/categories/useGetCategories';
 import { AutoComplete } from 'antd';
+import productValidation from './validations/productValidation';
 
 interface VariantFormProps {
   id: string;
@@ -52,14 +53,15 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
     setFieldValue,
     handleSubmit: handleSubmitFormik,
     handleChange,
-    handleReset,
+    errors,
+    touched,
     setValues,
   } = useFormik({
     initialValues: {
       product: {
-        description: '',
         name: '',
-        price: '5000',
+        description: '',
+        price: '50000',
       },
       category: [],
       image: [],
@@ -70,6 +72,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       result.image = fileImages;
       handleSubmit(result);
     },
+    validationSchema: productValidation,
   });
 
   useEffect(() => {
@@ -131,6 +134,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               onChange={handleChange}
               placeholder="Adida Ultra Boost"
             ></Input>
+            {(touched.product?.name || errors.product?.name) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.product?.name}
+              </Label>
+            )}
           </div>
           <div>
             <Label>Description</Label>
@@ -142,6 +150,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               value={values.product.description}
               onChange={handleChange}
             />
+            {(touched.product?.description || errors.product?.description) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.product?.description}
+              </Label>
+            )}
           </div>
           <div className="flex flex-col gap-4">
             <Label>Category</Label>
@@ -211,18 +224,13 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 Add Category
               </Button>
             </div>
+            {(touched.category || errors.category) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.category}
+              </Label>
+            )}
           </div>
           <div className="flex gap-4">
-            <div>
-              <Label>SKU</Label>
-              <Input
-                placeholder="#4512"
-                id="product.name"
-                name="product.name"
-                value={values.product.name}
-                onChange={handleChange}
-              ></Input>
-            </div>
             <div>
               <Label>Price</Label>
               <NumericFormat
@@ -240,6 +248,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 prefix="Rp."
                 suffix=",00"
               />
+              {(touched.product?.price || errors.product?.price) && (
+                <Label className="flex justify-end text-red-500">
+                  {errors.product?.price}
+                </Label>
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-4">
@@ -284,6 +297,18 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             ) : (
               ''
             )}
+            {(touched.variant || errors.variant) && (
+              <Label className="flex justify-end text-red-500">
+                <div className="flex flex-col">
+                  {typeof errors.variant == 'string' && errors.variant}
+                  {/* {typeof errors.variant == "object" Object.entries(errors.variant)} */}
+                  {Array.isArray(errors.variant) &&
+                    Object.entries(errors.variant[0]).map((ee, indx) => (
+                      <p key={indx}>{ee[1]}</p>
+                    ))}
+                </div>
+              </Label>
+            )}
             <Button
               onClick={() =>
                 setFieldValue('variant', [
@@ -310,6 +335,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             }}
             isError={false}
           />
+          {(touched.image || errors.image) && (
+            <Label className="flex justify-end text-red-500">
+              {typeof errors.image == 'string' && errors.image}
+            </Label>
+          )}
         </div>
       </div>
       <div className="flex md:justify-end mt-8 justify-between gap-4">

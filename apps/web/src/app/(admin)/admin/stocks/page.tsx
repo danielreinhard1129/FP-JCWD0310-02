@@ -11,6 +11,7 @@ import { RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from 'use-debounce';
 import SearchBarDebounce from '@/components/SearchBarDebounce';
+import { Button } from '@/components/ui/button';
 
 const AdminDashboardStocksPage = () => {
   const user = useAppSelector((state) => state.user);
@@ -71,6 +72,28 @@ const AdminDashboardStocksPage = () => {
                 loading={mutation.isLoading}
                 refetch={mutation.mutate}
               />
+              <div className="flex gap-4 mt-4 justify-end">
+                <Button
+                  disabled={query.page == 1}
+                  onClick={() =>
+                    query.page > 1 &&
+                    setQuery({ ...query, page: query.page - 1 })
+                  }
+                >
+                  Previous
+                </Button>
+                <Button
+                  disabled={
+                    !mutation.data?.data || mutation.data?.data.length < 10
+                  }
+                  onClick={() =>
+                    mutation.data?.data.length &&
+                    setQuery({ ...query, page: query.page + 1 })
+                  }
+                >
+                  Next
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
