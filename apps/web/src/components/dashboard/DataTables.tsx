@@ -186,6 +186,7 @@ const DataTables: FC<DataTablesProps> = ({ data, loading, refetch }) => {
             columns={columnsProducts}
             loading={loading}
             dataSource={dataTable}
+            pagination={{ style: { display: 'none' } }}
           />
         </div>
       </div>
