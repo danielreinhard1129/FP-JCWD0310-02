@@ -21,7 +21,6 @@ export const authVerifyService = async (body: VerifyBody) => {
     const validateUser = await prisma.users.findUnique({
       where: { id: userId },
     });
-    console.log(validateUser);
     if (!validateUser) {
       throw new Error('User not found');
     }

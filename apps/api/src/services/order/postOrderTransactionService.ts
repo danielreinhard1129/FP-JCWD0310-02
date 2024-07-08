@@ -45,9 +45,6 @@ export const postOrderTransactionService = async (
         if (!currentOrder || !currentOrder.paymentsId)
           throw new Error('Order transaction not found!');
 
-        console.log('userId', admin.id);
-        console.log('userRole', admin.role);
-
         if (
           admin.role != 'SUPER_ADMIN' &&
           admin.employee.warehouseId != currentOrder.warehouseId

@@ -21,7 +21,6 @@ const RecentOrders = ({ data }: { data: Order[] | undefined }) => {
     <div className="px-4 py-6 w-full bg-white rounded-lg border-black border flex flex-col gap-4">
       <div className="flex min-h-8 justify-between items-center">
         <Label>Recent Orders</Label>
-        <Ellipsis className="w-6 rotate-90" />
       </div>
       <Separator className="bg-black" />
       <Table>

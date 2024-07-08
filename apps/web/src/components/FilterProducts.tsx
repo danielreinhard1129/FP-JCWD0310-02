@@ -70,11 +70,15 @@ const FilterProducts = ({
   );
 
   useEffect(() => {
-    setFilter({
-      ...data.reduce((prev, val) => {
-        return { ...prev, [val.name]: false };
-      }, {}),
-    });
+    if (data) {
+      setFilter({
+        ...data.categories.reduce((prev, val) => {
+          return { ...prev, [val.name]: false };
+        }, {}),
+      });
+      setSize(new Map(data.variants.size.map((val) => [val, false])));
+      setColor(new Map(data.variants.color.map((val) => [val, false])));
+    }
   }, [data]);
 
   useEffect(() => {
@@ -172,7 +176,7 @@ const FilterProducts = ({
           CATEGORIES
         </h3>
         <div id="filter-category-select">
-          {data?.map((val) => {
+          {data.categories?.map((val) => {
             return (
               <div key={'category-' + val.name}>
                 <label className="flex items-center mb-1">
