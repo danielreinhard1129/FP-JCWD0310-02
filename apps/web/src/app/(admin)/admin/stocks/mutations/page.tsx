@@ -71,12 +71,18 @@ const StockJournalsPage = () => {
             />
             <div className="flex gap-4 mt-4 justify-end">
               <Button
-                onClick={() => setQuery({ ...query, page: query.page - 1 })}
+                disabled={query.page == 1}
+                onClick={() =>
+                  query.page > 1 && setQuery({ ...query, page: query.page - 1 })
+                }
               >
                 Previous
               </Button>
               <Button
-                onClick={() => setQuery({ ...query, page: query.page + 1 })}
+                disabled={!data || data.length < 10}
+                onClick={() =>
+                  data.length && setQuery({ ...query, page: query.page + 1 })
+                }
               >
                 Next
               </Button>
