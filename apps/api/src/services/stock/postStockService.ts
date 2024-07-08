@@ -122,7 +122,7 @@ const addStock = async (
 
     const journal = await prisma.stockMutation.create({
       data: {
-        quantity: addVariantStock.quantity,
+        quantity: incrementQuantity,
         status: 'DONE',
         type: 'ADD',
         toWarehouseId: warehouseId,

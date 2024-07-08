@@ -33,7 +33,6 @@ const TopOverviewCardCategory: FC<ITopOverviewCardProps> = ({
     <div className="px-4 py-6 bg-white border-black border col-span-1 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center min-h-8">
         <Label className="font-bold text-lg">{title}</Label>
-        <Ellipsis className="rotate-90 w-6" />
       </div>
       <Separator className="bg-black" />
       <div className="flex flex-col gap-4 h-full justify-between">

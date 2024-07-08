@@ -73,7 +73,6 @@ const OrderPage = () => {
       };
       const response = await getAddress(received);
       setAddresses(response);
-      console.log(response);
     } catch (error) {
       console.error('Error fetching addresses:', error);
     }
@@ -81,7 +80,6 @@ const OrderPage = () => {
   useEffect(() => {
     fetchAddresses();
   }, []);
-  console.log(selectedAddress, selectedCourier);
   const fetchOngkir = async () => {
     try {
       const received = {
@@ -92,7 +90,6 @@ const OrderPage = () => {
       };
       const response = await transactionOngkir(received);
       setTransactionsOngkir(response);
-      console.log(response);
     } catch (error) {
       console.error('Error fetching ongkir:', error);
     }
@@ -101,7 +98,7 @@ const OrderPage = () => {
     if (selectedAddress === '' || selectedCourier === '') return;
     fetchOngkir();
   }, [selectedAddress, selectedCourier]);
-  console.log(transactionsOngkir);
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-row-reverse justify-end w-full gap-4">

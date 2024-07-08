@@ -11,7 +11,10 @@ export const postStockMutationsConfirmationService = async (
 ) => {
   try {
     if (quantity == 0) throw new Error('Quantity cannot be 0');
-
+    if (toWarehouseId == fromWarehouseId)
+      throw new Error(
+        'Cannot request from your warehouse!.try request another warehouse',
+      );
     const user = await prisma.users.findFirst({
       where: { id: userId },
       include: {
@@ -91,9 +94,6 @@ export const postStockMutationsConfirmationService = async (
             warehouseId: fromWarehouseId,
           },
         });
-
-        console.log(toVariantStock);
-        console.log(fromVariantStock);
 
         if (!toVariantStock) throw new Error('Cannot find variant stocks');
 

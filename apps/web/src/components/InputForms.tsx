@@ -14,6 +14,8 @@ import { NumericFormat } from 'react-number-format';
 import { CreateProductPayload } from '@/hooks/products/useCreateProduct';
 import { Trash, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useGetCategories } from '@/hooks/categories/useGetCategories';
+import { AutoComplete } from 'antd';
 
 interface VariantFormProps {
   id: string;
@@ -40,8 +42,10 @@ interface InputFormsProps {
 
 const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
   const router = useRouter();
+  const { data: dataCategories } = useGetCategories();
   const { getImagesBlob } = useGetImagesBlob();
   const [tempCategory, setTempCategory] = useState('');
+  const [options, setOptions] = useState<string[]>([]);
   const [fileImages, setFileImages] = useState<FileWithPath[]>([]);
   const {
     values,
@@ -63,6 +67,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       warehouse: 0,
     },
     onSubmit: (result: CreateProductPayload) => {
+      result.image = fileImages;
       handleSubmit(result);
     },
   });
@@ -76,12 +81,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               const type = a.data.type as string;
               const file = new File(
                 [a.data],
-                new Date().toISOString() + '.' + type.split('/')[1],
+                new Date().toISOString() + index + '.' + type.split('/')[1],
                 {
                   type,
                 },
               );
-              console.log('file', file);
               return file;
             }),
           ]);
@@ -109,6 +113,10 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       });
     }
   }, [data]);
+
+  useEffect(() => {
+    setFieldValue('image', [...fileImages]);
+  }, [fileImages]);
 
   return (
     <section className="flex flex-col gap-4">
@@ -166,15 +174,30 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               ''
             )}
             <div className="flex gap-3">
-              <Input
+              <AutoComplete
+                className="w-40 h-10"
                 value={tempCategory}
-                onChange={(e) => setTempCategory(e.currentTarget.value)}
+                options={options.map((values) => {
+                  return { label: values, value: values };
+                })}
+                onSearch={(e) =>
+                  setOptions(
+                    dataCategories.categories.reduce((a: string[], b) => {
+                      const c = a;
+                      if (!b.name.toLowerCase().search(e.toLowerCase()))
+                        c.push(b.name);
+                      return c;
+                    }, []),
+                  )
+                }
+                onChange={(e) => setTempCategory(e)}
+                onSelect={(e, p) => {}}
               />
               <Button
                 onClick={() => {
                   if (
                     !values.category.includes(tempCategory) &&
-                    tempCategory.length > 3
+                    tempCategory.length > 2
                   ) {
                     setFieldValue('category', [
                       ...values.category,
@@ -284,7 +307,6 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             label="Product Images"
             onDrop={(e) => {
               setFileImages([...fileImages, ...e]);
-              setFieldValue('image', [...fileImages, ...e]);
             }}
             isError={false}
           />

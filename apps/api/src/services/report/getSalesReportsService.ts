@@ -84,6 +84,7 @@ export const getSalesReportsSerivce = async (
       include: {
         productImages: true,
       },
+      take: 10,
       orderBy: {
         orderItems: {
           _count: 'desc',
@@ -131,7 +132,9 @@ export const getSalesReportsSerivce = async (
       }),
     );
 
-    const allCategory = await prisma.category.findMany({});
+    const allCategory = await prisma.category.findMany({
+      take: 10,
+    });
 
     const salesByCategory = await Promise.all(
       allCategory.map(async (val) => {
