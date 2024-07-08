@@ -64,7 +64,7 @@ const OverviewStocks: FC<IOverviewStocksProps> = ({
   }, [dataStocks]);
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-3 gap-4 rounded-lg">
+      <div className="grid md:grid-cols-3 gap-4 rounded-lg">
         <OverviewCard
           Icon={Box}
           title="Total Stocks"

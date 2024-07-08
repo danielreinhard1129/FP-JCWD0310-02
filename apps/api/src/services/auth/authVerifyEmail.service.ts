@@ -15,8 +15,6 @@ export const verifyEmail = async (body: User) => {
     const generateToken = sign({ id: user.id }, jwtSecretKey, {
       expiresIn: '2h',
     });
-    console.log(user.id);
-    // const token = req.headers.authorization?.split(' ')[1];
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: email,

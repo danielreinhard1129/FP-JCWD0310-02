@@ -23,15 +23,12 @@ const oAuth2Client = new google.auth.OAuth2(
 export const loginGoogleService = async (code: string) => {
   try {
     const { tokens } = await oAuth2Client.getToken(code);
-    console.log('Tokens received from Google:', tokens);
-
     oAuth2Client.setCredentials(tokens);
 
     const response = await oAuth2Client.request({
       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
     });
     const data = response.data as GoogleUser;
-    console.log('User info received from Google:', data);
 
     const existingUser = await prisma.users.findFirst({
       where: {

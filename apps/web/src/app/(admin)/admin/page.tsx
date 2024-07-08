@@ -1,11 +1,11 @@
 'use client';
-import { Label } from '@/components/ui/label';
-import { Breadcrumb, DatePicker } from 'antd';
-import { Calendar } from 'lucide-react';
+import { DatePicker } from 'antd';
+import { Calendar, CalendarIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useGetSalesReports } from '@/hooks/reports/useGetSalesReports';
 import { useGetStocksReports } from '@/hooks/reports/useGetStocksReports';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calendar as CalendarRangePicker } from '@/components/ui/calendar';
 import OverviewSales from './components/OverviewSales';
 import OverviewStocks from './components/OverviewStocks';
 import { useAppSelector } from '@/redux/hooks';
@@ -19,6 +19,13 @@ import {
 } from '@/components/ui/select';
 import { useGetWarehouses } from '@/hooks/warehouses/useGetWarehouses';
 import dayjs from 'dayjs';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const DashboardPage = () => {
   const admin = useAppSelector((state) => state.admin);
@@ -28,21 +35,23 @@ const DashboardPage = () => {
     admin.warehouseId,
   );
   const [rangeDate, setRangeDate] = useState<any>([
-    dayjs(new Date()),
-    dayjs(new Date()).add(30, 'day'),
+    {
+      from: dayjs(new Date()).toDate(),
+      to: dayjs(new Date()).add(30, 'day').toDate(),
+    },
   ]);
   const { dataStocks, isLoading: isLoadingStock } = useGetStocksReports({
     warehouseId: warehouse,
     date: {
-      startDate: rangeDate ? dayjs(rangeDate[0]).toISOString() : undefined,
-      endDate: rangeDate ? dayjs(rangeDate[1]).toISOString() : undefined,
+      startDate: rangeDate.from || undefined,
+      endDate: rangeDate.to || undefined,
     },
   });
   const { data, isLoading } = useGetSalesReports({
     warehouseId: warehouse,
     date: {
-      startDate: rangeDate ? dayjs(rangeDate[0]).toISOString() : undefined,
-      endDate: rangeDate ? dayjs(rangeDate[1]).toISOString() : undefined,
+      startDate: rangeDate.from || undefined,
+      endDate: rangeDate.to || undefined,
     },
   });
 
@@ -50,31 +59,63 @@ const DashboardPage = () => {
     <section
       className={`p-8 flex relative flex-col gap-4 font-rubik ${(isLoading || isLoadingStock) && 'opacity-30'}`}
     >
-      <div className="flex justify-end">
-        <div className="flex gap-2 items-center">
-          <div className="flex gap-2 items-center border border-black bg-white p-2 rounded-lg">
-            <Calendar className="w-6" />
-            <DatePicker.RangePicker
-              value={rangeDate}
-              allowEmpty
-              className="font-rubik text-black font-medium border-black pr-0"
-              suffixIcon=""
-              picker="week"
-              format="DD-MMM-YYYY"
-              onChange={(e) => setRangeDate(e)}
-              id={{
-                start: 'startInput',
-                end: 'endInput',
-              }}
+      <div className="flex md:justify-end">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              id="date"
+              variant={'outline'}
+              className={cn(
+                'justify-start text-left border border-black font-normal text-black',
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {rangeDate.from ? (
+                rangeDate.to ? (
+                  <>
+                    {dayjs(rangeDate.from).format('DD MMMM')} -{' '}
+                    {dayjs(rangeDate.to).format('DD MMMM')}
+                  </>
+                ) : (
+                  dayjs(rangeDate.from).format('DD MMMM YYYY')
+                )
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <CalendarRangePicker
+              initialFocus
+              mode="range"
+              defaultMonth={rangeDate.from}
+              selected={rangeDate}
+              onSelect={(e) =>
+                setRangeDate(
+                  e
+                    ? {
+                        from: e.from ? e.from : undefined,
+                        to: e.to ? e.to : undefined,
+                      }
+                    : { from: undefined, to: undefined },
+                )
+              }
+              numberOfMonths={1}
             />
-          </div>
-        </div>
+          </PopoverContent>
+        </Popover>
       </div>
       <Tabs defaultValue="sales">
-        <TabsList className="p-1 border-black border">
-          <TabsTrigger value="sales">Sales Overview</TabsTrigger>
-          <TabsTrigger value="stocks">Stocks Overview</TabsTrigger>
-          <div className="ml-2 py-2 w-fit  transition-all duration-500">
+        <TabsList className="px-4 border-black border md:w-fit w-full md:justify-start flex md:flex-row flex-col gap-2 h-fit">
+          <div className="w-full py-2 md:w-fit flex justify-between">
+            <TabsTrigger className="w-full" value="sales">
+              Sales Overview
+            </TabsTrigger>
+            <TabsTrigger className="w-full" value="stocks">
+              Stocks Overview
+            </TabsTrigger>
+          </div>
+          <div className="ml-2 md:w-fit w-full transition-all duration-500 md:mb-0 mb-2">
             <Select
               disabled={
                 user.role == 'CUSTOMER' || user.role == 'WAREHOUSE_ADMIN'

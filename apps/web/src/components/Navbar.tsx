@@ -38,7 +38,6 @@ export const Navbar = () => {
       setEmail(findEmail);
     }
   }, []);
-  console.log(email);
   const handleLogout = () => {
     localStorage.removeItem('persist:shoes');
     setEmail('');

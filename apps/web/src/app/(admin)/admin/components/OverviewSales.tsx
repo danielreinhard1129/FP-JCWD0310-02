@@ -13,7 +13,7 @@ interface IOverviewSalesProps {
 const OverviewSales: FC<IOverviewSalesProps> = ({ dataSales }) => {
   return (
     <div className="flex flex-col gap-4 font-rubik transition-all duration-300">
-      <div className="grid grid-cols-3 gap-4 rounded-lg">
+      <div className="grid md:grid-cols-3 gap-4 rounded-lg">
         <OverviewCard
           Icon={ShoppingBag}
           title="Revenue"
@@ -36,7 +36,7 @@ const OverviewSales: FC<IOverviewSalesProps> = ({ dataSales }) => {
           total={dataSales?.data.cancelledOrders.count || 0}
         />
       </div>
-      <div className="rounded-lg grid grid-cols-2 gap-4">
+      <div className="rounded-lg grid md:grid-cols-2 gap-4">
         <TopOverviewCard
           title="Best By Product Seller"
           buttonLabel="REPORT"

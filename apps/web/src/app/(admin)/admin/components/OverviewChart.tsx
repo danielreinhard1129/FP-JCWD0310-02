@@ -49,7 +49,6 @@ const OverviewChart: FC<IDataChartProps> = ({ data }) => {
         },
         {},
       );
-      console.log('temp', tempChartData);
       setChartData(
         Object.entries(tempChartData).reduce((a: any, [k, v]: any) => {
           return [
