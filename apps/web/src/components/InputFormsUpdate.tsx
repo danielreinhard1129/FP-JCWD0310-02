@@ -309,6 +309,8 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                   {typeof errors.variant == 'string' && errors.variant}
                   {/* {typeof errors.variant == "object" Object.entries(errors.variant)} */}
                   {Array.isArray(errors.variant) &&
+                    errors.variant[0] &&
+                    typeof errors.variant[0] == 'object' &&
                     Object.entries(errors.variant[0]).map((ee, indx) => (
                       <p key={indx}>{ee[1]}</p>
                     ))}
