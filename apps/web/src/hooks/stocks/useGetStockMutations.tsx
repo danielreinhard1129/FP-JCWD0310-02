@@ -14,7 +14,7 @@ export const useGetStockMutations = () => {
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState({
     page: 1,
-    take: 5,
+    take: 10,
     status: '',
     warehouseId: undefined,
   });
