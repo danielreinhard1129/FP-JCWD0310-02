@@ -307,7 +307,6 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               <Label className="flex justify-end text-red-500">
                 <div className="flex flex-col">
                   {typeof errors.variant == 'string' && errors.variant}
-                  {/* {typeof errors.variant == "object" Object.entries(errors.variant)} */}
                   {Array.isArray(errors.variant) &&
                     errors.variant[0] &&
                     typeof errors.variant[0] == 'object' &&
