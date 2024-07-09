@@ -149,7 +149,8 @@ const PopoverCart: FC<IPopoverCartProps> = ({ product }) => {
               Quantity : {values.quantity}
             </Label>
             <Label className='font-rubik font-medium"'>
-              Total prices : {formatPrice.format(values.quantity * 850000)}
+              Total prices :{' '}
+              {formatPrice.format(values.quantity * product.price)}
             </Label>
           </div>
           {mutate.isSuccess ? (
