@@ -72,13 +72,6 @@ const DialogStockMutations = ({
               Status : <p className="font-bold ">{data.status}</p>
             </Label>
           </div>
-          <div className="mt-4 mb-4">
-            <Label className="text-lg">Summary : </Label>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label>Current stocks : 450</Label>
-            <Label>Expected stocks after confirmation : 400</Label>
-          </div>
         </div>
         <DialogFooter>
           {data.status == 'ON_PROGRESS' &&

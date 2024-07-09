@@ -76,14 +76,24 @@ const DetailStockPopover = ({
                   <Table>
                     <TableBody></TableBody>
                   </Table>
-                  {data.variant.map((val, indx) => {
-                    return (
-                      <Label key={indx}>
-                        {val.color}-{val.size} ={' '}
-                        {val.variantStocks.reduce((a, b) => a + b.quantity, 0)}
-                      </Label>
-                    );
-                  })}
+                  <div className="flex flex-wrap gap-3 justify-stretch">
+                    {data.variant.map((val, indx) => {
+                      return (
+                        <>
+                          <Label
+                            className="border w-fit p-2 rounded-lg"
+                            key={indx}
+                          >
+                            {val.color}-{val.size} ={' '}
+                            {val.variantStocks.reduce(
+                              (a, b) => a + b.quantity,
+                              0,
+                            )}
+                          </Label>
+                        </>
+                      );
+                    })}
+                  </div>
                 </div>
               </TabsContent>
               <TabsContent value="stocks">
