@@ -1,4 +1,5 @@
 import { User } from '@/app/types/user.type';
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { adminLoginAction } from '@/redux/slicers/adminSlice';
@@ -21,6 +22,7 @@ interface LoginResponse {
 const useLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { openNotification } = useNotification();
   const { role } = useAppSelector((state) => state.user);
   const login = async (payload: LoginArgs) => {
     try {
@@ -41,14 +43,14 @@ const useLogin = () => {
           dispatch(adminLoginAction(data.data.employee));
         }
         localStorage.setItem('token', data.token);
-        alert('login sucess');
+        openNotification.success({ message: 'Login success' });
+
         router.replace('/');
       } else {
-        alert('login failed');
+        openNotification.error({ message: 'Login failed' });
       }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      openNotification.error({ message: 'Login failed' });
     }
   };
 

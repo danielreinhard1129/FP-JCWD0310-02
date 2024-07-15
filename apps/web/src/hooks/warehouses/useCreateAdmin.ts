@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
+import { useNotification } from '../useNotification';
 
 interface CreateAdminArgs {
   firstName: string;
@@ -11,6 +12,7 @@ interface CreateAdminArgs {
 }
 
 const useCreateAdmin = () => {
+  const { openNotification } = useNotification();
   const createAdmin = async (payload: CreateAdminArgs) => {
     try {
       const { data } = await axiosInstance.post(
@@ -18,10 +20,10 @@ const useCreateAdmin = () => {
         payload,
       );
       console.log(data);
-      alert('Admin created successfully');
+      openNotification.success({ message: 'Create Admin Success' });
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      openNotification.error({ message: 'Create Admin Failed' });
     }
   };
   return { createAdmin };

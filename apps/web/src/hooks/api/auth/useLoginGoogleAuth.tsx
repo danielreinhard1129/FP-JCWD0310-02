@@ -1,5 +1,6 @@
 'use client';
 
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppDispatch } from '@/redux/hooks';
 import { loginAction } from '@/redux/slicers/userSlice';
@@ -9,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 const useLoginGoogleAuth = () => {
   const router = useRouter();
+  const { openNotification } = useNotification();
   const dispatch = useAppDispatch();
   const googleLogin = useGoogleLogin({
     onSuccess: async ({ code }) => {
@@ -20,10 +22,10 @@ const useLoginGoogleAuth = () => {
         const { data } = response;
         // dispatch({ type: 'LOGIN', payload: data.data });
         dispatch(loginAction(data.data));
-        console.log('Login successful, server response:', data);
+        openNotification.success({ message: 'Login google success' });
         router.replace('/');
       } catch (error) {
-        console.error('Error during Google login:', error);
+        openNotification.error({ message: 'Login Google failed' });
       }
     },
     flow: 'auth-code',
