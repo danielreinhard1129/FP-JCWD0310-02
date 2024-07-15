@@ -2,9 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import React, { useEffect, useState } from 'react';
-import sepatu from '../../../../public/sepatu.jpg';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { usePostOrder } from '@/hooks/orders/usePostOrder';
 import { useNotification } from '@/hooks/useNotification';
 import { useGetCarts } from '@/hooks/carts/useGetCarts';
@@ -38,32 +36,22 @@ const OrderPage = () => {
     TransactionOngkir[]
   >([]);
   const { data, isSuccess } = useGetCarts(id);
-  const {
-    postOrder,
-    postOrderAsync,
-    data: dataPost,
-  } = usePostOrder(router.push);
+  const { postOrderAsync, data: dataPost } = usePostOrder(router.push);
+  const { data: dataAddresses } = useGetUserAddress();
   const { openNotification } = useNotification();
   const formatPrice = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
     style: 'currency',
   });
 
-  const dummyAddress: Address = {
-    id: 1,
-    name: 'rumah',
-    lat: 4.5,
-    long: 4.5,
-    postalCode: 55752,
-    street: 'Jln.Kaliurang',
-    city: 'Sleman',
-    subdistrict: 'Melati',
-    province: 'Jogjakarta',
-  };
-
   const handlePost = () => {
     if (data) {
-      openNotification.async(postOrderAsync());
+      openNotification.async(
+        postOrderAsync({
+          shippingDetail: Number(selectedAddress),
+          shippingCost: 0,
+        }),
+      );
     } else openNotification.error({ message: 'Something is error!' });
   };
   const fetchAddresses = async () => {
@@ -85,7 +73,6 @@ const OrderPage = () => {
       };
       const response = await getAddress(received);
       setAddresses(response);
-      console.log(response);
     } catch (error) {
       console.error('Error fetching addresses:', error);
     }
@@ -93,7 +80,6 @@ const OrderPage = () => {
   useEffect(() => {
     fetchAddresses();
   }, []);
-  console.log(selectedAddress, selectedCourier);
   const fetchOngkir = async () => {
     try {
       const received = {
@@ -104,7 +90,6 @@ const OrderPage = () => {
       };
       const response = await transactionOngkir(received);
       setTransactionsOngkir(response);
-      console.log(response);
     } catch (error) {
       console.error('Error fetching ongkir:', error);
     }
@@ -113,7 +98,7 @@ const OrderPage = () => {
     if (selectedAddress === '' || selectedCourier === '') return;
     fetchOngkir();
   }, [selectedAddress, selectedCourier]);
-  console.log(transactionsOngkir);
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-row-reverse justify-end w-full gap-4">
@@ -155,15 +140,6 @@ const OrderPage = () => {
             </div>
             <div className="flex flex-col w-full gap-6 items-center justify-between">
               <div className="flex flex-col w-full gap-6">
-                {/* <div>
-                  <h1 className="font-rubik font-bold text-2xl">
-                    Shipping Details
-                  </h1>
-                  <Label>
-                    We will use these details to keep you inform about your
-                    delivery
-                  </Label>
-                </div> */}
                 <div className="flex flex-col max-w-96 gap-2">
                   <h1 className="font-rubik font-bold text-xl">
                     Select your address
@@ -174,11 +150,11 @@ const OrderPage = () => {
                     onChange={(e) => setSelectedAddress(e.target.value)}
                   >
                     <option value="">Select address</option>
-                    {addresses.map((address, index) => (
-                      <option
-                        key={index}
-                        value={address.city}
-                      >{`${address.subdistrict} ${address.city} ${address.province}`}</option>
+                    {dataAddresses?.data.map((address, index) => (
+                      <option key={index} value={address.id}>
+                        {address?.street},{address?.subdistrict},{address?.city}{' '}
+                        {address?.postalCode},{address?.province}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -229,7 +205,9 @@ const OrderPage = () => {
               <OrderDialogConfirmation
                 data={data?.data}
                 addressDetail={{
-                  address: dummyAddress,
+                  address: dataAddresses?.data.find(
+                    (val) => val.id == Number(selectedAddress),
+                  ),
                   estimations: '3 Days',
                   fee: 50000,
                   options: 'TIKI',

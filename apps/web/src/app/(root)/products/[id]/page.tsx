@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
 import PopoverCart from '../components/PopoverCart';
+import { Tag } from 'antd';
 
 const ProductDetailPage = ({ params }: { params: { id: number } }) => {
   const { data, isLoading } = useGetProduct(params.id);
@@ -36,9 +37,9 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
       <section className="w-full py-8 rounded-xl">
         <div
           id="content"
-          className="p-4 flex flex-col md:flex-row w-full h-full gap-8"
+          className="p-4 flex flex-col md:flex-row w-full justify-center h-full gap-4"
         >
-          <div id="left-content" className="w-[60%] gap-4">
+          <div id="left-content" className="md:w-[70%] lg:w-[50%] w-full gap-4">
             {isLoading ? (
               <>
                 <Skeleton className="w-40 h-40" />
@@ -94,7 +95,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
           </div>
           <div
             id="right-content"
-            className="w-[40%] flex flex-col justify-between gap-4"
+            className="md:w-[30%] w-full flex flex-col py-4 gap-4"
           >
             {isLoading ? (
               <>
@@ -104,7 +105,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                 <Skeleton className="cursor-none text-xs w-28 p-2 h-8" />
               </>
             ) : (
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center md:items-start items-center">
                 <Button className="text-xs mb-4 w-28 p-2 h-10 font-rubik font-semibold bg-blue-500 cursor-default">
                   New Release
                 </Button>
@@ -140,11 +141,23 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                   <Skeleton className="w-full h-40" />
                 </>
               ) : (
-                <>
-                  <p className="font-openSans text-base text-gray-600">
+                <div className="md:mt-20 font-rubik mt-8 flex flex-col">
+                  <div className="flex flex-col gap-2">
+                    <Label className="font-rubik font-bold text-lg">
+                      ABOUT THE PRODUCT
+                    </Label>
+                    <Label className="font-semibold mb-2">
+                      Color :{' '}
+                      {Array.from(
+                        new Set(data?.data.variant.map((val) => val.color)),
+                      ).join(' / ')}
+                    </Label>
+                  </div>
+                  <Label className="font-rubik text-lg">Descriptions :</Label>
+                  <p className="font-rubik text-lg text-gray-600">
                     {data?.data.description}
                   </p>
-                </>
+                </div>
               )}
             </div>
           </div>

@@ -62,7 +62,7 @@ const ProfilePage = () => {
       formik.setFieldValue('profileImageUrl', fileArray);
     }
   };
-  const googleImage = formik.values.profileImageUrl.toString();
+  const googleImage = (formik.values.profileImageUrl || '').toString();
 
   return (
     <div className="md:h-full flex flex-col">
@@ -72,7 +72,7 @@ const ProfilePage = () => {
           className="flex max-md:flex-col gap-10 mt-11 max-md:items-center"
           onSubmit={formik.handleSubmit}
         >
-          <div className="w-80 border-4 border-gray-300 rounded-lg shadow-lg max-h-72 flex flex-col justify-center items-center p-4">
+          <div className="w-80 border-4  border-gray-300 rounded-lg shadow-lg max-h-72 flex flex-col justify-center items-center p-4">
             <img
               src={
                 imagePreviewUrl.length > 0
@@ -81,7 +81,7 @@ const ProfilePage = () => {
                     ? googleImage
                     : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
               }
-              className="w-40 h-40 rounded-sm shadow-md"
+              className="w-40 h-40 rounded-sm shadow-md object-cover max-w-full max-h-full "
             />
 
             <div className="text-center mt-4 text-gray-600 bg-gray-50 p-2">

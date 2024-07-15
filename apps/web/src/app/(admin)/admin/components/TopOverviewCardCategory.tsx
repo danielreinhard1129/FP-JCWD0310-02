@@ -11,8 +11,11 @@ interface ITopOverviewCardProps {
     | {
         id: number;
         name: string;
-        count: number;
-        total: number | null;
+        count: {
+          _sum: {
+            quantity: number;
+          };
+        };
       }[]
     | undefined;
 }
@@ -27,10 +30,9 @@ const TopOverviewCardCategory: FC<ITopOverviewCardProps> = ({
     style: 'currency',
   });
   return (
-    <div className="px-4 py-6 bg-white col-span-1 rounded-lg flex flex-col gap-4">
+    <div className="px-4 py-6 bg-white border-black border col-span-1 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center min-h-8">
         <Label className="font-bold text-lg">{title}</Label>
-        <Ellipsis className="rotate-90 w-6" />
       </div>
       <Separator className="bg-black" />
       <div className="flex flex-col gap-4 h-full justify-between">
@@ -47,17 +49,16 @@ const TopOverviewCardCategory: FC<ITopOverviewCardProps> = ({
                     <Label className="font-bold">{val.name}</Label>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Label className="font-bold">
-                    {formatPrice.format(val.total || 0)}
+                <div className="flex gap-2 items-center">
+                  <Label className="font-bold text-lg">
+                    {val.count._sum.quantity || 0}
                   </Label>
-                  <Label>{val.count} Sales</Label>
+                  <Label>Sold</Label>
                 </div>
               </div>
             );
           })}
         </div>
-        {/* <Button className="h-8 w-24 font-bold">{buttonLabel}</Button> */}
       </div>
     </div>
   );

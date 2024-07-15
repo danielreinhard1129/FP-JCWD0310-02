@@ -14,7 +14,7 @@ const page = () => (
 
       <HeroPage />
 
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-end mb-8">
         <div className="uppercase flex flex-col">
           <div className="text-[74px] font-bold">Don’t miss out</div>
           <div className="text-[74px] font-bold">new drops</div>
@@ -25,12 +25,12 @@ const page = () => (
           </div>
         </div>
       </div>
-      {/* <NewProducts /> */}
+      <NewProducts />
     </div>
-    <div className="bg-black w-[1440px] my-8">
+    <div className="bg-black lg:w-[1440px] w-[90vw] my-8">
       <Categories />
     </div>
-    <div className="flex flex-col gap-y-8 w-[1320px] mx-auto">
+    {/* <div className="flex flex-col gap-y-8 w-[1320px] mx-auto">
       <div className="flex justify-between items-end mb-8">
         <div className="uppercase  flex flex-col ">
           <div className="text-[74px] font-bold ">Product</div>
@@ -41,7 +41,22 @@ const page = () => (
           </div>
         </div>
       </div>
-      {/* <ProductsPage /> */}
+      <ProductsPage />
+    </div> */}
+    <div className="flex flex-col gap-y-8 w-full md:w-[1320px] mx-auto px-4 sm:px-8 md:px-0">
+      <div className="flex flex-row justify-between items-end mb-8">
+        <div className="uppercase flex flex-col mb-4 md:mb-0">
+          <div className="text-4xl sm:text-[40px] md:text-[50px] lg:text-[60px] xl:text-[74px] font-bold">
+            Product
+          </div>
+        </div>
+        <div className="h-12 px-4 sm:px-6 md:px-8 py-2 bg-indigo-500 rounded-lg justify-center items-center inline-flex">
+          <div className="text-white text-xs sm:text-sm font-medium uppercase">
+            Shop New Drops
+          </div>
+        </div>
+      </div>
+      <ProductsPage />
     </div>
   </section>
 );

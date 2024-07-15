@@ -1,19 +1,49 @@
 import prisma from '@/prisma';
 
-export const getStocksReportsService = async () => {
+export const getStocksReportsService = async (
+  warehouseId: number,
+  userId: number,
+  date: {
+    startDate: Date | string;
+    endDate: Date | string;
+  },
+) => {
   try {
+    const user = await prisma.users.findFirst({
+      where: {
+        id: userId,
+      },
+      include: {
+        employee: { include: { warehouse: true } },
+      },
+    });
+
+    if (!user) throw new Error('Cannot find user data');
+    if (!user.employee) throw new Error('You are not an admin');
+    if (!user.employee.warehouseId) throw new Error('You are not an admin');
+
     const warehouse = await prisma.warehouse.findFirst({
-      where: { id: 1 },
+      where: { id: warehouseId },
     });
 
     if (!warehouse) throw new Error('');
+    const currentWarehouseId =
+      user.role == 'SUPER_ADMIN'
+        ? warehouseId
+          ? warehouseId
+          : user.employee.warehouseId
+        : user.employee.warehouseId;
 
     const stockProductReport = await prisma.stockMutation.findMany({
       where: {
         OR: [
-          { fromWarehouseId: warehouse.id },
-          { toWarehouseId: warehouse.id },
+          { fromWarehouseId: currentWarehouseId },
+          { toWarehouseId: currentWarehouseId },
         ],
+        createdAt: {
+          gte: date.startDate,
+          lte: date.endDate,
+        },
       },
       include: {
         product: true,
@@ -23,7 +53,7 @@ export const getStocksReportsService = async () => {
     if (!stockProductReport) throw new Error('Cannot find any stock mutations');
     const reportProduct = stockProductReport.reduce(
       (a: any, b) => {
-        if (b.fromWarehouseId == warehouse.id) {
+        if (b.fromWarehouseId == currentWarehouseId) {
           return {
             ...a,
             export: {
@@ -34,13 +64,13 @@ export const getStocksReportsService = async () => {
                   a.export &&
                   a.export[b.product.name] &&
                   a.export[b.product.name].count
-                    ? a.export[b.product.name].count + 1
-                    : 1,
+                    ? a.export[b.product.name].count + b.quantity
+                    : b.quantity,
               },
             },
           };
         }
-        if (b.toWarehouseId == warehouse.id) {
+        if (b.toWarehouseId == currentWarehouseId) {
           return {
             ...a,
             import: {
@@ -51,8 +81,8 @@ export const getStocksReportsService = async () => {
                   a.import &&
                   a.import[b.product.name] &&
                   a.import[b.product.name].count
-                    ? a.import[b.product.name].count + 1
-                    : 1,
+                    ? a.import[b.product.name].count + b.quantity
+                    : b.quantity,
               },
             },
           };
@@ -64,7 +94,7 @@ export const getStocksReportsService = async () => {
 
     const stock = await prisma.variantStock.findMany({
       where: {
-        warehouseId: warehouse.id,
+        warehouseId: currentWarehouseId,
       },
       include: {
         variant: {
@@ -85,31 +115,24 @@ export const getStocksReportsService = async () => {
     }, {});
 
     const overallStocks = await prisma.product.findMany({
-      where: {
-        // variant: {
-        //   every: {
-        //     variantStocks: {
-        //       every: {
-        //         warehouseId: warehouse.id,
-        //       },
-        //     },
-        //   },
-        // },
-      },
       include: {
         stockMutations: {
           where: {
             OR: [
-              { fromWarehouseId: warehouse.id },
-              { toWarehouseId: warehouse.id },
+              { fromWarehouseId: currentWarehouseId },
+              { toWarehouseId: currentWarehouseId },
             ],
+            createdAt: {
+              gte: date.startDate,
+              lte: date.endDate,
+            },
           },
         },
         variant: {
           include: {
             variantStocks: {
               where: {
-                warehouseId: warehouse.id,
+                warehouseId: currentWarehouseId,
               },
             },
           },

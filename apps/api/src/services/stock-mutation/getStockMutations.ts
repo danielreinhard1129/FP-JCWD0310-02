@@ -13,6 +13,11 @@ export const getStockMutationsService = async (
     const user = await prisma.users.findFirst({
       where: {
         id: userId,
+        employee: {
+          warehouseId: {
+            not: null,
+          },
+        },
       },
       include: {
         employee: {
@@ -25,6 +30,10 @@ export const getStockMutationsService = async (
 
     if (!user) throw new Error('Cannot find your user data');
     if (!user.employee) throw new Error('Sorry you are not an admin!');
+    if (!user.employee.warehouseId)
+      throw new Error('Sorry you are not an admin!');
+    if (!user.employee.warehouse)
+      throw new Error('Sorry you are not an admin!');
 
     const stockMutations = await prisma.stockMutation.findMany({
       orderBy: { createdAt: 'desc' },

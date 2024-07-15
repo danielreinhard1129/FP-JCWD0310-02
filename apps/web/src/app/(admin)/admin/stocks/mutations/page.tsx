@@ -23,8 +23,8 @@ const StockJournalsPage = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div className="px-4 py-4">
-      <Card>
+    <div className="p-8">
+      <Card className="border border-black">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>List Stock Mutations</CardTitle>
@@ -44,7 +44,7 @@ const StockJournalsPage = () => {
             <div className="flex items-center gap-2">
               <Label>Filter : </Label>
               <Select
-                className="w-42"
+                className="w-42 border border-black rounded-lg font-rubik"
                 placeholder="Status"
                 onChange={(e) => setQuery({ ...query, status: e })}
                 loading={loading}
@@ -52,7 +52,7 @@ const StockJournalsPage = () => {
               />
               {user.role == 'SUPER_ADMIN' ? (
                 <Select
-                  className="w-42"
+                  className="w-42 border border-black rounded-lg font-rubik"
                   placeholder="Warehouse"
                   onChange={(e) => setQuery({ ...query, warehouseId: e })}
                   loading={loading}
@@ -71,12 +71,18 @@ const StockJournalsPage = () => {
             />
             <div className="flex gap-4 mt-4 justify-end">
               <Button
-                onClick={() => setQuery({ ...query, page: query.page - 1 })}
+                disabled={query.page == 1}
+                onClick={() =>
+                  query.page > 1 && setQuery({ ...query, page: query.page - 1 })
+                }
               >
                 Previous
               </Button>
               <Button
-                onClick={() => setQuery({ ...query, page: query.page + 1 })}
+                disabled={!data || data.length < 10}
+                onClick={() =>
+                  data.length && setQuery({ ...query, page: query.page + 1 })
+                }
               >
                 Next
               </Button>

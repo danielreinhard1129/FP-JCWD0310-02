@@ -20,20 +20,15 @@ interface ITopOverviewCardProps {
     | undefined;
 }
 
-const TopOverviewCard: FC<ITopOverviewCardProps> = ({
-  buttonLabel,
-  data,
-  title,
-}) => {
+const TopOverviewCard: FC<ITopOverviewCardProps> = ({ data, title }) => {
   const formatPrice = new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
     style: 'currency',
   });
   return (
-    <div className="px-4 py-6 bg-white col-span-1 rounded-lg flex flex-col gap-4">
+    <div className="px-4 py-6 bg-white border-black border col-span-1 rounded-lg flex flex-col gap-4">
       <div className="flex justify-between items-center min-h-8">
         <Label className="font-bold text-lg">{title}</Label>
-        <Ellipsis className="rotate-90 w-6" />
       </div>
       <Separator className="bg-black" />
       <div className="flex flex-col gap-4 justify-between">
@@ -42,7 +37,7 @@ const TopOverviewCard: FC<ITopOverviewCardProps> = ({
             return (
               <div
                 key={indx}
-                className="flex w-full justify-between items-center gap-4 hover:bg-[#D2D1D3] hover:bg-opacity-30 py-2 px-2 rounded-lg transition-all duration-300"
+                className="flex w-full justify-between items-center hover:bg-[#D2D1D3] hover:bg-opacity-30 py-2 px-2 rounded-lg transition-all duration-300"
               >
                 <div className="flex gap-2 items-center">
                   <Label className="text-lg min-w-4">{indx + 1}.</Label>

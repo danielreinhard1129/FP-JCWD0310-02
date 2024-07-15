@@ -17,6 +17,8 @@ export const getStockJournalsService = async (userId: number) => {
 
     if (!user) throw new Error('Cannot find your user data');
     if (!user.employee) throw new Error('Sorry you are not an admin!');
+    if (!user.employee.warehouseId)
+      throw new Error('Sorry you are not an admin!');
 
     const stockMutations = await prisma.stockMutation.findMany({
       where: {

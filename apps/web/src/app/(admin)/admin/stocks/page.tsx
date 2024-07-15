@@ -11,6 +11,7 @@ import { RotateCcw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from 'use-debounce';
 import SearchBarDebounce from '@/components/SearchBarDebounce';
+import { Button } from '@/components/ui/button';
 
 const AdminDashboardStocksPage = () => {
   const user = useAppSelector((state) => state.user);
@@ -22,8 +23,8 @@ const AdminDashboardStocksPage = () => {
 
   return (
     <>
-      <div className="px-4 py-4">
-        <Card>
+      <div className="p-8">
+        <Card className="border border-black">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle>Stock Management</CardTitle>
@@ -40,14 +41,13 @@ const AdminDashboardStocksPage = () => {
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
-                {/* <Label>Warehouse : </Label> */}
                 <div className="w-52 font-rubik">
                   <SearchBarDebounce
                     onValueChange={(e) => setQuery({ ...query, product: e })}
                   />
                 </div>
                 <Select
-                  className="w-52 h-10 border-2 font-rubik border-black rounded-lg text-black"
+                  className="w-52 h-10 border font-rubik border-black rounded-lg text-black"
                   defaultValue={{
                     value: warehouse.warehouseId,
                     label: warehouse.warehouse,
@@ -72,6 +72,28 @@ const AdminDashboardStocksPage = () => {
                 loading={mutation.isLoading}
                 refetch={mutation.mutate}
               />
+              <div className="flex gap-4 mt-4 justify-end">
+                <Button
+                  disabled={query.page == 1}
+                  onClick={() =>
+                    query.page > 1 &&
+                    setQuery({ ...query, page: query.page - 1 })
+                  }
+                >
+                  Previous
+                </Button>
+                <Button
+                  disabled={
+                    !mutation.data?.data || mutation.data?.data.length < 10
+                  }
+                  onClick={() =>
+                    mutation.data?.data.length &&
+                    setQuery({ ...query, page: query.page + 1 })
+                  }
+                >
+                  Next
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

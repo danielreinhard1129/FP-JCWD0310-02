@@ -37,11 +37,17 @@ export interface IGetOrdersResponse {
   }[];
 }
 
-export const useGetOrders = () => {
+export const useGetOrders = (
+  warehouseId: number | undefined,
+  status: string,
+) => {
   const { axiosInstance } = useAxios();
   const { data, isError, isLoading, isSuccess, refetch } = useQuery({
+    queryKey: ['getOrdersAdmin', [warehouseId, status]],
     queryFn: async () =>
-      await axiosInstance.get<IGetOrdersResponse[]>('/orders'),
+      await axiosInstance.get<IGetOrdersResponse[]>('/orders', {
+        params: { warehouseId, status },
+      }),
   });
   return {
     data,

@@ -18,7 +18,6 @@ interface GetProductsQuery extends PaginationQueryParams {
 export const getProductsService = async (query: GetProductsQuery) => {
   try {
     const { page, take, search, sortBy, sortOrder, filter } = query;
-    const filterVariant = [filter.color, filter.size];
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
       productCategory: {

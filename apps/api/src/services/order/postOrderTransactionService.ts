@@ -45,9 +45,6 @@ export const postOrderTransactionService = async (
         if (!currentOrder || !currentOrder.paymentsId)
           throw new Error('Order transaction not found!');
 
-        console.log('userId', admin.id);
-        console.log('userRole', admin.role);
-
         if (
           admin.role != 'SUPER_ADMIN' &&
           admin.employee.warehouseId != currentOrder.warehouseId
@@ -92,7 +89,7 @@ export const postOrderTransactionService = async (
           return shippingOrder;
         }
 
-        return currentOrder.orderItems.map(async (val) => {
+        const automateOrder = currentOrder.orderItems.map(async (val) => {
           await automateStockMutations(
             val.variantId,
             currentOrder.warehouseId,
@@ -100,6 +97,8 @@ export const postOrderTransactionService = async (
             currentOrder.id,
           );
         });
+
+        return automateOrder;
       } catch (error) {
         throw error;
       }

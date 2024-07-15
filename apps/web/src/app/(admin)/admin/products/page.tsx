@@ -1,13 +1,7 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useGetProducts } from '@/hooks/products/useGetProducts';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import DataTables from '@/components/dashboard/DataTables';
@@ -19,8 +13,8 @@ const AdminDashboardProductPage = () => {
 
   return (
     <>
-      <div className="px-4 py-4">
-        <Card>
+      <div className="p-8">
+        <Card className="border border-black">
           <CardHeader>
             <div className="flex justify-between">
               <CardTitle>List Product</CardTitle>
@@ -35,6 +29,25 @@ const AdminDashboardProductPage = () => {
               data={data?.data}
               refetch={getProduct}
             />
+            <div className="flex gap-4 mt-4 justify-end">
+              <Button
+                disabled={query.page == 1}
+                onClick={() =>
+                  query.page > 1 && setQuery({ ...query, page: query.page - 1 })
+                }
+              >
+                Previous
+              </Button>
+              <Button
+                disabled={!data?.data || data?.data.length < 10}
+                onClick={() =>
+                  data?.data.length &&
+                  setQuery({ ...query, page: query.page + 1 })
+                }
+              >
+                Next
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

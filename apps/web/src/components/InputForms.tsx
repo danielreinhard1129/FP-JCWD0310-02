@@ -14,6 +14,9 @@ import { NumericFormat } from 'react-number-format';
 import { CreateProductPayload } from '@/hooks/products/useCreateProduct';
 import { Trash, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useGetCategories } from '@/hooks/categories/useGetCategories';
+import { AutoComplete } from 'antd';
+import productValidation from './validations/productValidation';
 
 interface VariantFormProps {
   id: string;
@@ -40,22 +43,25 @@ interface InputFormsProps {
 
 const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
   const router = useRouter();
+  const { data: dataCategories } = useGetCategories();
   const { getImagesBlob } = useGetImagesBlob();
   const [tempCategory, setTempCategory] = useState('');
+  const [options, setOptions] = useState<string[]>([]);
   const [fileImages, setFileImages] = useState<FileWithPath[]>([]);
   const {
     values,
     setFieldValue,
     handleSubmit: handleSubmitFormik,
     handleChange,
-    handleReset,
+    errors,
+    touched,
     setValues,
   } = useFormik({
     initialValues: {
       product: {
-        description: '',
         name: '',
-        price: '5000',
+        description: '',
+        price: '50000',
       },
       category: [],
       image: [],
@@ -63,8 +69,10 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       warehouse: 0,
     },
     onSubmit: (result: CreateProductPayload) => {
+      result.image = fileImages;
       handleSubmit(result);
     },
+    validationSchema: productValidation,
   });
 
   useEffect(() => {
@@ -76,12 +84,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               const type = a.data.type as string;
               const file = new File(
                 [a.data],
-                new Date().toISOString() + '.' + type.split('/')[1],
+                new Date().toISOString() + index + '.' + type.split('/')[1],
                 {
                   type,
                 },
               );
-              console.log('file', file);
               return file;
             }),
           ]);
@@ -110,6 +117,10 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    setFieldValue('image', [...fileImages]);
+  }, [fileImages]);
+
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-col md:flex-row gap-8">
@@ -123,6 +134,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               onChange={handleChange}
               placeholder="Adida Ultra Boost"
             ></Input>
+            {(touched.product?.name || errors.product?.name) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.product?.name}
+              </Label>
+            )}
           </div>
           <div>
             <Label>Description</Label>
@@ -134,6 +150,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               value={values.product.description}
               onChange={handleChange}
             />
+            {(touched.product?.description || errors.product?.description) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.product?.description}
+              </Label>
+            )}
           </div>
           <div className="flex flex-col gap-4">
             <Label>Category</Label>
@@ -166,15 +187,30 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               ''
             )}
             <div className="flex gap-3">
-              <Input
+              <AutoComplete
+                className="w-40 h-10"
                 value={tempCategory}
-                onChange={(e) => setTempCategory(e.currentTarget.value)}
+                options={options.map((values) => {
+                  return { label: values, value: values };
+                })}
+                onSearch={(e) =>
+                  setOptions(
+                    dataCategories.categories.reduce((a: string[], b) => {
+                      const c = a;
+                      if (!b.name.toLowerCase().search(e.toLowerCase()))
+                        c.push(b.name);
+                      return c;
+                    }, []),
+                  )
+                }
+                onChange={(e) => setTempCategory(e)}
+                onSelect={(e, p) => {}}
               />
               <Button
                 onClick={() => {
                   if (
                     !values.category.includes(tempCategory) &&
-                    tempCategory.length > 3
+                    tempCategory.length > 2
                   ) {
                     setFieldValue('category', [
                       ...values.category,
@@ -188,18 +224,13 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 Add Category
               </Button>
             </div>
+            {(touched.category || errors.category) && (
+              <Label className="flex justify-end text-red-500">
+                {errors.category}
+              </Label>
+            )}
           </div>
           <div className="flex gap-4">
-            <div>
-              <Label>SKU</Label>
-              <Input
-                placeholder="#4512"
-                id="product.name"
-                name="product.name"
-                value={values.product.name}
-                onChange={handleChange}
-              ></Input>
-            </div>
             <div>
               <Label>Price</Label>
               <NumericFormat
@@ -217,6 +248,11 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 prefix="Rp."
                 suffix=",00"
               />
+              {(touched.product?.price || errors.product?.price) && (
+                <Label className="flex justify-end text-red-500">
+                  {errors.product?.price}
+                </Label>
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-4">
@@ -261,6 +297,19 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             ) : (
               ''
             )}
+            {(touched.variant || errors.variant) && (
+              <Label className="flex justify-end text-red-500">
+                <div className="flex flex-col">
+                  {typeof errors.variant == 'string' && errors.variant}
+                  {Array.isArray(errors.variant) &&
+                    errors.variant[0] &&
+                    typeof errors.variant[0] == 'object' &&
+                    Object.entries(errors.variant[0]).map((ee, indx) => (
+                      <p key={indx}>{ee[1]}</p>
+                    ))}
+                </div>
+              </Label>
+            )}
             <Button
               onClick={() =>
                 setFieldValue('variant', [
@@ -284,10 +333,14 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             label="Product Images"
             onDrop={(e) => {
               setFileImages([...fileImages, ...e]);
-              setFieldValue('image', [...fileImages, ...e]);
             }}
             isError={false}
           />
+          {(touched.image || errors.image) && (
+            <Label className="flex justify-end text-red-500">
+              {typeof errors.image == 'string' && errors.image}
+            </Label>
+          )}
         </div>
       </div>
       <div className="flex md:justify-end mt-8 justify-between gap-4">
