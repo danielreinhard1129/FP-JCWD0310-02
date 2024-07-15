@@ -5,7 +5,11 @@ import useLogin from '@/hooks/api/auth/useLogin';
 
 import { useFormik } from 'formik';
 import { Route } from 'lucide-react';
+import Image from 'next/image';
+import logo from '../../../../public/logo-dark.png';
+
 import { useRouter } from 'next/navigation';
+import { validationSchema } from './validationSchema';
 
 const Login = () => {
   const { login } = useLogin();
@@ -17,6 +21,7 @@ const Login = () => {
       password: '',
       role: '',
     },
+    validationSchema,
     onSubmit: (values) => {
       login(values);
     },
@@ -31,8 +36,8 @@ const Login = () => {
           className="w-full h-full rounded-xl object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent rounded-xl"></div>
-        <div className="absolute text-3xl md:text-9xl text-center inset-0 top-10 md:top-20 font-bold max-md:hidden">
-          LOGO
+        <div className="absolute inset-x-0 top-10 md:top-20 flex justify-center text-3xl md:text-9xl font-bold max-md:hidden">
+          <Image src={logo} alt="logo" width={400} height={400} />
         </div>
       </div>
       <div className="md:w-1/2 flex items-center justify-center max-md:absolute max-md:mt-10 max-md:mx-10">
@@ -65,12 +70,12 @@ const Login = () => {
               value={formik.values.password}
             />
             <div className="flex items-center">
-              <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
+              {/* <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
               <div className="max-md:text-sm">
                 <span>Make sure the account you are using is correct</span>
                 <br />
                 <span>applies to all login options below. More info.</span>
-              </div>
+              </div> */}
             </div>
             <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold -mb-3">
               Login

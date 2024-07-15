@@ -46,12 +46,12 @@ export const GetStocksService = async (
     }
 
     const warehouse = await prisma.warehouse.findFirst({
-      where: {
-        id:
-          user.role == 'WAREHOUSE_ADMIN'
-            ? user.employee.warehouseId
-            : warehouseId || undefined,
-      },
+      // where: {
+      //   id:
+      //     user.role == 'WAREHOUSE_ADMIN'
+      //       ? user.employee.warehouseId
+      //       : warehouseId || undefined,
+      // },
     });
 
     if (!warehouse) throw new Error('Cannot find the warehouse');

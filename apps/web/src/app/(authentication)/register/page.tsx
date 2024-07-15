@@ -1,10 +1,12 @@
 'use client';
 import React from 'react';
 
-import Image from 'next/image';
 import useRegister from '@/hooks/api/auth/useRegister';
 import { useFormik } from 'formik';
 import useRegisterGoogleAuth from '@/hooks/api/auth/useRegisterGoogleAuth';
+import Image from 'next/image';
+import logo from '../../../../public/logo-dark.png';
+import { validationSchema } from './validationSchema';
 
 const Register = () => {
   const { register } = useRegister();
@@ -17,6 +19,7 @@ const Register = () => {
       role: '',
       password: '',
     },
+    validationSchema,
     onSubmit: (values) => {
       register(values);
     },
@@ -31,8 +34,8 @@ const Register = () => {
             className="w-full h-full rounded-xl"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent rounded-xl"></div>
-          <div className="absolute text-3xl md:text-9xl text-center inset-0 top-10 md:top-20 font-bold max-md:hidden">
-            LOGO
+          <div className="absolute inset-x-0 top-10 md:top-20 flex justify-center text-3xl md:text-9xl font-bold max-md:hidden">
+            <Image src={logo} alt="logo" width={400} height={400} />
           </div>
         </div>
       </div>
