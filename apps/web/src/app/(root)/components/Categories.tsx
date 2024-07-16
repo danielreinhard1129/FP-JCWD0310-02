@@ -51,7 +51,11 @@ export default function Categories() {
           >
             <div className="absolute text-black bottom-0 w-full flex justify-between items-center pb-4 px-8">
               <Label className="text-3xl cursor-pointer font-semibold">
-                {data.categories[currentIndex].name}
+                {(data.categories &&
+                  data.categories[currentIndex] &&
+                  data.categories[currentIndex].name &&
+                  data.categories[currentIndex].name) ||
+                  ''}
               </Label>
               <Link
                 href={'/products'}
@@ -69,7 +73,11 @@ export default function Categories() {
           >
             <div className="absolute text-black bottom-0 w-full flex justify-between items-center pb-4 px-8">
               <Label className="text-3xl cursor-pointer font-semibold">
-                {data.categories[(currentIndex + 1) % images.length].name}
+                {(data.categories &&
+                  data.categories[(currentIndex + 1) % images.length] &&
+                  data.categories[(currentIndex + 1) % images.length].name &&
+                  data.categories[(currentIndex + 1) % images.length].name) ||
+                  ''}
               </Label>
               <Link
                 href={'/products'}
