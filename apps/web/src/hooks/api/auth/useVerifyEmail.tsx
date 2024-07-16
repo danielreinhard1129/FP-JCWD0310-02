@@ -19,9 +19,10 @@ const useVerifyEmail = () => {
       });
       router.push('/login');
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       openNotification.error({
-        message: 'verify email failed',
+        message: error.response?.data?.message || 'An error occurred',
       });
     }
   };

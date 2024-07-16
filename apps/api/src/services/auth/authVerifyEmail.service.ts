@@ -12,6 +12,9 @@ export const verifyEmail = async (body: User) => {
     if (!user) {
       throw new Error('User not found');
     }
+    if (!user.password) {
+      throw new Error('not gooogle account');
+    }
     const generateToken = sign({ id: user.id }, jwtSecretKey, {
       expiresIn: '2h',
     });
@@ -31,6 +34,8 @@ export const verifyEmail = async (body: User) => {
         token: generateToken,
       },
     });
-    return user;
-  } catch (error) {}
+    return { message: 'success' };
+  } catch (error) {
+    throw error;
+  }
 };
