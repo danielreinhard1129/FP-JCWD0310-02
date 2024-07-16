@@ -24,8 +24,10 @@ const useCreateAdmin = () => {
       console.log(data);
       openNotification.success({ message: 'Create Admin Success' });
       router.back();
-    } catch (error) {
-      // openNotification.error({ message: error });
+
+    } catch (error: any) {
+      openNotification.error({ message: error.response?.data?.message });
+
       console.log(error);
     }
   };

@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import {
   LayoutDashboard,
   FileBarChart,
@@ -9,7 +10,7 @@ import {
   Ticket,
   UserRound,
 } from 'lucide-react';
-
+import logo from '../../../../../public/logo-dark.png';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -31,11 +32,12 @@ export const NavigationBar = ({ href, children }: NavigationBarProps) => {
 const Sidebar = () => {
   const route = useRouter();
   return (
-    // fixed left-0 top-0
     <>
       <section className="  flex h-screen w-80 flex-col justify-between rounded-r-xl  bg-eastern-blue-500 px-4 pb-4 max-md:hidden">
         <div className=" ">
-          <div className="pb-4 pt-8 text-center text-3xl ">LOGO</div>
+          <div className="pb-4 pt-8 text-center text-3xl flex justify-center">
+            <Image src={logo} alt="logo" width={100} height={100} />
+          </div>
           <div className="m-4 mt-8 flex flex-col gap-y-4 px-4">
             <NavigationBar href={'/'}>
               <LayoutDashboard />
@@ -46,10 +48,10 @@ const Sidebar = () => {
               Profile
             </NavigationBar>
 
-            <NavigationBar href={'/dashboard/setting'}>
+            {/* <NavigationBar href={'/dashboard/setting'}>
               <Settings />
               setting
-            </NavigationBar>
+            </NavigationBar> */}
           </div>
         </div>
         <div

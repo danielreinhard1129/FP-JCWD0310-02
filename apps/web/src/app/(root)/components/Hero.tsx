@@ -1,24 +1,35 @@
 'use client';
-import { Autoplay } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useEffect, useState } from 'react';
 import 'swiper/css';
-import { useState } from 'react';
-import Image from 'next/image';
-import { BASE_API_URL } from '@/utils/config';
-import Link from 'next/link';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function HeroPage() {
+  const router = useRouter();
   const [images, setImages] = useState<string[]>([
     '/landing_page/image15.png',
     '/landing_page/lifestyle.jpg',
     '/landing_page/sports.webp',
   ]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1,
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <div
       className="relative bg-cover bg-center bg-no-repeat w-full md:h-[700px] h-[450px] rounded-[30px] text-white"
-      style={{ backgroundImage: `url(${images[0]})` }}
+      style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[30px] font-sans z-20"></div>
 
@@ -31,17 +42,17 @@ export default function HeroPage() {
             <p>Nike introducing the new air max for everyone's comfort</p>
           </div>
           <Link
-            href={''}
+            href="/products"
             className="p-4 rounded-xl bg-[#3252DF] text-white font-semibold"
           >
-            <Label className="font-rubik">View All Products</Label>
+            <span className="font-rubik">View All Products</span>
           </Link>
         </div>
         <div className="z-50 flex flex-col gap-4">
           <div className="rounded-xl overflow-hidden border-2 border-white aspect-square">
             <Image
               alt="product"
-              src={images[0]}
+              src={images[currentImageIndex]}
               className="object-cover object-center h-full"
               width={200}
               height={400}
@@ -50,7 +61,7 @@ export default function HeroPage() {
           <div className="rounded-xl overflow-hidden border-2 border-white aspect-square">
             <Image
               alt="product"
-              src={images[0]}
+              src={images[currentImageIndex]}
               className="object-cover object-center h-full"
               width={200}
               height={400}
@@ -69,144 +80,4 @@ export default function HeroPage() {
   );
 }
 
-// export default function HeroPage() {
-//   return (
-//     <Swiper
-//       spaceBetween={30}
-//       slidesPerView={1}
-//       navigation
-//       pagination={{ clickable: true }}
-//       className="w-full"
-//     >
-//       {images.map((image, index) => (
-//         <SwiperSlide key={index}>
-//           <div
-//             className="relative bg-cover bg-center bg-no-repeat w-full max-md:h-[382px] h-[750px] rounded-[65px] text-white"
-//             style={{ backgroundImage: `url(${image})` }}
-//           >
-//             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[65px] font-sans"></div>
-//             <div className="absolute max-md:bottom-4 max-md:left-4 md:bottom-12 md:left-12 flex-col justify-start items-start inline-flex font-sans max-md:text-sm">
-//               <div className="md:text-[74px] font-semibold max-md:text-2xl">
-//                 NIKE AIR MAX
-//               </div>
-//               <div className="w-[490px] text-stone-200 md:text-2xl font-semibold">
-//                 <p>Nike introducing the new air max for everyone's comfort</p>
-//               </div>
-//               <button className="p-4 rounded-xl bg-[#3252DF] text-white mt-7 font-semibold">
-//                 View All Products
-//               </button>
-//             </div>
-//             <div className="absolute bottom-12 right-12 space-y-6">
-//               <div
-//                 className="relative bg-cover bg-center bg-no-repeat w-40 h-40 rounded-3xl text-white border-2 border-white hidden md:block"
-//                 style={{ backgroundImage: `url(${image})` }}
-//               ></div>
-//               <div
-//                 className="relative bg-cover bg-center bg-no-repeat w-40 h-40 rounded-3xl text-white border-2 border-white hidden md:block"
-//                 style={{ backgroundImage: `url(${image})` }}
-//               ></div>
-//             </div>
-//           </div>
-//         </SwiperSlide>
-//       ))}
-//     </Swiper>
-//   );
-// }
 
-// return (
-//   <div className="relative bg-[url('/landing_page/image15.png')] w-full max-md:h-[382px] h-[750px] rounded-[65px] text-white bg-cover bg-center bg-no-repeat">
-//     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[65px] font-sans"></div>
-
-//     <div className="absolute max-md:bottom-4 max-md:left-4 md:bottom-12 md:left-12 flex-col justify-start items-start inline-flex font-sans max-md:text-sm">
-//       <div className="md:text-[74px] font-semibold max-md:text-2xl">
-//         NIKE AIR MAX
-//       </div>
-//       <div className="w-[490px] text-stone-200 md:text-2xl font-semibold">
-//         <p>Nike introducing the new air max for everyone&apos;s comfort</p>
-//       </div>
-//       <button className="p-4 rounded-xl bg-[#3252DF] text-white mt-7 font-semibold">
-//         View All Products
-//       </button>
-//     </div>
-
-//     <div className="absolute bottom-12 right-12 space-y-6">
-//       <div className="relative bg-[url('/landing_page/image15.png')] w-40 h-40 rounded-3xl text-white bg-cover bg-repeat bg-center border-2 border-white hidden md:block"></div>
-//       <div className="relative bg-[url('/landing_page/image15.png')] w-40 h-40 rounded-3xl text-white bg-cover bg-repeat bg-center border-2 border-white hidden md:block"></div>
-//     </div>
-//   </div>
-// );
-
-// import { Swiper, SwiperSlide } from 'swiper/react';
-
-// const images: string[] = [
-//   '/landing_page/image1.png',
-//   '/landing_page/image2.png',
-//   '/landing_page/image3.png',
-//   '/landing_page/image4.png',
-// ];
-// export default function HeroPage() {
-//   return (
-//     <Swiper
-//       spaceBetween={30}
-//       slidesPerView={1}
-//       navigation
-//       pagination={{ clickable: true }}
-//       className="w-full"
-//     >
-//       {images.map((image, index) => (
-//         <SwiperSlide key={index}>
-//           <div
-//             className="relative bg-cover bg-center bg-no-repeat w-full max-md:h-[382px] h-[750px] rounded-[65px] text-white"
-//             style={{ backgroundImage: `url(${image})` }}
-//           >
-//             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[65px] font-sans"></div>
-//             <div className="absolute max-md:bottom-4 max-md:left-4 md:bottom-12 md:left-12 flex-col justify-start items-start inline-flex font-sans max-md:text-sm">
-//               <div className="md:text-[74px] font-semibold max-md:text-2xl">
-//                 NIKE AIR MAX
-//               </div>
-//               <div className="w-[490px] text-stone-200 md:text-2xl font-semibold">
-//                 <p>Nike introducing the new air max for everyone's comfort</p>
-//               </div>
-//               <button className="p-4 rounded-xl bg-[#3252DF] text-white mt-7 font-semibold">
-//                 View All Products
-//               </button>
-//             </div>
-//             <div className="absolute bottom-12 right-12 space-y-6">
-//               <div
-//                 className="relative bg-cover bg-center bg-no-repeat w-40 h-40 rounded-3xl text-white border-2 border-white hidden md:block"
-//                 style={{ backgroundImage: `url(${image})` }}
-//               ></div>
-//               <div
-//                 className="relative bg-cover bg-center bg-no-repeat w-40 h-40 rounded-3xl text-white border-2 border-white hidden md:block"
-//                 style={{ backgroundImage: `url(${image})` }}
-//               ></div>
-//             </div>
-//           </div>
-//         </SwiperSlide>
-//       ))}
-//     </Swiper>
-//   );
-// }
-
-// // return (
-// //   <div className="relative bg-[url('/landing_page/image15.png')] w-full max-md:h-[382px] h-[750px] rounded-[65px] text-white bg-cover bg-center bg-no-repeat">
-// //     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[65px] font-sans"></div>
-
-// //     <div className="absolute max-md:bottom-4 max-md:left-4 md:bottom-12 md:left-12 flex-col justify-start items-start inline-flex font-sans max-md:text-sm">
-// //       <div className="md:text-[74px] font-semibold max-md:text-2xl">
-// //         NIKE AIR MAX
-// //       </div>
-// //       <div className="w-[490px] text-stone-200 md:text-2xl font-semibold">
-// //         <p>Nike introducing the new air max for everyone&apos;s comfort</p>
-// //       </div>
-// //       <button className="p-4 rounded-xl bg-[#3252DF] text-white mt-7 font-semibold">
-// //         View All Products
-// //       </button>
-// //     </div>
-
-// //     <div className="absolute bottom-12 right-12 space-y-6">
-// //       <div className="relative bg-[url('/landing_page/image15.png')] w-40 h-40 rounded-3xl text-white bg-cover bg-repeat bg-center border-2 border-white hidden md:block"></div>
-// //       <div className="relative bg-[url('/landing_page/image15.png')] w-40 h-40 rounded-3xl text-white bg-cover bg-repeat bg-center border-2 border-white hidden md:block"></div>
-// //     </div>
-// //   </div>
-// // );

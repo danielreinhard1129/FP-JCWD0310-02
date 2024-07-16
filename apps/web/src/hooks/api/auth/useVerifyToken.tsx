@@ -1,3 +1,4 @@
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -10,6 +11,7 @@ const useVerifyToken = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const token = searchParams.get('token');
+  const { openNotification } = useNotification();
 
   console.log(searchParams.get('token'));
 
@@ -28,7 +30,7 @@ const useVerifyToken = () => {
           },
         },
       );
-      alert('Token Verified');
+      openNotification.success({ message: 'Token Verified' });
       console.log(response);
       router.replace('/login');
     } catch (error) {
