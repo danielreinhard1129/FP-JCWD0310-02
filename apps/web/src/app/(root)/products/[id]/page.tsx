@@ -174,6 +174,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
               <>
                 <>
                   <ProductCard
+                    productId={0}
                     category="baju"
                     price={125000}
                     created={new Date()}
@@ -181,6 +182,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                     skeleton={isLoadingSuggestion}
                   />
                   <ProductCard
+                    productId={0}
                     category="baju"
                     price={125000}
                     created={new Date()}
@@ -188,6 +190,7 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
                     skeleton={isLoadingSuggestion}
                   />
                   <ProductCard
+                    productId={0}
                     category="baju"
                     price={125000}
                     created={new Date()}
@@ -199,17 +202,16 @@ const ProductDetailPage = ({ params }: { params: { id: number } }) => {
             ) : dataSuggestion?.data.length ? (
               dataSuggestion.data.map((val, indx) => {
                 return (
-                  <Link href={'/products/' + val.id} key={indx}>
-                    <ProductCard
-                      key={indx}
-                      title={val.name}
-                      price={val.price}
-                      created={val.createdAt}
-                      images={val.productImages[0].url}
-                      category="baju"
-                      skeleton={false}
-                    />
-                  </Link>
+                  <ProductCard
+                    productId={val.id}
+                    key={indx}
+                    title={val.name}
+                    price={val.price}
+                    created={val.createdAt}
+                    images={val.productImages[0].url}
+                    category="baju"
+                    skeleton={false}
+                  />
                 );
               })
             ) : (

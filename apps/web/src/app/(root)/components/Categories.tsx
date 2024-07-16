@@ -1,42 +1,39 @@
 'use client';
 import { useState } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ChevronRight, MoveUpRight } from 'lucide-react';
 import { ChevronLeft } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { useGetCategories } from '@/hooks/categories/useGetCategories';
+import Link from 'next/link';
 export default function Categories() {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const images = [
-    '/landing_page/image15.png',
-    '/landing_page/foot.png',
-    '/landing_page/image15.png',
-    '/landing_page/foot.png',
-    '/landing_page/image15.png',
-  ];
-
+  const { data } = useGetCategories();
+  const images = ['/landing_page/lifestyle.jpg', '/landing_page/sports.webp'];
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
-
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1,
     );
   };
   return (
-    <div className="md:relative bg-black w-full my-4 flex flex-col text-white items-center h-full md:h-[824px]">
-      <div className="flex justify-between items-end w-full md:w-[1320px] mt-10 px-4 md:px-0">
-        <div className="uppercase flex flex-col">
-          <div className="text-4xl md:text-[74px] font-bold">Categories</div>
+    <div className="bg-[#232321] font-rubik flex flex-col pt-20 gap-12 text-white h-fit md:w-[calc(100vw-16px)] w-[calc(100vw)] md:-ml-[33px] -ml-[16px]">
+      <div className="flex justify-between w-full px-8">
+        <div className="uppercase">
+          <Label className="md:text-[60px] text-[30px] font-rubik font-bold">
+            Categories
+          </Label>
         </div>
-        <div className="flex h-12 px-4 md:px-8 py-2 rounded-lg justify-center items-center gap-3 md:gap-7">
+        <div className="flex text-black gap-4">
           <div
-            className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex cursor-pointer"
+            className="h-10 w-10 bg-[#E7E7E3] bg-opacity-50 rounded-lg flex justify-center items-center cursor-pointer"
             onClick={handlePrev}
           >
             <ChevronLeft />
           </div>
           <div
-            className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex cursor-pointer"
+            className="h-10 w-10 bg-[#E7E7E3] rounded-lg flex justify-center items-center cursor-pointer"
             onClick={handleNext}
           >
             <ChevronRight />
@@ -44,153 +41,54 @@ export default function Categories() {
         </div>
       </div>
 
-      <div className="absolute right-0 w-full md:w-[1380px] h-[300px] md:h-[600px] bottom-0 rounded-tl-[48px] bg-gray-100">
-        <div className="absolute flex flex-col md:flex-row p-5 h-full w-full gap-5">
+      <div className="pl-8">
+        <div className="md:h-[400px] h-[600px] lg:h-[500px] uppercase rounded-tl-3xl overflow-hidden grid md:grid-cols-2">
           <div
-            className="w-full h-full rounded-3xl text-white bg-cover bg-repeat bg-center border-2"
+            className="bg-center bg-no-repeat bg-cover relative"
             style={{
               backgroundImage: `url(${images[currentIndex]})`,
             }}
-          ></div>
+          >
+            <div className="absolute text-black bottom-0 w-full flex justify-between items-center pb-4 px-8">
+              <Label className="text-3xl cursor-pointer font-semibold">
+                {(data.categories &&
+                  data.categories[currentIndex] &&
+                  data.categories[currentIndex].name &&
+                  data.categories[currentIndex].name) ||
+                  ''}
+              </Label>
+              <Link
+                href={'/products'}
+                className="bg-black w-10 h-10 flex justify-center items-center rounded-lg p-2 cursor-pointer"
+              >
+                <ArrowUpRight className="text-white" />
+              </Link>
+            </div>
+          </div>
           <div
-            className="w-full h-full rounded-3xl text-white bg-cover bg-repeat bg-center border-2 hidden md:block"
+            className="bg-center bg-no-repeat bg-cover relative"
             style={{
               backgroundImage: `url(${images[(currentIndex + 1) % images.length]})`,
             }}
-          ></div>
+          >
+            <div className="absolute text-black bottom-0 w-full flex justify-between items-center pb-4 px-8">
+              <Label className="text-3xl cursor-pointer font-semibold">
+                {(data.categories &&
+                  data.categories[(currentIndex + 1) % images.length] &&
+                  data.categories[(currentIndex + 1) % images.length].name &&
+                  data.categories[(currentIndex + 1) % images.length].name) ||
+                  ''}
+              </Label>
+              <Link
+                href={'/products'}
+                className="bg-black w-10 h-10 flex justify-center items-center rounded-lg p-2 cursor-pointer"
+              >
+                <ArrowUpRight className="text-white" />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    // <>
-    //   <div className="relative bg-black w-full my-4 flex flex-col text-white items-center h-[824px]">
-    //     <div className="flex justify-between items-end w-[1320px] mt-10">
-    //       <div className="uppercase flex flex-col">
-    //         <div className="text-[74px] font-bold">Categories</div>
-    //       </div>
-    //       <div className="h-12 px-8 py-2 rounded-lg justify-center items-center inline-flex gap-7">
-    //         <div
-    //           className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex cursor-pointer"
-    //           onClick={handlePrev}
-    //         >
-    //           <ChevronLeft />
-    //         </div>
-    //         <div
-    //           className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex cursor-pointer"
-    //           onClick={handleNext}
-    //         >
-    //           <ChevronRight />
-    //         </div>
-    //       </div>
-    //     </div>
-
-    //     <div className="absolute right-0 w-[1380px] h-[600px] bottom-0 rounded-tl-[48px] bg-gray-100">
-    //       <div className="absolute flex p-5 h-full w-full gap-5">
-    //         <div
-    //           className="w-full h-full rounded-3xl text-white bg-cover bg-repeat bg-center border-2"
-    //           style={{
-    //             backgroundImage: `url(${images[currentIndex]})`,
-    //           }}
-    //         ></div>
-    //         <div
-    //           className="w-full h-full rounded-3xl text-white bg-cover bg-repeat bg-center border-2"
-    //           style={{
-    //             backgroundImage: `url(${images[(currentIndex + 1) % images.length]})`,
-    //           }}
-    //         ></div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </>
   );
-  // return (
-  //   // <>
-  //   //   <div className="relative bg-black w-full my-4 flex flex-col text-white items-center h-[824px] ">
-  //   //     <div className="flex justify-between items-end w-[1320px] mt-10">
-  //   //       <div className="uppercase flex flex-col">
-  //   //         <div className="text-[74px] font-bold">Categories</div>
-  //   //       </div>
-  //   //       <div className="h-12 px-8 py-2 rounded-lg justify-center items-center inline-flex gap-7">
-  //   //         <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-  //   //           <div className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex">
-  //   //             <div className="w-4 h-4 relative"></div>
-  //   //           </div>
-  //   //         </div>
-  //   //         <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-  //   //           <div className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex">
-  //   //             <div className="w-4 h-4 relative"></div>
-  //   //           </div>
-  //   //         </div>
-  //   //       </div>
-  //   //     </div>
-  //   //     <div className="absolute right-0 w-[1380px] h-[600px] bottom-0 rounded-tl-[48px] bg-gray-100">
-  //   //       <div className="absolute flex p-5 h-full w-full gap-5">
-  //   //         {' '}
-  //   //         <div
-  //   //           className={`  bg-[url('/landing_page/foot.png')] w-full h-full  rounded-3xl text-white bg-cover bg-repeat bg-center border-2 `}
-  //   //         ></div>
-  //   //         <div
-  //   //           className={` bg-[url('/landing_page/foot.png')] w-full h-full   rounded-3xl text-white bg-cover bg-repeat bg-center border-2 `}
-  //   //         ></div>
-  //   //       </div>
-  //   //     </div>
-  //   //   </div>
-  //   // </>
-  // );
 }
-
-// <>
-//   { <div className="w-[1440px] h-[824px] relative">
-//     <div className="w-[1440px] h-[824px] left-[1440px] top-0 absolute origin-top-left rotate-180 bg-neutral-800"></div>
-//     <div className="w-[1320px] left-[60px] top-[90px] absolute justify-between items-end inline-flex">
-//       <div className="text-white text-[74px] font-semibold font-['Rubik'] uppercase leading-[70.30px]">
-//         Categories
-//       </div>
-//       <div className="justify-start items-center gap-4 flex">
-//         <div className="origin-top-left rotate-180 opacity-50 flex-col justify-start items-start gap-2.5 inline-flex">
-//           <div className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex">
-//             <div className="w-4 h-4 relative"></div>
-//           </div>
-//         </div>
-//         <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-//           <div className="h-10 px-3 py-2 bg-stone-200 rounded-lg justify-center items-center gap-1 inline-flex">
-//             <div className="w-4 h-4 relative"></div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     <div className="w-[1380px] h-[600px] left-[60px] top-[224px] absolute rounded-tl-[48px] justify-start items-start inline-flex">
-//       <div className="grow shrink basis-0 self-stretch px-16 bg-gray-100 rounded-tl-[64px] justify-center items-center gap-2.5 flex">
-//         <div className="text-neutral-800 text-4xl font-semibold font-['Rubik'] uppercase">
-//           Lifestyle
-//           <br />
-//           Shoes
-//         </div>
-//         <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-//           <div className="p-2 bg-neutral-800 rounded-lg justify-center items-center gap-1 inline-flex">
-//             <div className="w-8 h-8 relative"></div>
-//           </div>
-//         </div>
-//         <img
-//           className="w-[480px] h-[600px] origin-top-left rotate-180"
-//           src="https://via.placeholder.com/480x600"
-//         />
-//       </div>
-//       <div className="grow shrink basis-0 self-stretch px-16 bg-neutral-100 justify-center items-center gap-2.5 flex">
-//         <div className="text-neutral-800 text-4xl font-semibold font-['Rubik'] uppercase">
-//           Basketball
-//           <br />
-//           Shoes
-//         </div>
-//         <img
-//           className="w-[480px] h-[600px]"
-//           src="https://via.placeholder.com/480x600"
-//         />
-//         <div className="flex-col justify-start items-start gap-2.5 inline-flex">
-//           <div className="p-2 bg-neutral-800 rounded-lg justify-center items-center gap-1 inline-flex">
-//             <div className="w-8 h-8 relative"></div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-// </>
