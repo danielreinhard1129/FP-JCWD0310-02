@@ -48,7 +48,7 @@ const Login = () => {
           >
             <div className="text-4xl font-bold max-md:text-center">Login</div>
             <div
-              className="text-2xl font-semibold"
+              className="text-2xl font-semibold cursor-pointer"
               onClick={() => router.replace('/forgotPassword')}
             >
               Forgot your password?

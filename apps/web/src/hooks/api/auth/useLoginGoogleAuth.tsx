@@ -20,11 +20,19 @@ const useLoginGoogleAuth = () => {
         });
         console.log('ini code google', code);
         const { data } = response;
-        // dispatch({ type: 'LOGIN', payload: data.data });
+        console.log(data.data.role);
         dispatch(loginAction(data.data));
         localStorage.setItem('token', data.token);
         openNotification.success({ message: 'Login google success' });
-        router.replace('/');
+
+        if (data.data.role === 'CUSTOMER') {
+          router.replace('/');
+        } else if (
+          data.data.role === 'WAREHOUSE_ADMIN' ||
+          data.data.role === 'SUPER_ADMIN'
+        ) {
+          router.replace('/admin');
+        }
       } catch (error) {
         openNotification.error({ message: 'Login Google failed' });
       }
@@ -36,5 +44,3 @@ const useLoginGoogleAuth = () => {
 };
 
 export default useLoginGoogleAuth;
-
-// import { OAuth2Client } from 'google-auth-library';

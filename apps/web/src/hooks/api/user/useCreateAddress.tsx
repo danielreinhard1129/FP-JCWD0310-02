@@ -3,8 +3,7 @@
 import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
-import { useRouter } from 'next/router';
-
+import { useRouter } from 'next/navigation';
 interface Address {
   name: string;
   street: string;
@@ -22,6 +21,7 @@ interface RootState {
 
 const useCreateAddress = () => {
   const { openNotification } = useNotification();
+
   const { id } = useAppSelector((state: RootState) => state.user);
   console.log(id);
 

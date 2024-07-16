@@ -31,9 +31,13 @@ const useLogin = () => {
         payload,
       );
       console.log(data);
+
+      localStorage.setItem('token', data.token);
+      openNotification.success({ message: 'Login success' });
       if (data.data) {
         if (data.data.role == 'CUSTOMER') {
           dispatch(loginAction(data.data));
+          router.replace('/');
         } else if (
           data.data.employee &&
           (data.data.role == 'WAREHOUSE_ADMIN' ||
@@ -41,11 +45,11 @@ const useLogin = () => {
         ) {
           dispatch(loginAction(data.data));
           dispatch(adminLoginAction(data.data.employee));
-        }
-        localStorage.setItem('token', data.token);
-        openNotification.success({ message: 'Login success' });
 
-        router.replace('/');
+          router.replace('/admin');
+        }
+
+        // router.replace('/');
       } else {
         openNotification.error({ message: 'Login failed' });
       }

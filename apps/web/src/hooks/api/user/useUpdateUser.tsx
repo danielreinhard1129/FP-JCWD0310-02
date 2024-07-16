@@ -38,9 +38,7 @@ const useUpdateUser = () => {
       const { data } = await axiosInstance.put(`/user/update/${id}`, formData);
 
       openNotification.success({ message: data.message });
-    } catch (error) {
-      throw error;
-    }
+    } catch (error) {}
   };
 
   return { updateUser };
