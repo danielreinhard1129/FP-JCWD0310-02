@@ -14,7 +14,6 @@ const useDeleteWarehouseAdmin = () => {
         message: 'Admin deleted successfully',
       });
       console.log(response.data);
-      window.location.reload();
 
       return response.data;
     } catch (error) {}

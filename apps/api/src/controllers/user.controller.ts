@@ -67,6 +67,7 @@ export class UserController {
         req.body,
         Number(req.params.id),
       );
+      console.log(response);
       return res.status(200).send(response);
     } catch (error) {
       next(error);

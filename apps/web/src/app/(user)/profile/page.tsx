@@ -7,6 +7,7 @@ import useUpdateUser from '@/hooks/api/user/useUpdateUser';
 import { useFormik } from 'formik';
 import { ProfileAddress } from './components/ProfileAddress';
 import { BASE_API_URL } from '@/utils/config';
+import useModal from '@/hooks/useModal';
 
 interface userArgs extends User {
   email: string;
@@ -81,10 +82,10 @@ const ProfilePage = () => {
                     ? googleImage
                     : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
               }
-              className="w-40 h-40 rounded-sm shadow-md object-cover max-w-full max-h-full "
+              className="  rounded-sm shadow-md object-cover max-w-full max-h-40 "
             />
 
-            <div className="text-center mt-4 text-gray-600 bg-gray-50 p-2">
+            <div className="text-center text-gray-600 bg-gray-50 p-2">
               <input
                 type="file"
                 id="fileInput"

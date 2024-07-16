@@ -22,6 +22,7 @@ const useLoginGoogleAuth = () => {
         const { data } = response;
         // dispatch({ type: 'LOGIN', payload: data.data });
         dispatch(loginAction(data.data));
+        localStorage.setItem('token', data.token);
         openNotification.success({ message: 'Login google success' });
         router.replace('/');
       } catch (error) {

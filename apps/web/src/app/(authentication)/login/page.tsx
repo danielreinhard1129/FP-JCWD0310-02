@@ -40,7 +40,7 @@ const Login = () => {
           <Image src={logo} alt="logo" width={400} height={400} />
         </div>
       </div>
-      <div className="md:w-1/2 flex items-center justify-center max-md:absolute max-md:mt-10 max-md:mx-10">
+      <div className="md:w-1/2 flex items-center justify-center mx-4 md:mx-0 max-md:absolute max-md:inset-x-0 max-md:top-10 bg-white bg-opacity-80 p-8 rounded-xl shadow-lg">
         <div className="flex flex-col gap-y-5 w-full max-w-md">
           <form
             className="flex flex-col gap-y-7 w-full max-w-md"
@@ -59,8 +59,14 @@ const Login = () => {
               name="email"
               onChange={formik.handleChange}
               value={formik.values.email}
+              onBlur={formik.handleBlur}
               type="text"
             />
+            {formik.touched.email && formik.errors.email ? (
+              <div className="text-red-500 text-sm -my-4">
+                {formik.errors.email}
+              </div>
+            ) : null}
             <input
               className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
               placeholder="Password"
@@ -68,15 +74,14 @@ const Login = () => {
               type="password"
               onChange={formik.handleChange}
               value={formik.values.password}
+              onBlur={formik.handleBlur}
             />
-            <div className="flex items-center">
-              {/* <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
-              <div className="max-md:text-sm">
-                <span>Make sure the account you are using is correct</span>
-                <br />
-                <span>applies to all login options below. More info.</span>
-              </div> */}
-            </div>
+            {formik.touched.password && formik.errors.password ? (
+              <div className="text-red-500 text-sm -my-5">
+                {formik.errors.password}
+              </div>
+            ) : null}
+            <div className="flex items-center"></div>
             <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold -mb-3">
               Login
             </button>
@@ -96,10 +101,7 @@ const Login = () => {
             />
             Sign in with Google
           </button>
-          {/* <div className=" text-base">
-            Not a member ?{' '}
-            <span className="text-lg font-semibold"> Sing up now</span>
-          </div> */}
+
           <div className="text-base text-gray-600">
             Not a member?{' '}
             <a

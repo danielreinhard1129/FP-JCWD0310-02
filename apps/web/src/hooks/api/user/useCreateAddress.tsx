@@ -1,5 +1,6 @@
 'use client';
 
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/router';
@@ -20,6 +21,7 @@ interface RootState {
 }
 
 const useCreateAddress = () => {
+  const { openNotification } = useNotification();
   const { id } = useAppSelector((state: RootState) => state.user);
   console.log(id);
 
@@ -29,8 +31,8 @@ const useCreateAddress = () => {
       const { data } = await axiosInstance.post(`/user/createAddress/${id}`, {
         ...payload,
       });
-      console.log(data);
-      alert('Address created successfully');
+
+      openNotification.success({ message: 'Address created successfully' });
     } catch (error) {
       console.log(error);
     }

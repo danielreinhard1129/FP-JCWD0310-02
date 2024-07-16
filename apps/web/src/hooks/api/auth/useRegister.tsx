@@ -16,7 +16,8 @@ const useRegister = () => {
       openNotification.success({ message: 'Register success' });
       router.replace('/login');
     } catch (error) {
-      openNotification.error({ message: 'Register failed' });
+      // openNotification.error({ message: 'Register failed' });
+      console.log(error);
     }
   };
   return { register };

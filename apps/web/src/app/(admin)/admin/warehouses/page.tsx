@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import useGetEmployes from '@/hooks/api/user/useGetEmployes';
 import { useFormik } from 'formik';
 import useUpdateEmploye from '@/hooks/api/user/useUpdateEmploye';
+import { useModal } from '@/hooks/useModal';
 interface Warehouse {
   id: number;
   name: string;
@@ -36,6 +37,8 @@ const ListWarehouse = () => {
   const [adminList, setAdminList] = useState<Admin[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const { ModalAsync, setOpen, setTitle } = useModal();
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState(0);
   // const ararry = ['budi', 'supri', 'basuri', ' bude', 'supre', 'basurif'];
   const fetchWarehouses = async (page: number) => {
     try {
@@ -54,6 +57,7 @@ const ListWarehouse = () => {
     try {
       await deleteWarehouse(warehouseId);
       fetchWarehouses(currentPage);
+      setOpen(false);
     } catch (error) {
       console.error('Error deleting warehouse:', error);
     }
@@ -61,28 +65,11 @@ const ListWarehouse = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  //ini hapus
-  // useEffect(() => {
-  //   const fetchAdmins = async () => {
-  //     try {
-  //       const admins = await getEmployes();
-  //       setAdminList(admins);
-  //     } catch (error) {
-  //       console.error('Error fetching admins:', error);
-  //     }
-  //   };
-  //   fetchAdmins();
-  // }, []);
-  // const formik = useFormik({
-  //   initialValues: {
-  //     id: 0,
-  //     warehousesId: 0,
-  //   },
-  //   onSubmit: (values) => {
-  //     // updateEmploye(values);
-  //   },
-  // });
-
+  const confirmDeleteAddress = (id: number) => {
+    setSelectedWarehouseId(id);
+    setOpen(true);
+    setTitle('Delete Address');
+  };
   console.log(adminList);
   return (
     <div className="px-4 py-4">
@@ -106,7 +93,7 @@ const ListWarehouse = () => {
                   <th className="px-4 py-2">No</th>
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Alamat</th>
-                  <th className="px-4 py-2 max-md:hidden">Penanggung Jawab</th>
+                  {/* <th className="px-4 py-2 max-md:hidden">Penanggung Jawab</th> */}
                   <th className="px-4 py-2">Action</th>
                 </tr>
               </thead>
@@ -120,29 +107,14 @@ const ListWarehouse = () => {
                     <td className="px-4 py-2">{warehouse.name}</td>
                     <td className="px-4 py-2">{`${warehouse.street}, ${warehouse.subdistrict} ,${warehouse.city}, ${warehouse.province} `}</td>
                     {/* <td className="px-4 py-2">{warehouse.alamat}</td> */}
-                    <td className="px-4 py-2 max-md:hidden">
+                    {/* <td className="px-4 py-2 max-md:hidden">
                       Belum memilih Admin
-                      {/* <select
-                        className="appearance-auto  rounded py-2 px-3 focus:outline-none"
-                        // onChange={(e) => {
-                        //   formik.handleChange(e);
-                        //   formik.setFieldValue('id', e.target.value);
-                        //   formik.setFieldValue('warehousesId', warehouse.id);
-                        // }}
-                        value={formik.values.id}
-                      >
-                        <option value="">Select Admin</option>
-                        {adminList.map((admin) => (
-                          <option key={admin.id} value={admin.id}>
-                            {admin.user.firstName}{' '}
-                          </option>
-                        ))}
-                      </select> */}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-2 flex justify-center gap-4">
                       <Trash2
                         className="cursor-pointer"
-                        onClick={() => handleDelete(warehouse.id)}
+                        // onClick={() => handleDelete(warehouse.id)}
+                        onClick={() => confirmDeleteAddress(warehouse.id)}
                       />
                       <FilePenLine
                         className="cursor-pointer"
@@ -175,6 +147,12 @@ const ListWarehouse = () => {
           </div>
         </CardContent>
       </Card>
+
+      <ModalAsync
+        loading={false}
+        handleOk={() => handleDelete(selectedWarehouseId)}
+        description=" are you sure you want to delete this address"
+      />
     </div>
   );
 };
