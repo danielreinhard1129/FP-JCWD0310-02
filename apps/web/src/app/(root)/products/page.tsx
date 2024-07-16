@@ -17,6 +17,7 @@ const Loading = () => {
     return (
       <>
         <ProductCard
+          productId={0}
           created={new Date(0)}
           category=""
           key={index}
@@ -51,7 +52,7 @@ const ProductsPage = () => {
     debounceCategory();
   }, [size, categories, color]);
   return (
-    <div className="w-full">
+    <div className="w-full mt-4 md:mt-0">
       <div id="title">
         <div id="top" className="flex flex-col">
           <div
@@ -106,6 +107,7 @@ const ProductsPage = () => {
                 return (
                   <Link key={indx} href={'/products/' + val.id}>
                     <ProductCard
+                      productId={val.id}
                       title={val.name}
                       price={val.price}
                       images={val.productImages[0]?.url}

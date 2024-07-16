@@ -7,6 +7,9 @@ import useRegisterGoogleAuth from '@/hooks/api/auth/useRegisterGoogleAuth';
 import Image from 'next/image';
 import logo from '../../../../public/logo-dark.png';
 import { validationSchema } from './validationSchema';
+import Image from 'next/image';
+import logo from '../../../../public/logo-dark.png';
+import { validationSchema } from './validationSchema';
 
 const Register = () => {
   const { register } = useRegister();
