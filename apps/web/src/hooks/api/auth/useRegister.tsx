@@ -13,10 +13,12 @@ const useRegister = () => {
   const register = async (payload: RegisterArgs) => {
     try {
       const { data } = await axiosInstance.post('/auth/register', payload);
+      console.log(data);
       openNotification.success({ message: 'Register success' });
       router.replace('/login');
     } catch (error) {
-      openNotification.error({ message: 'Register failed' });
+      console.log(error);
+      openNotification.error({ message: error });
     }
   };
   return { register };

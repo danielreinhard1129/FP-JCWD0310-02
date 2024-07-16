@@ -18,9 +18,9 @@ export const verifyEmail = async (body: User) => {
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: email,
-      subject: 'Register success ',
+      subject: 'Reset your password',
       text:
-        'klick link di bawah ini untuk verivikasi akun anda ' +
+        'klick link di bawah ini untuk Reset Password ' +
         `${BASE_WEB}/forgotPassword/resetPassword?token=${generateToken}`,
     });
     await prisma.users.update({

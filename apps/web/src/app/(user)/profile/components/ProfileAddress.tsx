@@ -4,6 +4,7 @@ import { CreateAddress } from './CreateAddress';
 import useDeleteAddress from '@/hooks/api/user/useDeleteAddress';
 import { Edit3Icon } from 'lucide-react';
 import { EditAddress } from './EditAddress';
+import { useModal } from '@/hooks/useModal';
 
 interface Address {
   id: number;
@@ -27,6 +28,7 @@ export const ProfileAddress = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     null,
   );
+  const { ModalAsync, setOpen, setTitle } = useModal();
 
   const fetchAddresses = async () => {
     try {
@@ -64,6 +66,7 @@ export const ProfileAddress = () => {
     try {
       await deleteAddress(id);
       fetchAddresses();
+      setOpen(false);
     } catch (error) {
       console.error('Error deleting address:', error);
     }
@@ -71,7 +74,11 @@ export const ProfileAddress = () => {
   const handleAddress = () => {
     setshowCreateAddress(true);
   };
-
+  const confirmDeleteAddress = (id: number) => {
+    setSelectedAddressId(id);
+    setOpen(true);
+    setTitle('Delete Address');
+  };
   return (
     <div className="w-full h-full mt-8 max-md:w-80 border-4 p-4 flex flex-col gap-y-4 text-black font-normal border-gray-300 rounded-lg shadow-lg ">
       {showCreateAddress || showEditAddress ? (
@@ -101,7 +108,7 @@ export const ProfileAddress = () => {
                 key={index}
                 className="bg-white rounded-lg shadow-md overflow-hidden mt-1  "
               >
-                <div className="px-6 py-4">
+                <div className="px-6 py-2">
                   <div className="text-lg mb-2 ">
                     {`Alamat: ${address.street},${address.city}, ${address.province}, ${address.postalCode}`}
                   </div>
@@ -111,7 +118,8 @@ export const ProfileAddress = () => {
                   <div className="flex items-center gap-4">
                     <button
                       className="text-sm text-red-500 hover:text-red-700 focus:outline-none"
-                      onClick={() => handleDeleteAddress(address.id)}
+                      // onClick={() => handleDeleteAddress(address.id)}
+                      onClick={() => confirmDeleteAddress(address.id)}
                     >
                       Hapus
                     </button>
@@ -145,6 +153,11 @@ export const ProfileAddress = () => {
           addressId={addresses.find((item) => item.id === selectedAddressId)!}
         />
       )}
+      <ModalAsync
+        handleOk={() => handleDeleteAddress(selectedAddressId!)}
+        loading={false}
+        description="Are you sure to delete this address"
+      />
     </div>
   );
 };

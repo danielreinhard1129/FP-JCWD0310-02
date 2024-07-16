@@ -9,6 +9,7 @@ import { userService } from '../services/user/getUser.service';
 import { getEmployesService } from '@/services/user/getEmployes.service';
 import { updateEmployeService } from '@/services/user/updateEmploye.service';
 import { getUserAddressService } from '@/services/user/getUserAddress.service';
+import { getWarehouseAdmins } from '@/services/user/getWarehouseAdmins.services';
 export class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
@@ -67,19 +68,20 @@ export class UserController {
         req.body,
         Number(req.params.id),
       );
+      console.log(response);
       return res.status(200).send(response);
     } catch (error) {
       next(error);
     }
   }
-  // async getAdmin(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const response = await getWarehouseAdmins(req.body);
-  //     return res.status(200).send(response);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  async getAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const response = await getWarehouseAdmins(req.body);
+      return res.status(200).send(response);
+    } catch (error) {
+      next(error);
+    }
+  }
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const response = await getUsersService();

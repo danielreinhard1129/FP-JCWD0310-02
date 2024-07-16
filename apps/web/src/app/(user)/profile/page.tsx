@@ -7,6 +7,7 @@ import useUpdateUser from '@/hooks/api/user/useUpdateUser';
 import { useFormik } from 'formik';
 import { ProfileAddress } from './components/ProfileAddress';
 import { BASE_API_URL } from '@/utils/config';
+import useModal from '@/hooks/useModal';
 
 interface userArgs extends User {
   email: string;
@@ -50,8 +51,6 @@ const ProfilePage = () => {
       updateUser(values);
     },
   });
-  console.log(formik.values);
-  console.log(typeof formik.values.profileImageUrl);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -81,10 +80,10 @@ const ProfilePage = () => {
                     ? googleImage
                     : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
               }
-              className="w-40 h-40 rounded-sm shadow-md object-cover max-w-full max-h-full "
+              className="  rounded-sm shadow-md object-cover max-w-full max-h-40 "
             />
 
-            <div className="text-center mt-4 text-gray-600 bg-gray-50 p-2">
+            <div className="text-center text-gray-600 bg-gray-50 p-2">
               <input
                 type="file"
                 id="fileInput"
@@ -139,43 +138,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-{
-  /* <img
-              src={
-                imagePreviewUrl.length > 0
-                  ? imagePreviewUrl[0]
-                  : `${BASE_API_URL}/assets${formik.values.profileImageUrl}`
-              }
-              className="w-40 h-40 rounded-sm shadow-md"
-              alt="Profile Image"
-            /> */
-}
-{
-  /* {imagePreviewUrl.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                className="w-40 h-40 rounded-sm shadow-md mb-2"
-                alt={`Profile ${index}`}
-              />
-            ))} */
-}
-{
-  /* {imagePreviewUrl.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                src={`${BASE_API_URL}/assets${formik.values.profileImageUrl}`}
-                className="w-40 h-40 rounded-sm shadow-md mb-2"
-                alt={`Profile ${index}`}
-              />
-            ))} */
-}
-{
-  /* <img
-              // src={`${BASE_API_URL}/assets/${val}`}
-              // src={`${BASE_API_URL}/assets${formik.values.profileImageUrl}`}
-              className="w-40 h-40 rounded-sm shadow-md"
-              alt="Profile Image"
-            /> */
-}
