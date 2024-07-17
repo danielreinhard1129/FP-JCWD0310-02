@@ -25,13 +25,10 @@ const useUpdateAddress = () => {
       const response = await axiosInstance.post(`/user/updateAddress/${id}`, {
         ...payload,
       });
-      console.log(response.data);
       openNotification.success({ message: response.data.message });
 
       window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return { updateAddress };
 };

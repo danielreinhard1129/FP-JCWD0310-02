@@ -29,7 +29,6 @@ const ManageDataUserPage = () => {
     try {
       const response = await getWarehousesAdmin();
       setUsers(response.data);
-      console.log(response);
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +36,6 @@ const ManageDataUserPage = () => {
   useEffect(() => {
     fetchUser();
   }, []);
-  console.log(users);
   const handleDelete = async (id: number) => {
     try {
       await deleteWarehouseAdmin(id);

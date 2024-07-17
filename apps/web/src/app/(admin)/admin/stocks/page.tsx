@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 const AdminDashboardStocksPage = () => {
   const user = useAppSelector((state) => state.user);
   const warehouse = useAppSelector((state) => state.admin);
-  const { getWarehouses } = useGetWarehouses(warehouse.warehouseId);
+  const { getWarehouses } = useGetWarehouses(undefined);
   const { mutation, setQuery, query } = useGetStocks({
     warehouseId: Number(warehouse.warehouseId),
   });

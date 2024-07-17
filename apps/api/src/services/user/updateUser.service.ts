@@ -18,9 +18,6 @@ export const updateUserService = async (
     const existingUser = await prisma.users.findFirst({
       where: { id },
     });
-
-    console.log(body);
-    console.log(existingUser);
     if (!existingUser) {
       throw new Error('User not found');
     }

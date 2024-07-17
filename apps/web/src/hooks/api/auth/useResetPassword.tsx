@@ -13,10 +13,7 @@ const useResetPassword = () => {
 
   const token = searchParams.get('token');
 
-  console.log(searchParams.get('token'));
-
   const resetPassword = async (payload: VerifyTokenArgs) => {
-    console.log(payload.password);
     try {
       const response = await axiosInstance.post(
         '/auth/reset-password',
@@ -31,7 +28,6 @@ const useResetPassword = () => {
         },
       );
       openNotification.success({ message: 'Reset Password Success' });
-      console.log(response);
       router.replace('/login');
     } catch (error) {
       openNotification.error({ message: 'Reset Password Failed' });

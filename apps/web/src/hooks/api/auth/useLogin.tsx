@@ -30,7 +30,6 @@ const useLogin = () => {
         '/auth/login',
         payload,
       );
-      console.log(data);
 
       localStorage.setItem('token', data.token);
       openNotification.success({ message: 'Login success' });

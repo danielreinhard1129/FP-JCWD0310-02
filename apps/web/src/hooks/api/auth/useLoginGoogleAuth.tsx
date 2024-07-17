@@ -18,9 +18,7 @@ const useLoginGoogleAuth = () => {
         const response = await axiosInstance.post('/auth/login/google', {
           code,
         });
-        console.log('ini code google', code);
         const { data } = response;
-        console.log(data.data.role);
         dispatch(loginAction(data.data));
         localStorage.setItem('token', data.token);
         openNotification.success({ message: 'Login google success' });

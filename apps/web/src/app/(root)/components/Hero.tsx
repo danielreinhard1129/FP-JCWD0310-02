@@ -39,7 +39,7 @@ export default function HeroPage() {
             NIKE AIR MAX
           </div>
           <div className="w-[400px] text-stone-200 text-2xl font-semibold mb-6">
-            <p>Nike introducing the new air max for everyone's comfort</p>
+            <p>Nike introducing the new air max for everyone&apos;s comfort</p>
           </div>
           <Link
             href="/products"
@@ -72,12 +72,10 @@ export default function HeroPage() {
       <div className="md:hidden font-rubik absolute flex flex-col gap-4 bottom-0 z-50 px-4 py-4">
         <Label className="text-3xl font-bold font-rubik">Nike Air Max</Label>
         <Label className="text-xl font-semibold font-rubik">
-          Nike introducing the new air max for everyone's comfort
+          Nike introducing the new air max for everyone&apos;s comfort
         </Label>
         <Button className="bg-blue-500 w-40">SHOP NOW</Button>
       </div>
     </div>
   );
 }
-
-

@@ -45,7 +45,6 @@ const ListWarehouse = () => {
   const fetchAdminWarehouse = async () => {
     try {
       const data = await getWarehouseAdmin();
-      console.log(data.data);
       setAdminList(data.data);
     } catch (error) {
       console.error('Error fetching admin warehouse:', error);
@@ -55,7 +54,6 @@ const ListWarehouse = () => {
   useEffect(() => {
     fetchAdminWarehouse();
   }, []);
-  console.log(adminList);
   const fetchWarehouses = async (page: number) => {
     try {
       const data = await getWarehouse();
@@ -68,7 +66,6 @@ const ListWarehouse = () => {
   useEffect(() => {
     fetchWarehouses(currentPage);
   }, [currentPage]);
-  console.log(warehouses);
   const handleDelete = async (warehouseId: number) => {
     try {
       await deleteWarehouse(warehouseId);
@@ -86,7 +83,6 @@ const ListWarehouse = () => {
     setOpen(true);
     setTitle('Delete Address');
   };
-  console.log(adminList);
   return (
     <div className="px-4 py-4">
       <Card>
@@ -126,8 +122,8 @@ const ListWarehouse = () => {
                     <td className="px-4 py-2 max-md:hidden">
                       {adminList
                         .filter((admin) => admin.id === warehouse.employee[0])
-                        .map((admin) => (
-                          <p>{admin.user.firstName}</p>
+                        .map((admin, index) => (
+                          <p key={index}>{admin.user.firstName}</p>
                         ))}
                     </td>
                     <td className="px-4 py-2 flex justify-center gap-4">

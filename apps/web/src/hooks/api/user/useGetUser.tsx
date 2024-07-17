@@ -12,7 +12,6 @@ interface User {
 
 const useGetUser = () => {
   const { id } = useAppSelector((state: RootState) => state.user);
-  console.log(id);
   const getUser = async (received: User) => {
     try {
       const response = await axiosInstance.get(`/user/${id}`, {

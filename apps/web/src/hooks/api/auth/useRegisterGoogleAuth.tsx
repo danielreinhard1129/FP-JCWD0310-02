@@ -15,7 +15,6 @@ const useRegisterGoogleAuth = () => {
         const response = await axiosInstance.post('auth/register/google', {
           code,
         });
-        console.log('ini code google', code);
         const { data } = response;
 
         openNotification.success({

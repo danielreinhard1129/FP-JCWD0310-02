@@ -28,7 +28,12 @@ export const uploader = (
     ) => {
       const originalnameParts = file.originalname.split('.');
       const fileExtension = originalnameParts[originalnameParts.length - 1];
-      const newFileName = filePreFix + Date.now() + '.' + fileExtension;
+      const newFileName =
+        filePreFix +
+        Date.now() +
+        file.originalname.length +
+        '.' +
+        fileExtension;
 
       cb(null, newFileName);
     },

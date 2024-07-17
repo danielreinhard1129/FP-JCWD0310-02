@@ -13,7 +13,6 @@ const useDeleteAddress = () => {
   const { openNotification } = useNotification();
   const userId = useAppSelector((state: RootState) => state.user.id);
   const deleteAddress = async (id: number) => {
-    console.log(id);
     const response = await axiosInstance.delete(`/user/deleteAddress/${id}`, {
       params: { userId },
     });

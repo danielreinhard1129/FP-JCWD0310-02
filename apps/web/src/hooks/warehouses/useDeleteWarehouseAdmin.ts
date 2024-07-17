@@ -5,7 +5,6 @@ import { useNotification } from '../useNotification';
 const useDeleteWarehouseAdmin = () => {
   const { openNotification } = useNotification();
   const deleteWarehouseAdmin = async (id: number) => {
-    console.log(id);
     try {
       const response = await axiosInstance.delete(
         `/warehouse/delete-warehouse-admin/${id}`,
@@ -13,7 +12,6 @@ const useDeleteWarehouseAdmin = () => {
       openNotification.success({
         message: 'Admin deleted successfully',
       });
-      console.log(response.data);
 
       return response.data;
     } catch (error) {}

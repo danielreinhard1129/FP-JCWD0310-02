@@ -49,7 +49,6 @@ export const ProfileAddress = () => {
       };
       const response = await getAddress(received);
       setAddresses(response);
-      console.log(response);
     } catch (error) {
       console.error('Error fetching addresses:', error);
     }

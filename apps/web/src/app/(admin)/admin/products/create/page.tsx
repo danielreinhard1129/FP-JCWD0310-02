@@ -16,9 +16,9 @@ const CreateProductAdminPage = () => {
           <h1 className="mb-4 font-bold text-xl">Create Product</h1>
           <InputForms
             handleSubmit={(e) =>
-              openNotification.async(createProduct(e), () => {
-                setTimeout(() => router.push('/admin/products'), 500);
-              })
+              openNotification.async(createProduct(e), () =>
+                setTimeout(() => router.push('/admin/products'), 500),
+              )
             }
           />
         </div>

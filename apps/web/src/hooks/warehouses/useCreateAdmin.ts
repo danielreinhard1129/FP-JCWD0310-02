@@ -21,14 +21,10 @@ const useCreateAdmin = () => {
         '/warehouse/create-warehouse-admin',
         payload,
       );
-      console.log(data);
       openNotification.success({ message: 'Create Admin Success' });
       router.back();
-
     } catch (error: any) {
       openNotification.error({ message: error.response?.data?.message });
-
-      console.log(error);
     }
   };
   return { createAdmin };

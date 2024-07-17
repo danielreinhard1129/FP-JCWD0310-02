@@ -69,7 +69,6 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       warehouse: 0,
     },
     onSubmit: (result: CreateProductPayload) => {
-      result.image = fileImages;
       handleSubmit(result);
     },
     validationSchema: productValidation,
@@ -84,7 +83,10 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               const type = a.data.type as string;
               const file = new File(
                 [a.data],
-                new Date().toISOString() + index + '.' + type.split('/')[1],
+                new Date().valueOf() +
+                  'a'.repeat(index) +
+                  '.' +
+                  type.split('/')[1],
                 {
                   type,
                 },
@@ -93,7 +95,6 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             }),
           ]);
         }
-        setFieldValue('image', [...fileImages]);
       });
       setValues({
         product: {
@@ -117,6 +118,10 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    setFieldValue('image', fileImages);
+  }, [fileImages]);
+
   return (
     <section className="flex flex-col gap-4">
       <div className="flex flex-col md:flex-row gap-8">
@@ -131,7 +136,7 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               placeholder="Adida Ultra Boost"
             ></Input>
             {(touched.product?.name || errors.product?.name) && (
-              <Label className="flex justify-end text-red-500">
+              <Label className="flex justify-end text-red-500 mt-2">
                 {errors.product?.name}
               </Label>
             )}
@@ -147,7 +152,7 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               onChange={handleChange}
             />
             {(touched.product?.description || errors.product?.description) && (
-              <Label className="flex justify-end text-red-500">
+              <Label className="flex justify-end text-red-500 mt-2">
                 {errors.product?.description}
               </Label>
             )}
@@ -221,7 +226,7 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               </Button>
             </div>
             {(touched.category || errors.category) && (
-              <Label className="flex justify-end text-red-500">
+              <Label className="flex justify-end text-red-500 mt-2">
                 {errors.category}
               </Label>
             )}
@@ -255,7 +260,7 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 suffix=",00"
               />
               {(touched.product?.price || errors.product?.price) && (
-                <Label className="flex justify-end text-red-500">
+                <Label className="flex justify-end text-red-500 mt-2">
                   {errors.product?.price}
                 </Label>
               )}
@@ -344,7 +349,7 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             isError={false}
           />
           {(touched.image || errors.image) && (
-            <Label className="flex justify-end text-red-500">
+            <Label className="flex justify-end text-red-500 mt-2">
               {typeof errors.image == 'string' && errors.image}
             </Label>
           )}

@@ -15,15 +15,12 @@ const useUpdateWarehouse = () => {
         `/warehouse/update-warehouse/${warehouseId}`,
         payload,
       );
-      console.log(data);
       openNotification.success({
         message: 'Warehouse updated successfully',
       });
       window.location.replace('/admin/warehouses');
       return data;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return { updateWarehouse };
 };

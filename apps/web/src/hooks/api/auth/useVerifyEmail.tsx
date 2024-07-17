@@ -13,14 +13,12 @@ const useVerifyEmail = () => {
       const response = await axiosInstance.post('/auth/verify-email', {
         email,
       });
-      console.log(response);
       openNotification.success({
         message: 'verify email success and check your email',
       });
       router.push('/login');
       return response.data;
     } catch (error: any) {
-      console.log(error);
       openNotification.error({
         message: error.response?.data?.message || 'An error occurred',
       });

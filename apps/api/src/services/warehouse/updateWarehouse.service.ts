@@ -27,9 +27,7 @@ export const updateWarehouseService = async (body: Warehouse, id: number) => {
     if (!existingWarehouse) {
       throw new Error('Warehouse not found');
     }
-    console.log(url);
     const response = await axios.get(url);
-    // console.log(response.data.results[1].geometry);
 
     if (response.data.results[1]?.geometry !== undefined) {
       lat = response.data.results[1]?.geometry?.lat;
