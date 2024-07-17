@@ -16,9 +16,9 @@ const page = () => {
       </Label>
       <div className="flex flex-col gap-4 justify-center items-center">
         <Label className="font-bold text-xl text-center">
-          But don't worry we can assist you to the right way
+          But don&apos;t worry we can assist you to the right way
         </Label>
-        <Button className="w-fit">Here's the way my lord</Button>
+        <Button className="w-fit">Here&apos;s the way my lord</Button>
       </div>
     </div>
   );
