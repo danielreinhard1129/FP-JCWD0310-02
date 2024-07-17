@@ -22,12 +22,9 @@ const Register = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       register(values);
     },
   });
-  console.log(formik.values);
-  console.log(formik.errors);
   return (
     <div className="h-screen w-screen flex flex-col md:flex-row bg-white">
       <div className="md:w-1/2 h-full flex justify-center items-center relative">

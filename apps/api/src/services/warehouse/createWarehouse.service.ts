@@ -24,7 +24,6 @@ export const createWarehouseService = async (body: Warehouse) => {
     if (existingWarehouse) {
       throw new Error('Warehouse already exists');
     }
-    console.log(url);
     const response = await axios.get(url);
     const results = response.data.results;
     if (results.length > 0) {

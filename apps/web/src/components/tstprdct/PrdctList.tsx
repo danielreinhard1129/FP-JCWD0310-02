@@ -10,21 +10,7 @@ import { Button } from '../ui/button';
 const ProductList = ({ data }: { data: any[] }) => {
   const carts = useAppSelector((root: RootState) => root.cart.cartItems);
   const dispatch = useAppDispatch();
-
-  const handleClickBuy = (product: any) => {
-    // dispatch(
-    //   addItemAsync({
-    //     userId: 5,
-    //     productId: product.id,
-    //     quantity: 1,
-    //     variantId: 1,
-    //   }),
-    // );
-    console.log('Item added to cart');
-  };
-
-  console.log('CARTS:', carts);
-
+  const handleClickBuy = (product: any) => {};
   return (
     <div className=" w-[90%] max-w-[1100px] mx-auto">
       <div className="grid grid-cols-4 justify-center place-items-center gap-10">

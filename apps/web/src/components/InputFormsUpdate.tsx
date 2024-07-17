@@ -69,7 +69,6 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       warehouse: 0,
     },
     onSubmit: (result: CreateProductPayload) => {
-      result.image = fileImages;
       handleSubmit(result);
     },
     validationSchema: productValidation,
@@ -84,20 +83,10 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               const type = a.data.type as string;
               const file = new File(
                 [a.data],
-                new Date().toISOString() + index + '.' + type.split('/')[1],
-                {
-                  type,
-                },
-              );
-              return file;
-            }),
-          ]);
-          setFieldValue('image', [
-            ...val.map((a, index) => {
-              const type = a.data.type as string;
-              const file = new File(
-                [a.data],
-                new Date().toISOString() + index + '.' + type.split('/')[1],
+                new Date().valueOf() +
+                  'a'.repeat(index) +
+                  '.' +
+                  type.split('/')[1],
                 {
                   type,
                 },
@@ -128,6 +117,10 @@ const InputFormsUpdate: FC<InputFormsProps> = ({ data, handleSubmit }) => {
       });
     }
   }, [data]);
+
+  useEffect(() => {
+    setFieldValue('image', fileImages);
+  }, [fileImages]);
 
   return (
     <section className="flex flex-col gap-4">

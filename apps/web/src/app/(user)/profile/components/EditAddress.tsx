@@ -83,7 +83,6 @@ export const EditAddress = ({
       try {
         const response = await getProvince();
         setProvinces(response);
-        console.log(response);
 
         const selectedProvinceData = response.find(
           (province: Province) => province.provinceName === addressId.province,

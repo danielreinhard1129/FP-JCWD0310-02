@@ -13,10 +13,7 @@ const useVerifyToken = () => {
   const token = searchParams.get('token');
   const { openNotification } = useNotification();
 
-  console.log(searchParams.get('token'));
-
   const verifyToken = async (payload: VerifyTokenArgs) => {
-    console.log(payload.password);
     try {
       const response = await axiosInstance.post(
         '/auth/verify',
@@ -31,11 +28,8 @@ const useVerifyToken = () => {
         },
       );
       openNotification.success({ message: 'Token Verified' });
-      console.log(response);
       router.replace('/login');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return { verifyToken };
 };

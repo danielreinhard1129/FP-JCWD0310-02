@@ -1,9 +1,9 @@
 import React from 'react';
 const LoadingPage = () => {
   return (
-    <div className="w-screen dark h-screen bg-[#E7E7E3] dark:bg-[#232321]">
+    <div className="w-screen dark h-screen overflow-hidden bg-[#E7E7E3] dark:bg-[#232321]">
       <div className="flex w-full h-full justify-center items-center font-bold text-4xl rotate-center">
-        <div className="w-[50vw]">
+        <div className="w-[50vw] max-w-[300px]">
           <svg
             viewBox="0 0 1270 322"
             fill="none"

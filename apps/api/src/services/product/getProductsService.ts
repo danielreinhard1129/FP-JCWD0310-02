@@ -20,6 +20,7 @@ export const getProductsService = async (query: GetProductsQuery) => {
     const { page, take, search, sortBy, sortOrder, filter } = query;
     const whereClause: Prisma.ProductWhereInput = {
       name: { contains: search },
+      isDelete: false,
       productCategory: {
         some: filter.filter && {
           category: {

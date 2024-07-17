@@ -3,7 +3,6 @@
 import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
-import { useRouter } from 'next/navigation';
 interface Address {
   name: string;
   street: string;
@@ -11,7 +10,6 @@ interface Address {
   city: string;
   province: string;
   postalCode: string;
-  // isPrimary: boolean;
 }
 interface RootState {
   user: {
@@ -23,19 +21,15 @@ const useCreateAddress = () => {
   const { openNotification } = useNotification();
 
   const { id } = useAppSelector((state: RootState) => state.user);
-  console.log(id);
 
   const createAddress = async (payload: Address) => {
-    console.log(payload);
     try {
       const { data } = await axiosInstance.post(`/user/createAddress/${id}`, {
         ...payload,
       });
 
       openNotification.success({ message: 'Address created successfully' });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return { createAddress };
 };

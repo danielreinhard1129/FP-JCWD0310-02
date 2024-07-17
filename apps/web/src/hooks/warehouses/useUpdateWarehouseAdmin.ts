@@ -25,9 +25,7 @@ const useUpdateWarehouseAdmin = () => {
         message: 'Warehouse Admin updated successfully',
       });
       return data;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return {
     updateWarehouseAdmin,

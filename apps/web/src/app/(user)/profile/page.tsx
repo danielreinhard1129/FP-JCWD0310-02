@@ -34,7 +34,6 @@ const ProfilePage = () => {
         const response = await getUser(received);
 
         formik.setValues(response);
-        console.log(response.profileImageUrl);
       } catch (error) {}
     };
     fetchUser();

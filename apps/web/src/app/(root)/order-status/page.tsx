@@ -1,4 +1,5 @@
 'use client';
+import { useNotification } from '@/hooks/useNotification';
 import { BASE_API_URL } from '@/utils/config';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
@@ -10,9 +11,11 @@ const OrderStatus = () => {
   const searchParams = useSearchParams();
   const [transaction, setTransaction] = useState(null);
   const [emptyMessage, setEmptyMessage] = useState('');
+  const { openNotification } = useNotification();
 
   const getTransactionDetail = useCallback(async (transactionId: any) => {
-    if (!transactionId) return alert('Transaction ID harus diisi');
+    if (!transactionId)
+      return openNotification.info({ message: 'Transaction ID harus diisi' });
     const response = await fetch(`${API_URL}/${transactionId}`);
     const res = await response.json();
     if (res.data) {

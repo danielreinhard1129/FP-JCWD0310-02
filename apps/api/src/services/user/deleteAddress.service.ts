@@ -5,7 +5,6 @@ export const deleteAddressService = async (id: number, userId: number) => {
     const existingUser = await prisma.address.findFirst({
       where: { id, userId },
     });
-    console.log(existingUser);
     if (!existingUser) {
       throw new Error('Address not found');
     }
