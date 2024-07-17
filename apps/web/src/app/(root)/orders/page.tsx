@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import useGetUserAddress from '@/hooks/api/user/useGetUserAddress';
 import useGetAddress from '@/hooks/api/user/useGetAddress';
 import useTransacrionOngkir from '@/hooks/transactions/useTransactionOngkir';
+import Link from 'next/link';
 
 interface TransactionOngkir {
   service: string;
@@ -147,7 +148,15 @@ const OrderPage = () => {
 
                   <select
                     className="bg-transparent h-10 px-2 border overflow-hidden border-black rounded-lg"
-                    onChange={(e) => setSelectedAddress(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === 'add_address') {
+                        router.push('/profile');
+                        window.location.href = '/profile';
+                      } else {
+                        setSelectedAddress(value);
+                      }
+                    }}
                   >
                     <option value="">Select address</option>
                     {dataAddresses?.data.map((address, index) => (
@@ -156,6 +165,7 @@ const OrderPage = () => {
                         {address?.postalCode},{address?.province}
                       </option>
                     ))}
+                    <option value="add_address">add address</option>
                   </select>
                 </div>
                 <div className="flex flex-col max-w-96 gap-2">
@@ -209,8 +219,8 @@ const OrderPage = () => {
                     (val) => val.id == Number(selectedAddress),
                   ),
                   estimations: '3 Days',
-                  fee: 50000,
-                  options: 'TIKI',
+                  fee: Number(transactionsOngkir?.[0]?.cost[0].value),
+                  options: selectedCourier,
                 }}
                 handleOrder={() => handlePost()}
               />

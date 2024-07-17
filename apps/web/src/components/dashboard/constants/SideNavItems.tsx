@@ -117,7 +117,7 @@ export const NavItems: NavItem[] = [
         title: 'Manage User',
         icon: Bolt,
         color: '',
-        href: 'admin/manage-data/edit',
+        href: 'admin/manage-data/users',
       },
     ],
   },

@@ -1,9 +1,18 @@
 import prisma from '@/prisma';
-import { Warehouse } from '@prisma/client';
+
 import axios from 'axios';
 const OPEN_CAGE_API_KEY = '30d89911e50c41329178651b1a706345';
+interface Warehouse {
+  id: number;
+  name: string;
+  street: string;
+  city: string;
+  province: string;
+  subdistrict: string;
+  adminId?: number;
+}
 export const updateWarehouseService = async (body: Warehouse, id: number) => {
-  const { name, city, province, subdistrict } = body;
+  const { name, city, province, subdistrict, adminId, street } = body;
   try {
     let lat = '';
     let lon = '';
@@ -29,13 +38,25 @@ export const updateWarehouseService = async (body: Warehouse, id: number) => {
       lat = response.data.results[0]?.geometry?.lat;
       lon = response.data.results[0]?.geometry?.lng;
     }
-
+    await prisma.employee.updateMany({
+      where: {
+        userId: Number(adminId),
+      },
+      data: {
+        warehouseId: id,
+      },
+    });
     return await prisma.warehouse.update({
       where: {
         id,
       },
       data: {
-        ...body,
+        name,
+        city,
+        province,
+        subdistrict,
+        state,
+        street,
         lat: Number(lat),
         lon: Number(lon),
       },

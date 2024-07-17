@@ -29,8 +29,8 @@ export const resetPassword = async (body: VerifyBody) => {
     await prisma.users.update({
       where: { id: userId },
       data: {
-        password: await hashedPassword(password),
         isVerify: true,
+        password: await hashedPassword(password),
       },
     });
 

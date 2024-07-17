@@ -55,7 +55,7 @@ export const uploader = (
     }
   };
 
-  const limits = { fileSize: filelimit || 1 * 1024 * 1024 }; // default 2mb
+  const limits = { fileSize: filelimit || 1 * 1024 * 1024 };
 
   return multer({ storage, fileFilter, limits });
 };
@@ -78,7 +78,7 @@ export const uploaderCloudinary = (filelimit?: number) => {
     }
   };
 
-  const limits = { fileSize: filelimit || 2 * 1024 * 1024 }; // default 2mb
+  const limits = { fileSize: filelimit || 1 * 1024 * 1024 }; // default 1mb
 
   return multer({ storage, fileFilter, limits });
 };

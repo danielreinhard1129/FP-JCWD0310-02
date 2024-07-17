@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { FilePenLine, Trash2 } from 'lucide-react';
 import useDeleteWarehouseAdmin from '@/hooks/warehouses/useDeleteWarehouseAdmin';
-import UpdateWarehouseAdminPage from './edit/[id]/page';
+
 import { useRouter } from 'next/navigation';
 import useModal from '@/hooks/useModal';
 
@@ -57,10 +57,7 @@ const ManageDataUserPage = () => {
       <Card>
         <CardHeader>
           <div className="flex justify-between">
-            <CardTitle>List Warehouse Admin</CardTitle>
-            <Link href="/admin/manage-data/create">
-              <Button>Create Warehouse Admin</Button>
-            </Link>
+            <CardTitle>List Users</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
@@ -76,12 +73,12 @@ const ManageDataUserPage = () => {
                   <th className="px-4 py-2">Email</th>
                   <th className="px-4 py-2 max-md:hidden">Password</th>
                   <th className="px-4 py-2 max-md:hidden">Role</th>
-                  <th className="px-4 py-2">Action</th>
+                  {/* <th className="px-4 py-2">Action</th> */}
                 </tr>
               </thead>
               <tbody className="overscroll-contain font-medium text-center">
                 {users
-                  .filter((users) => users.role !== 'CUSTOMER')
+                  .filter((users) => users.role === 'CUSTOMER')
                   .map((user, index) => (
                     <tr key={user.id}>
                       <td className="px-4 py-2">{index + 1}</td>
@@ -91,7 +88,7 @@ const ManageDataUserPage = () => {
                         {'**********'}
                       </td>
                       <td className="px-4 py-2 max-md:hidden">{user.role}</td>
-                      <td className="px-4 py-2 flex justify-center gap-4">
+                      {/* <td className="px-4 py-2 flex justify-center gap-4">
                         <Trash2
                           className="cursor-pointer"
                           onClick={() => confirmDeleteAdmin(user.id)}
@@ -104,7 +101,7 @@ const ManageDataUserPage = () => {
                             );
                           }}
                         />
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
               </tbody>
