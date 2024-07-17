@@ -135,7 +135,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               placeholder="Adida Ultra Boost"
             ></Input>
             {(touched.product?.name || errors.product?.name) && (
-              <Label className="flex justify-end text-red-500">
+              <Label className="flex justify-end text-red-500 mt-2">
                 {errors.product?.name}
               </Label>
             )}
@@ -151,7 +151,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               onChange={handleChange}
             />
             {(touched.product?.description || errors.product?.description) && (
-              <Label className="flex justify-end text-red-500">
+              <Label className="flex justify-end text-red-500 mt-2">
                 {errors.product?.description}
               </Label>
             )}
@@ -224,12 +224,12 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
                 Add Category
               </Button>
             </div>
-            {(touched.category || errors.category) && (
-              <Label className="flex justify-end text-red-500">
-                {errors.category}
-              </Label>
-            )}
           </div>
+          {(touched.category || errors.category) && (
+            <Label className="flex justify-end text-red-500 mt-2">
+              {errors.category}
+            </Label>
+          )}
           <div className="flex gap-4">
             <div>
               <Label>Price</Label>
@@ -337,7 +337,7 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             isError={false}
           />
           {(touched.image || errors.image) && (
-            <Label className="flex justify-end text-red-500">
+            <Label className="flex justify-end text-red-500 mt-2">
               {typeof errors.image == 'string' && errors.image}
             </Label>
           )}

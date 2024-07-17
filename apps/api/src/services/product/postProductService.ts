@@ -73,6 +73,7 @@ export const postProductService = async (body: CreateProductParams) => {
               url: `images/${val.filename}`,
             };
           }),
+          skipDuplicates: true,
         });
 
         const newCategory = await tx.category.createMany({
