@@ -15,7 +15,7 @@ export class UserRouter {
   // getUserAddress
   private initializeRoutes(): void {
     this.router.get('/geolocation', this.userController.createAddress);
-    // this.router.get('/admin', this.userController.getAdmin);
+    this.router.get('/get-admin', this.userController.getAdmin);
     this.router.get('/getUsers', this.userController.getUsers);
     this.router.get(
       '/get-users-address/:id',

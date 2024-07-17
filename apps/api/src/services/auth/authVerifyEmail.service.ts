@@ -12,15 +12,18 @@ export const verifyEmail = async (body: User) => {
     if (!user) {
       throw new Error('User not found');
     }
+    if (!user.password) {
+      throw new Error('not gooogle account');
+    }
     const generateToken = sign({ id: user.id }, jwtSecretKey, {
       expiresIn: '2h',
     });
     await transporter.sendMail({
       from: process.env.GMAIL_EMAIL,
       to: email,
-      subject: 'Register success ',
+      subject: 'Reset your password',
       text:
-        'klick link di bawah ini untuk verivikasi akun anda ' +
+        'klick link di bawah ini untuk Reset Password ' +
         `${BASE_WEB}/forgotPassword/resetPassword?token=${generateToken}`,
     });
     await prisma.users.update({
@@ -31,6 +34,8 @@ export const verifyEmail = async (body: User) => {
         token: generateToken,
       },
     });
-    return user;
-  } catch (error) {}
+    return { message: 'success' };
+  } catch (error) {
+    throw error;
+  }
 };

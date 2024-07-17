@@ -1,4 +1,5 @@
 'use client';
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
@@ -9,13 +10,16 @@ interface RootState {
 }
 const useDeleteAddress = () => {
   const router = useRouter();
+  const { openNotification } = useNotification();
   const userId = useAppSelector((state: RootState) => state.user.id);
   const deleteAddress = async (id: number) => {
-    console.log(id);
     const response = await axiosInstance.delete(`/user/deleteAddress/${id}`, {
       params: { userId },
     });
-    alert('Address deleted successfully');
+
+    openNotification.success({ message: 'Address deleted successfully' });
+
+    router.refresh();
   };
   return { deleteAddress };
 };

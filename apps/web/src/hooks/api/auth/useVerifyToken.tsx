@@ -1,3 +1,4 @@
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -10,11 +11,9 @@ const useVerifyToken = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const token = searchParams.get('token');
-
-  console.log(searchParams.get('token'));
+  const { openNotification } = useNotification();
 
   const verifyToken = async (payload: VerifyTokenArgs) => {
-    console.log(payload.password);
     try {
       const response = await axiosInstance.post(
         '/auth/verify',
@@ -28,12 +27,9 @@ const useVerifyToken = () => {
           },
         },
       );
-      alert('Token Verified');
-      console.log(response);
+      openNotification.success({ message: 'Token Verified' });
       router.replace('/login');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return { verifyToken };
 };

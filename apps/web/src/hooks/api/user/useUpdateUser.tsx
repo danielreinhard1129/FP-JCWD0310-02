@@ -1,4 +1,5 @@
 import { User } from '@/app/types/user.type';
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
@@ -19,6 +20,7 @@ interface RootState {
 const useUpdateUser = () => {
   const { id } = useAppSelector((state: RootState) => state.user);
   const router = useRouter();
+  const { openNotification } = useNotification();
 
   const updateUser = async (payload: UpdateArgs) => {
     try {
@@ -26,9 +28,7 @@ const useUpdateUser = () => {
       formData.append('email', payload.email);
       formData.append('firstName', payload.firstName);
       formData.append('password', payload.password);
-      // payload.profileImageUrl.forEach((file) => {
-      //   formData.append('images', file);
-      // });
+
       if (Array.isArray(payload.profileImageUrl)) {
         payload.profileImageUrl.forEach((file) => {
           formData.append('images', file);
@@ -36,11 +36,9 @@ const useUpdateUser = () => {
       }
 
       const { data } = await axiosInstance.put(`/user/update/${id}`, formData);
-      console.log(data);
-      alert(data.message);
-    } catch (error) {
-      throw error;
-    }
+
+      openNotification.success({ message: data.message });
+    } catch (error) {}
   };
 
   return { updateUser };

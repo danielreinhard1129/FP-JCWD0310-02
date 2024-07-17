@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
+import { useNotification } from '../useNotification';
 interface CreateAdminArgs {
   firstName: string;
   lastName: string;
@@ -10,6 +11,7 @@ interface CreateAdminArgs {
 }
 
 const useUpdateWarehouseAdmin = () => {
+  const { openNotification } = useNotification();
   const updateWarehouseAdmin = async (
     payload: CreateAdminArgs,
     adminId: number,
@@ -19,10 +21,11 @@ const useUpdateWarehouseAdmin = () => {
         `/warehouse/update-warehouse-admin/${adminId}`,
         payload,
       );
+      openNotification.success({
+        message: 'Warehouse Admin updated successfully',
+      });
       return data;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return {
     updateWarehouseAdmin,

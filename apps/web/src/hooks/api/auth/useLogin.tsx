@@ -1,4 +1,5 @@
 import { User } from '@/app/types/user.type';
+import { useNotification } from '@/hooks/useNotification';
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { adminLoginAction } from '@/redux/slicers/adminSlice';
@@ -21,6 +22,7 @@ interface LoginResponse {
 const useLogin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { openNotification } = useNotification();
   const { role } = useAppSelector((state) => state.user);
   const login = async (payload: LoginArgs) => {
     try {
@@ -28,10 +30,13 @@ const useLogin = () => {
         '/auth/login',
         payload,
       );
-      console.log(data);
+
+      localStorage.setItem('token', data.token);
+      openNotification.success({ message: 'Login success' });
       if (data.data) {
         if (data.data.role == 'CUSTOMER') {
           dispatch(loginAction(data.data));
+          router.replace('/');
         } else if (
           data.data.employee &&
           (data.data.role == 'WAREHOUSE_ADMIN' ||
@@ -39,16 +44,16 @@ const useLogin = () => {
         ) {
           dispatch(loginAction(data.data));
           dispatch(adminLoginAction(data.data.employee));
+
+          router.replace('/admin');
         }
-        localStorage.setItem('token', data.token);
-        alert('login sucess');
-        router.replace('/');
+
+        // router.replace('/');
       } else {
-        alert('login failed');
+        openNotification.error({ message: 'Login failed' });
       }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      openNotification.error({ message: 'Login failed' });
     }
   };
 

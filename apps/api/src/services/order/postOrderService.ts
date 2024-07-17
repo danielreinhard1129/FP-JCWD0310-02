@@ -15,9 +15,6 @@ export const postOrderService = async (
   payload: IPayloadPostOrder,
 ) => {
   try {
-    console.log('order services', payload);
-    console.log('order services', userId);
-
     if (!payload.shippingDetail) throw new Error('Please input yours address');
     const user = await prisma.users.findFirst({
       where: { id: userId },

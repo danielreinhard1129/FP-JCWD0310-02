@@ -84,7 +84,10 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
               const type = a.data.type as string;
               const file = new File(
                 [a.data],
-                new Date().toISOString() + index + '.' + type.split('/')[1],
+                new Date().valueOf() +
+                  'a'.repeat(index) +
+                  '.' +
+                  type.split('/')[1],
                 {
                   type,
                 },
@@ -93,7 +96,6 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
             }),
           ]);
         }
-        setFieldValue('image', [...fileImages]);
       });
       setValues({
         product: {
@@ -118,7 +120,16 @@ const InputForms: FC<InputFormsProps> = ({ data, handleSubmit }) => {
   }, [data]);
 
   useEffect(() => {
-    setFieldValue('image', [...fileImages]);
+    setFieldValue(
+      'image',
+      fileImages.map((v, i) => {
+        const split = v.name.split('.');
+        return {
+          ...v,
+          name: split[0] + 'a'.repeat(i) + split[-1],
+        };
+      }),
+    );
   }, [fileImages]);
 
   return (

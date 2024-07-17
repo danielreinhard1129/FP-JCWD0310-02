@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import useGetProvince from '@/hooks/api/user/useGetProvince';
+import useGetWarehouseAdmin from '@/hooks/api/user/useGetWarehouseAdmin';
 import useGetWarehouse from '@/hooks/warehouses/useGetWarehouse';
 import useUpdateWarehouse from '@/hooks/warehouses/useUpdateWarehouse';
 import { useFormik } from 'formik';
@@ -17,6 +18,7 @@ interface Province {
     subdistricts: { subdistrictName: string }[];
   }[];
 }
+
 interface Warehouse {
   id: number;
   name: string;
@@ -24,34 +26,60 @@ interface Warehouse {
   city: string;
   province: string;
   subdistrict: string;
+  adminId?: number;
+}
+
+interface Admin {
+  id: number;
+
+  firstName: string;
+  lastName: string;
 }
 
 const UpdateWarehouse = () => {
   const { updateWarehouse } = useUpdateWarehouse();
   const { getProvince } = useGetProvince();
+  const { getWarehouse } = useGetWarehouse();
+  const { getWarehouseAdmin } = useGetWarehouseAdmin();
+
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [cities, setCities] = useState<Province['cities']>([]);
   const [subdistricts, setSubdistricts] = useState<
     { subdistrictName: string }[]
   >([]);
-  const { getWarehouse } = useGetWarehouse();
   const [warehouse, setWarehouse] = useState<Warehouse | null>(null);
+  const [adminList, setAdminList] = useState<Admin[]>([]);
+
   const path = location.pathname;
   const id = path.split('/').pop();
 
+  const fetchAdminWarehouse = async () => {
+    try {
+      const data = await getWarehouseAdmin();
+      setAdminList(data.data);
+    } catch (error) {
+      console.error('Error fetching admin warehouse:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchWarehouses = async () => {
-      try {
-        const data = await getWarehouse();
-        const findWarehouse = data.find(
-          (warehouse: Warehouse) => warehouse.id === Number(id),
-        );
-        setWarehouse(findWarehouse);
-        formik.setValues(findWarehouse || formik.initialValues);
-      } catch (error) {
-        console.error('Error fetching warehouse:', error);
-      }
-    };
+    fetchAdminWarehouse();
+  }, []);
+
+  const fetchWarehouses = async () => {
+    try {
+      const data = await getWarehouse();
+      const findWarehouse = data.find(
+        (warehouse: Warehouse) => warehouse.id === Number(id),
+      );
+      setWarehouse(findWarehouse);
+      formik.setValues(findWarehouse || formik.initialValues);
+    } catch (error) {
+      console.error('Error fetching warehouse:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchWarehouses();
   }, [id]);
 
@@ -63,6 +91,7 @@ const UpdateWarehouse = () => {
       city: '',
       province: '',
       subdistrict: '',
+      adminId: 0,
     },
     onSubmit: (values) => {
       updateWarehouse(values, values.id);
@@ -104,6 +133,7 @@ const UpdateWarehouse = () => {
     };
     fetchProvinces();
   }, []);
+
   useEffect(() => {
     if (warehouse) {
       const selectedProvince = provinces.find(
@@ -222,12 +252,31 @@ const UpdateWarehouse = () => {
                     ))}
                   </select>
                 </div>
-
+                <div className="flex flex-col">
+                  <span className="ml-1 text-sm font-semibold">
+                    Choose Warehouse Admin
+                  </span>
+                  <select
+                    name="adminId"
+                    onChange={formik.handleChange}
+                    value={formik.values.adminId}
+                    className="text-black p-3 box-shadow cursor-pointer rounded-sm border-2 border-solid border-slate-400 bg-white"
+                  >
+                    <option value="" disabled>
+                      Select Warehouse Admin
+                    </option>
+                    {adminList.map((admin, index) => (
+                      <option key={index} value={admin.id}>
+                        {admin.firstName} {admin.lastName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <button
                   className="mt-4 bg-black text-white font-medium p-2 rounded-md"
                   type="submit"
                 >
-                  Update to Warehouse
+                  Update Warehouse
                 </button>
               </div>
             </form>
@@ -237,4 +286,5 @@ const UpdateWarehouse = () => {
     </div>
   );
 };
+
 export default UpdateWarehouse;

@@ -22,7 +22,6 @@ const CreateWarehouseAdminPage = () => {
       createAdmin(values);
     },
   });
-  console.log(formik.values);
   return (
     <div className="px-4 py-4">
       <Card>

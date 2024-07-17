@@ -33,7 +33,6 @@ export const CreateAddress = ({ setShowCreateAddress }: CreateAddressProps) => {
       try {
         const response = await getProvince();
         setProvinces(response);
-        console.log(response);
       } catch (error) {}
     };
     fetchProvinces();

@@ -32,7 +32,6 @@ const UpdateWarehouseAdminPage = () => {
   const [users, setUsers] = useState<userArgs>();
   const path = location.pathname;
   const id = path.split('/').pop();
-  console.log(id);
 
   useEffect(() => {
     const fetchUser = async () => {

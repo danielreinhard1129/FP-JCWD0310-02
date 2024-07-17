@@ -7,7 +7,6 @@ export const updateEmployeService = async (id: number, WarehouseId: number) => {
         userId: Number(id),
       },
     });
-    console.log(existingEmploye);
     if (!existingEmploye) {
       throw new Error('Employe not found');
     }

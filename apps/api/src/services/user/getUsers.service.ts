@@ -15,7 +15,5 @@ export const getUsersService = async () => {
     });
 
     return { message: 'OK', data: response };
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };

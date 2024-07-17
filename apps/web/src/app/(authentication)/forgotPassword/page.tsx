@@ -12,7 +12,6 @@ const VerifyPage = () => {
       verifyEmail(values);
     },
   });
-  console.log(formik.values);
   return (
     <>
       <div className="flex flex-col h-screen w-screen justify-center items-center">

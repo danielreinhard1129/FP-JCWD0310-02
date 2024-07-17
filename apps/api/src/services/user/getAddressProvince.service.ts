@@ -11,7 +11,6 @@ export const getAddressProvince = async () => {
         },
       },
     });
-    console.log(address);
     return address;
   } catch (error) {
     throw error;

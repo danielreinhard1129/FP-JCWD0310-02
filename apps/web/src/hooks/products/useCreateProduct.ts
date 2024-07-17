@@ -27,8 +27,16 @@ export const useCreateProduct = () => {
       const formData = new FormData();
       Object.entries(payload).map(([key, val]) => {
         if (key == 'image') {
-          return val.forEach((file: FileWithPath) => {
-            formData.append('images', file);
+          return val.forEach((file: FileWithPath, index: number) => {
+            const split = file.name.split('.');
+            formData.append(
+              'images',
+              file,
+              new Date().valueOf() +
+                'a'.repeat(index) +
+                '.' +
+                split[split.length - 1],
+            );
           });
         }
         return formData.append(key, JSON.stringify(val));
