@@ -28,7 +28,12 @@ export const uploader = (
     ) => {
       const originalnameParts = file.originalname.split('.');
       const fileExtension = originalnameParts[originalnameParts.length - 1];
-      const newFileName = filePreFix + Date.now() + '.' + fileExtension;
+      const newFileName =
+        filePreFix +
+        Date.now() +
+        file.originalname.length +
+        '.' +
+        fileExtension;
 
       cb(null, newFileName);
     },
@@ -50,7 +55,7 @@ export const uploader = (
     }
   };
 
-  const limits = { fileSize: filelimit || 1 * 1024 * 1024 }; // default 2mb
+  const limits = { fileSize: filelimit || 1 * 1024 * 1024 };
 
   return multer({ storage, fileFilter, limits });
 };
@@ -73,7 +78,7 @@ export const uploaderCloudinary = (filelimit?: number) => {
     }
   };
 
-  const limits = { fileSize: filelimit || 2 * 1024 * 1024 }; // default 2mb
+  const limits = { fileSize: filelimit || 1 * 1024 * 1024 }; // default 1mb
 
   return multer({ storage, fileFilter, limits });
 };

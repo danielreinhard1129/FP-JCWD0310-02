@@ -5,9 +5,11 @@ import { useGetProduct } from '@/hooks/products/useGetProduct';
 import { useUpdateProduct } from '@/hooks/products/useUpdateProduct';
 import useModal from '@/hooks/useModal';
 import { useNotification } from '@/hooks/useNotification';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 const AdminProductDetails = ({ params }: { params: { id: number } }) => {
+  const router = useRouter();
   const { data, getProduct } = useGetProduct(params.id);
   const { openNotification } = useNotification();
   const { ModalAsync, setOpen, setTitle } = useModal();
@@ -53,7 +55,9 @@ const AdminProductDetails = ({ params }: { params: { id: number } }) => {
         <InputFormsUpdate
           data={data?.data}
           handleSubmit={(e) =>
-            openNotification.async(updateProduct(params.id, e))
+            openNotification.async(updateProduct(params.id, e), () =>
+              setTimeout(() => router.push('/admin/products'), 500),
+            )
           }
         />
       </div>

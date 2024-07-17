@@ -2,13 +2,11 @@ import prisma from '@/prisma';
 
 export const deleteWarehouseAdminService = async (id: number) => {
   try {
-    console.log(id);
     const existingUser = await prisma.users.findFirst({
       where: {
         id: Number(id),
       },
     });
-    console.log(existingUser);
     if (!existingUser) {
       throw new Error('User not found');
     }
@@ -24,7 +22,6 @@ export const deleteWarehouseAdminService = async (id: number) => {
 
     return { message: 'Warehouse deleted successfully', data: existingUser };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

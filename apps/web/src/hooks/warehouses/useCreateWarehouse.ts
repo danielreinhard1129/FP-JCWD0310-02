@@ -3,6 +3,7 @@
 import { axiosInstance } from '@/lib/axios';
 import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'next/navigation';
+import { useNotification } from '../useNotification';
 
 interface Warehouse {
   name: string;
@@ -14,17 +15,16 @@ interface Warehouse {
 
 const useCreateWarehouse = () => {
   const router = useRouter();
+  const { openNotification } = useNotification();
   const createWarehouse = async (payload: Warehouse) => {
-    console.log(payload);
     try {
       const { data } = await axiosInstance.post(`/warehouse/createWarehouse`, {
         ...payload,
       });
-      console.log(data);
-      alert('Warehouse created successfully');
+      openNotification.success({ message: 'Create Warehouse Success' });
       router.back();
     } catch (error) {
-      console.log(error);
+      openNotification.error({ message: 'Create Warehouse Failed' });
     }
   };
   return { createWarehouse };

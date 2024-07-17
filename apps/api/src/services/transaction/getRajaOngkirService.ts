@@ -3,7 +3,6 @@ import axios from 'axios';
 interface RajaOngkirResponse {
   rajaongkir: {
     status: {
-      //   code: number;
       description: string;
     };
     results: {
@@ -27,7 +26,6 @@ interface RajaOngkirBody {
 
 export const getRajaOngkirService = async (body: RajaOngkirBody) => {
   try {
-    console.log(body);
     const apiKey = '7cf938ca0cd950bf59bac9148dbc2b2e';
 
     async function buildCitySearchUrl(cityName: string) {
@@ -83,20 +81,9 @@ export const getRajaOngkirService = async (body: RajaOngkirBody) => {
         value: detail.value,
       })),
     }));
-    console.log(formattedCosts);
     return formattedCosts;
   } catch (error) {
     console.error('Error fetching RajaOngkir service:', error);
     throw error;
   }
 };
-
-// const originCityId = await buildCitySearchUrl('Jakarta');
-// const destinationCityId = await buildCitySearchUrl('Kebumen');
-
-// const data = {
-//   origin: originCityId,
-//   destination: destinationCityId,
-//   weight: 1700,
-//   courier: 'tiki',
-// };

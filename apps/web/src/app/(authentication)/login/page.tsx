@@ -5,7 +5,11 @@ import useLogin from '@/hooks/api/auth/useLogin';
 
 import { useFormik } from 'formik';
 import { Route } from 'lucide-react';
+import Image from 'next/image';
+import logo from '../../../../public/logo-dark.png';
+
 import { useRouter } from 'next/navigation';
+import { validationSchema } from './validationSchema';
 
 const Login = () => {
   const { login } = useLogin();
@@ -17,11 +21,11 @@ const Login = () => {
       password: '',
       role: '',
     },
+    validationSchema,
     onSubmit: (values) => {
       login(values);
     },
   });
-  console.log(formik.values);
   return (
     <div className="h-screen w-screen flex flex-col md:flex-row bg-white ">
       <div className="md:w-1/2 h-full flex justify-center items-center md:block relative">
@@ -31,11 +35,11 @@ const Login = () => {
           className="w-full h-full rounded-xl object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent rounded-xl"></div>
-        <div className="absolute text-3xl md:text-9xl text-center inset-0 top-10 md:top-20 font-bold max-md:hidden">
-          LOGO
+        <div className="absolute inset-x-0 top-10 md:top-20 flex justify-center text-3xl md:text-9xl font-bold max-md:hidden">
+          <Image src={logo} alt="logo" width={400} height={400} />
         </div>
       </div>
-      <div className="md:w-1/2 flex items-center justify-center max-md:absolute max-md:mt-10 max-md:mx-10">
+      <div className="md:w-1/2 flex items-center justify-center mx-4 md:mx-0 max-md:absolute max-md:inset-x-0 max-md:top-10 bg-white bg-opacity-80 p-8 rounded-xl shadow-lg">
         <div className="flex flex-col gap-y-5 w-full max-w-md">
           <form
             className="flex flex-col gap-y-7 w-full max-w-md"
@@ -43,7 +47,7 @@ const Login = () => {
           >
             <div className="text-4xl font-bold max-md:text-center">Login</div>
             <div
-              className="text-2xl font-semibold"
+              className="text-2xl font-semibold cursor-pointer"
               onClick={() => router.replace('/forgotPassword')}
             >
               Forgot your password?
@@ -54,8 +58,14 @@ const Login = () => {
               name="email"
               onChange={formik.handleChange}
               value={formik.values.email}
+              onBlur={formik.handleBlur}
               type="text"
             />
+            {formik.touched.email && formik.errors.email ? (
+              <div className="text-red-500 text-sm -my-4">
+                {formik.errors.email}
+              </div>
+            ) : null}
             <input
               className="w-full h-12 px-4 py-2.5 rounded-lg border border-neutral-800"
               placeholder="Password"
@@ -63,15 +73,14 @@ const Login = () => {
               type="password"
               onChange={formik.handleChange}
               value={formik.values.password}
+              onBlur={formik.handleBlur}
             />
-            <div className="flex items-center">
-              <input type="checkbox" className="w-4 h-4 mr-4 p-2" />
-              <div className="max-md:text-sm">
-                <span>Make sure the account you are using is correct</span>
-                <br />
-                <span>applies to all login options below. More info.</span>
+            {formik.touched.password && formik.errors.password ? (
+              <div className="text-red-500 text-sm -my-5">
+                {formik.errors.password}
               </div>
-            </div>
+            ) : null}
+            <div className="flex items-center"></div>
             <button className="w-full p-4 text-base rounded-lg bg-black text-white font-semibold -mb-3">
               Login
             </button>
@@ -91,10 +100,7 @@ const Login = () => {
             />
             Sign in with Google
           </button>
-          {/* <div className=" text-base">
-            Not a member ?{' '}
-            <span className="text-lg font-semibold"> Sing up now</span>
-          </div> */}
+
           <div className="text-base text-gray-600">
             Not a member?{' '}
             <a

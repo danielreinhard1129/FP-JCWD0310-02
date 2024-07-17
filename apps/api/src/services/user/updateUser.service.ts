@@ -4,7 +4,7 @@ import prisma from '@/prisma';
 interface User {
   email: string;
   firstName: string;
-  password: string;
+
   profileImageUrl: string;
   //   isVerify: boolean;
 }
@@ -15,14 +15,25 @@ export const updateUserService = async (
   file: Express.Multer.File,
 ) => {
   try {
-    const { password } = body;
     const existingUser = await prisma.users.findFirst({
       where: { id },
     });
-    console.log(body);
-    console.log(existingUser);
     if (!existingUser) {
       throw new Error('User not found');
+    }
+    const existingemail = await prisma.users.findFirst({
+      where: { email: body.email },
+    });
+    if (!existingemail) {
+      await prisma.users.update({
+        where: { id },
+        data: {
+          email: body.email,
+          firstName: body.firstName,
+          isVerify: false,
+        },
+      });
+      throw 'Email update success and verify your email';
     }
     if (file) {
       await prisma.users.update({
@@ -34,13 +45,12 @@ export const updateUserService = async (
         },
       });
     }
+
     await prisma.users.update({
       where: { id },
       data: {
         email: body.email,
         firstName: body.firstName,
-        // profileImageUrl: `/images/${file.filename}`,
-        // profileImageUrl: String(profileImageUrls),
       },
     });
     return {

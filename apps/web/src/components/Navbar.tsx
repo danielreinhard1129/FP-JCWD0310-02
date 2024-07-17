@@ -39,8 +39,7 @@ export const Navbar = () => {
     }
   }, []);
   const handleLogout = () => {
-    localStorage.removeItem('persist:shoes');
-    setEmail('');
+    localStorage.clear();
   };
   return (
     <>
@@ -57,7 +56,7 @@ export const Navbar = () => {
             onClick={() => router.push('/carts')}
             className="flex items-center cursor-pointer gap-4"
           >
-            <User className="w-5 h-5" />
+            <User className="w-5 h-5 cursor-pointer" />
             <ShoppingBag className="w-5 h-5 cursor-pointer " />
           </div>
         </div>
@@ -77,7 +76,7 @@ export const Navbar = () => {
           <div className="w-6 h-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <User className="md:w-6 md:h-6" />
+                <User className="md:w-6 md:h-6 cursor-pointer" />
               </DropdownMenuTrigger>
               {!emails ? (
                 <DropdownMenuContent className="  mt-2 px-1">
@@ -105,7 +104,12 @@ export const Navbar = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     {isVerify === false ? (
-                      <DropdownMenuItem onClick={() => verifyEmail({ email })}>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          verifyEmail({ email });
+                          localStorage.clear();
+                        }}
+                      >
                         Verify
                       </DropdownMenuItem>
                     ) : (

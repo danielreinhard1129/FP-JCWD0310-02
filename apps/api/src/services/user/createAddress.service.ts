@@ -47,7 +47,7 @@ export const createAddressService = async (body: Address, id: number) => {
     } else {
       throw new Error('No results found.');
     }
-    console.log(lat, lon);
+
     return await prisma.address.create({
       data: {
         ...body,

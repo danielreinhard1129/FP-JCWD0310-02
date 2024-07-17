@@ -38,7 +38,7 @@ export class AuthRouter {
     );
     this.router.post(
       '/reset-password',
-      this.authController.verifyEmailController,
+      this.authController.resetPaswwordController,
     );
   }
   getRouter(): Router {

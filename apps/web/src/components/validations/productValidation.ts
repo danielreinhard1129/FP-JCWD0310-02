@@ -16,8 +16,8 @@ const productValidation = object({
     .of(string().min(3, 'Product category minimum length is 3!'))
     .optional(),
   image: array()
-    .required('Product image is required!')
-    .min(1, 'Product image is required!'),
+    .min(1, 'Product image is required!')
+    .max(3, 'Product image maximum is 3!'),
   variant: array()
     .of(
       object().shape({

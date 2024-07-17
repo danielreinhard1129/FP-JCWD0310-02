@@ -56,9 +56,27 @@ const PopoverCart: FC<IPopoverCartProps> = ({ product }) => {
   });
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button className="w-full font-rubik font-medium">Add to cart</Button>
-      </DialogTrigger>
+      {product.isDelete ? (
+        <Button
+          disabled={product.isDelete}
+          className="w-full font-rubik font-medium"
+        >
+          {!product.isDelete
+            ? 'Add to cart'
+            : 'This product currently is deleted'}
+        </Button>
+      ) : (
+        <DialogTrigger>
+          <Button
+            disabled={product.isDelete}
+            className="w-full font-rubik font-medium"
+          >
+            {!product.isDelete
+              ? 'Add to cart'
+              : 'This product currently is deleted'}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <Label className="font-rubik">
@@ -102,13 +120,19 @@ const PopoverCart: FC<IPopoverCartProps> = ({ product }) => {
                       </Label>
                     </SelectLabel>
                     {product?.variant.map((val, indx) => {
+                      const variantStock = val.variantStocks.reduce(
+                        (a, b) => a + b.quantity,
+                        0,
+                      );
                       return (
                         <SelectItem
                           key={indx}
+                          disabled={variantStock == 0}
                           className="font-rubik font-medium"
                           value={val.id.toString()}
                         >
-                          {val.color} - {val.size}
+                          {val.color} - {val.size}{' '}
+                          {variantStock == 0 ? '- this variant is empty' : ''}
                         </SelectItem>
                       );
                     })}
@@ -153,7 +177,16 @@ const PopoverCart: FC<IPopoverCartProps> = ({ product }) => {
               {formatPrice.format(values.quantity * product.price)}
             </Label>
           </div>
-          {mutate.isSuccess ? (
+          {product.stock == 0 ? (
+            <Button
+              className="font-rubik font-semibold"
+              type="submit"
+              onClick={() => handleSubmit()}
+              disabled
+            >
+              Product stock is empty
+            </Button>
+          ) : mutate.isSuccess ? (
             <Button
               className="font-rubik font-semibold"
               type="submit"

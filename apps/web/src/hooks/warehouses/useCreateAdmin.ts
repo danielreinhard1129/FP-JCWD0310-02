@@ -1,4 +1,6 @@
 import { axiosInstance } from '@/lib/axios';
+import { useNotification } from '../useNotification';
+import { useRouter } from 'next/navigation';
 
 interface CreateAdminArgs {
   firstName: string;
@@ -11,17 +13,18 @@ interface CreateAdminArgs {
 }
 
 const useCreateAdmin = () => {
+  const router = useRouter();
+  const { openNotification } = useNotification();
   const createAdmin = async (payload: CreateAdminArgs) => {
     try {
       const { data } = await axiosInstance.post(
         '/warehouse/create-warehouse-admin',
         payload,
       );
-      console.log(data);
-      alert('Admin created successfully');
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
+      openNotification.success({ message: 'Create Admin Success' });
+      router.back();
+    } catch (error: any) {
+      openNotification.error({ message: error.response?.data?.message });
     }
   };
   return { createAdmin };

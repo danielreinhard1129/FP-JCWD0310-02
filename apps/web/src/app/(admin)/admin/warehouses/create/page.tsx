@@ -31,7 +31,6 @@ const CreateWarehousePage = () => {
       try {
         const response = await getProvince();
         setProvinces(response);
-        console.log(response);
       } catch (error) {}
     };
     fetchProvinces();

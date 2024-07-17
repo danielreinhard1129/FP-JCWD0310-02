@@ -8,6 +8,7 @@ import { FilePenLine, Trash2 } from 'lucide-react';
 import useDeleteWarehouseAdmin from '@/hooks/warehouses/useDeleteWarehouseAdmin';
 import UpdateWarehouseAdminPage from './edit/[id]/page';
 import { useRouter } from 'next/navigation';
+import useModal from '@/hooks/useModal';
 
 interface UserArgs {
   id: number;
@@ -22,20 +23,33 @@ const ManageDataUserPage = () => {
   const { getWarehousesAdmin } = useWarehousesAdmin();
   const [users, setUsers] = useState<UserArgs[]>([]);
   const { deleteWarehouseAdmin } = useDeleteWarehouseAdmin();
-
+  const { ModalAsync, setOpen, setTitle } = useModal();
+  const [adminId, setAdminId] = useState<number>(0);
+  const fetchUser = async () => {
+    try {
+      const response = await getWarehousesAdmin();
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await getWarehousesAdmin();
-        setUsers(response.data);
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchUser();
   }, []);
-  console.log(users);
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteWarehouseAdmin(id);
+      fetchUser();
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const confirmDeleteAdmin = (id: number) => {
+    setOpen(true);
+    setTitle(`Delete Admin`);
+    setAdminId(id);
+  };
   return (
     <div className="px-4 py-4">
       <Card>
@@ -72,15 +86,13 @@ const ManageDataUserPage = () => {
                       <td className="px-4 py-2">{user.firstName}</td>
                       <td className="px-4 py-2">{user.email}</td>
                       <td className="px-4 py-2 max-md:hidden">
-                        {/* {user.password} */}
                         {'**********'}
                       </td>
                       <td className="px-4 py-2 max-md:hidden">{user.role}</td>
                       <td className="px-4 py-2 flex justify-center gap-4">
-                        {/* <Button>Edit</Button> */}
                         <Trash2
                           className="cursor-pointer"
-                          onClick={() => deleteWarehouseAdmin(user.id)}
+                          onClick={() => confirmDeleteAdmin(user.id)}
                         />
                         <FilePenLine
                           className="cursor-pointer"
@@ -98,6 +110,13 @@ const ManageDataUserPage = () => {
           </div>
         </CardContent>
       </Card>
+      <ModalAsync
+        loading={false}
+        handleOk={() => {
+          handleDelete(adminId);
+        }}
+        description={'Are you sure to delete this user'}
+      />
     </div>
   );
 };

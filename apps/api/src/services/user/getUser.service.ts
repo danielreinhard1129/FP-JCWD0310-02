@@ -10,7 +10,6 @@ interface User {
 
 export const userService = async (body: User, id: number) => {
   try {
-    console.log(id);
     const existingUser = await prisma.users.findFirst({
       where: { id, isDelete: false },
       // include: { Addresses: true },
@@ -24,7 +23,6 @@ export const userService = async (body: User, id: number) => {
         Addresses: true,
       },
     });
-    console.log(existingUser);
     return existingUser;
   } catch (error) {}
 };

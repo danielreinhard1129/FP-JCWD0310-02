@@ -22,7 +22,7 @@ const useGetStocks = (queryArgs: {
   warehouseId: number;
 }) => {
   const { axiosInstance } = useAxios();
-  const [data, setData] = useState<Product[]>();
+  const [data, setData] = useState<IProductStocks[]>();
   const [query, setQuery] = useState({
     page: queryArgs.page || 1,
     take: queryArgs.take || 10,

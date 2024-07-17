@@ -21,6 +21,7 @@ export const InputImages: FC<DropzoneProps> = ({
       'image/*': [],
     },
     maxFiles: 5,
+    maxSize: 1024000,
     onDrop: (acceptedFiles) => {
       onDrop(acceptedFiles);
     },

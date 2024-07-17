@@ -6,7 +6,7 @@ import Image from 'next/image';
 export const Footer = () => {
   return (
     <footer className="w-full mt-20 flex flex-col items-center relative ">
-      <div className="w-full rounded-[30px] px-4 md:px-10 bg-primary relative overflow-hidden">
+      <div className="w-full rounded-[20px] px-4 md:px-10 bg-primary relative overflow-hidden">
         <div className="w-full py-10 flex flex-col md:flex-row justify-between gap-4">
           <div className="text-primary-foreground md:text-base text-sm tracking-tight">
             <Label className="md:text-2xl text-xl font-rubik font-bold text-[#FFA52F]">

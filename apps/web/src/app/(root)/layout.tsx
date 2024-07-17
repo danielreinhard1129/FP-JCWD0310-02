@@ -13,9 +13,9 @@ export default function RootLayout({
   return (
     <QueryClientProvider client={queryClient}>
       <div className="w-full flex justify-center bg-[#E7E7E3]">
-        <div className="flex flex-col w-full px-8">
+        <div className="flex flex-col w-full md:px-8 px-4">
           <Navbar />
-          <div className="w-full min-h-[50vh] mt-8">
+          <div className="w-full min-h-[50vh] md:mt-8 mt-2">
             <div>{children}</div>
           </div>
           <Footer />
