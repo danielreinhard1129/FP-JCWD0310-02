@@ -1,11 +1,10 @@
+'use client';
 import { Label } from '@/components/ui/label';
 import React from 'react';
-import logo from '../../../public/logo-dark.png';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
-const page = () => {
+const NotFoundPage = () => {
   const router = useRouter();
   return (
     <div className="bg-[#E7E7E3] p-[10vw] h-screen w-screen overflow-hidden flex flex-col gap-12 justify-center items-center font-rubik">
@@ -28,4 +27,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default NotFoundPage;
